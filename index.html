@@ -22,26 +22,14 @@
             <div class="search-wrapper">
                 <input id="searchBar" type="text" placeholder="Buscar en todos los medicamentos..." aria-label="Buscar medicamento" class="w-full p-4 border border-slate-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
             </div>
-
             <div class="filter-controls">
                 <div class="dropdown-wrapper">
-                    <button id="families-dropdown-btn" class="dropdown-btn">
-                        <span>Familias de Medicamentos</span>
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                    </button>
-                    <div id="families-dropdown-panel" class="dropdown-panel">
-                        <nav id="familyFilterContainer" aria-label="Filtros por familia"></nav>
-                    </div>
+                    <button id="families-dropdown-btn" class="dropdown-btn"><span>Familias de Medicamentos</span><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg></button>
+                    <div id="families-dropdown-panel" class="dropdown-panel"><nav id="familyFilterContainer" aria-label="Filtros por familia"></nav></div>
                 </div>
-
                 <div class="dropdown-wrapper">
-                    <button id="themes-dropdown-btn" class="dropdown-btn">
-                        <span>Temas de Interés</span>
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                    </button>
-                    <div id="themes-dropdown-panel" class="dropdown-panel">
-                        <nav id="themesFilterContainer" aria-label="Temas de interés"></nav>
-                    </div>
+                    <button id="themes-dropdown-btn" class="dropdown-btn"><span>Temas de Interés</span><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg></button>
+                    <div id="themes-dropdown-panel" class="dropdown-panel"><nav id="themesFilterContainer" aria-label="Temas de interés"></nav></div>
                 </div>
             </div>
         </section>
@@ -49,56 +37,84 @@
         <div id="view-container" class="mt-8">
             <section id="medication-section">
                 <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-                <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden">
-                    <p>No se encontraron medicamentos que coincidan con la búsqueda.</p>
-                </div>
+                <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden"><p>No se encontraron medicamentos.</p></div>
             </section>
             <section id="themes-section" class="hidden">
                 <article id="theme-insulinas" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
-                    <h2>Guía de Insulinoterapia (ADA 2024)</h2>
-                    <p>El manejo con insulina en Diabetes Mellitus tipo 2 (DM2) es crucial cuando los agentes orales no alcanzan las metas de control glucémico (HbA1c > 10%, glucosa > 300 mg/dL o síntomas catabólicos). La estrategia debe ser individualizada, considerando el riesgo de hipoglucemia y comorbilidades.</p>
-                    <h3>1. Inicio con Insulina Basal</h3>
-                    <p>Es el primer paso recomendado para la intensificación del tratamiento.</p>
+                    <h2>Esquema de Intensificación de Insulina (ADA 2024)</h2>
+                    <p>La intensificación del tratamiento con insulina en DM2 se indica cuando la monoterapia con insulina basal no logra las metas de HbA1c, a pesar de una titulación adecuada. El objetivo es controlar la hiperglucemia posprandial.</p>
+                    
+                    <div class="svg-container">
+                        <svg viewBox="0 0 400 320" class="w-full">
+                            <defs><marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"></path></marker></defs>
+                            <style>.box{fill:#f3f4f6;stroke:#9ca3af;stroke-width:1;}.d-box{fill:#fef2f2;stroke:#ef4444;}.t-box{fill:#eff6ff;stroke:#3b82f6;}.label{font-family:Inter,sans-serif;font-size:8px;font-weight:500;}.title{font-size:10px;font-weight:600;}.line{stroke:#4b5563;stroke-width:1;marker-end:url(#arrowhead);}</style>
+                            <g>
+                                <rect x="80" y="10" width="240" height="30" rx="3" class="d-box"></rect><text x="200" y="30" text-anchor="middle" class="title">Paciente con Insulina Basal fuera de metas</text>
+                                <path d="M200,40 L200,60" class="line"></path>
+                                <rect x="100" y="60" width="200" height="30" rx="3" class="t-box"></rect><text x="200" y="80" text-anchor="middle" class="title">PASO 1: Intensificar Tratamiento</text>
+                                <path d="M200,90 L200,110" class="line"></path>
+                                <path d="M200,110 L40,110 L40,130" class="line"></path><path d="M200,110 L360,110 L360,130" class="line"></path>
+                                
+                                <rect x="10" y="130" width="160" height="70" rx="3" class="box"></rect><text x="90" y="145" text-anchor="middle" class="title">Opción A: Añadir Insulina Prandial</text>
+                                <text x="20" y="160" class="label">1. Iniciar 4U o 10% de la dosis basal</text><text x="20" y="170" class="label">   antes de la comida principal.</text><text x="20" y="180" class="label">2. Ajustar 1-2U cada 3-5 días.</text><text x="20" y="190" class="label">3. Progresar a esquema Basal-Bolus.</text>
+                                
+                                <rect x="190" y="130" width="100" height="70" rx="3" class="box"></rect><text x="240" y="145" text-anchor="middle" class="title">Opción B: Premezclas</text>
+                                <text x="200" y="160" class="label">1. Dividir dosis basal</text><text x="200" y="170" class="label">   en 2/3 AM y 1/3 PM.</text><text x="200" y="180" class="label">2. Administrar 2 veces</text><text x="200" y="190" class="label">   al día.</text>
+                                
+                                <rect x="310" y="130" width="80" height="70" rx="3" class="box"></rect><text x="350" y="145" text-anchor="middle" class="title">Opción C: Añadir aGLP-1</text><text x="320" y="165" class="label">Considerar si hay</text><text x="320" y="175" class="label">alto riesgo CV</text><text x="320" y="185" class="label">o necesidad de</text><text x="320" y="195" class="label">bajar de peso.</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <h3>Consideraciones Clave</h3>
                     <ul>
-                        <li><strong>Dosis de Inicio:</strong> Comenzar con <strong>10 unidades</strong> al día o calcular <strong>0.1-0.2 U/kg/día</strong>. Se administra usualmente por la noche.</li>
-                        <li><strong>Titulación:</strong> El objetivo es alcanzar la glucosa en ayuno meta (e.g., 80-130 mg/dL). Se puede aumentar la dosis en 2-4 unidades (o 10-15%) una o dos veces por semana hasta lograr el objetivo.</li>
-                        <li><strong>Manejo de Hipoglucemia:</strong> Si la glucosa es &lt;70 mg/dL sin causa aparente, se debe reducir la dosis en un 10-20%. Si es severa o &lt;40 mg/dL, la reducción puede ser del 20-40%.</li>
-                    </ul>
-                    <h3>2. Intensificación del Tratamiento (Añadir Insulina Prandial)</h3>
-                    <p>Se considera si la HbA1c permanece por encima del objetivo a pesar de una dosis de basal titulada y estable, o si la dosis de basal supera las 0.5 U/kg/día.</p>
-                    <h4>Opción A: Esquema "Basal-Plus"</h4>
-                    <ul>
-                        <li><strong>Dosis de Inicio:</strong> Añadir <strong>4 unidades</strong> (o el 10% de la dosis basal) de una insulina de acción rápida (Aspart, Lispro) o regular antes de la comida principal del día.</li>
-                        <li><strong>Ajuste:</strong> Aumentar 1-2 unidades (o 10-15%) una o dos veces por semana basándose en la glucosa postprandial. Si no se alcanza la meta, se pueden añadir dosis de insulina prandial en otras comidas.</li>
-                    </ul>
-                    <h4>Opción B: Cambio a Insulinas Premezcladas</h4>
-                    <ul>
-                        <li><strong>Uso:</strong> Se administran dos veces al día, antes del desayuno y la cena.</li>
-                        <li><strong>Conversión desde Basal:</strong> Si el paciente usaba insulina basal una vez al día, la dosis total de esta se administra como premezcla, dividida en 2/3 por la mañana y 1/3 por la noche.</li>
+                        <li><strong>Educación del Paciente:</strong> Es fundamental enseñar al paciente a reconocer y tratar la hipoglucemia, así como a ajustar la insulina según su glucosa capilar, dieta y ejercicio.</li>
+                        <li><strong>Flexibilidad:</strong> El esquema Basal-Bolus (múltiples dosis de insulina prandial) es el más fisiológico y flexible, pero requiere mayor compromiso y educación del paciente.</li>
+                        <li><strong>Riesgo Cardiovascular:</strong> En pacientes con enfermedad cardiovascular establecida, la adición de un agonista del receptor de GLP-1 (aGLP-1) es una opción preferente a la intensificación con insulina prandial.</li>
                     </ul>
                 </article>
                 <article id="theme-crisis-hipertensivas" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
-                    <h2>Manejo de Crisis Hipertensivas (AHA/ACC)</h2>
-                    <p>Una crisis hipertensiva se define por una elevación severa de la Presión Arterial (PA): <strong>Sistólica ≥180 mmHg y/o Diastólica ≥120 mmHg</strong>. La clave del manejo es diferenciar entre urgencia y emergencia según la presencia de daño agudo a órgano blanco (DAOB).</p>
-                    <h3>1. Urgencia Hipertensiva</h3>
+                    <h2>Algoritmo de Manejo de Crisis Hipertensivas</h2>
+                    <p>Una crisis hipertensiva (PAS ≥180 y/o PAD ≥120 mmHg) requiere una evaluación rápida para diferenciar entre urgencia y emergencia, lo cual define el manejo.</p>
+                    
+                    <div class="svg-container">
+                       <svg viewBox="0 0 400 320" class="w-full">
+                           <defs><marker id="arrowhead2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"></path></marker></defs>
+                           <style>.box{fill:#f3f4f6;stroke:#9ca3af;stroke-width:1;}.d-box{fill:#fef2f2;stroke:#ef4444;}.t-box{fill:#eff6ff;stroke:#3b82f6;}.label{font-family:Inter,sans-serif;font-size:8px;font-weight:500;}.title{font-size:10px;font-weight:600;}.line{stroke:#4b5563;stroke-width:1;marker-end:url(#arrowhead2);}</style>
+                           <g>
+                               <rect x="100" y="10" width="200" height="30" rx="3" class="d-box"></rect><text x="200" y="30" text-anchor="middle" class="title">PA ≥180/120 mmHg</text>
+                               <path d="M200,40 L200,60" class="line"></path>
+                               <path transform="translate(150 60)" d="M0,15 L50,0 L100,15 L50,30 Z" class="d-box"></path><text x="200" y="80" text-anchor="middle" class="title">¿Daño a Órgano Blanco?</text>
+                               <path d="M150,75 L80,75" class="line"></path><text x="115" y="70" class="label">NO</text>
+                               <path d="M250,75 L320,75" class="line"></path><text x="285" y="70" class="label">SÍ</text>
+                               
+                               <rect x="10" y="95" width="140" height="90" rx="3" class="t-box"></rect><text x="80" y="110" text-anchor="middle" class="title">URGENCIA Hipertensiva</text>
+                               <text x="20" y="125" class="label">• Sin DAOB agudo.</text>
+                               <text x="20" y="135" class="label">• Objetivo: Reducir PA</text>
+                               <text x="20" y="145" class="label">  en 24-48h.</text>
+                               <text x="20" y="155" class="label">• Tratamiento: Fármacos</text>
+                               <text x="20" y="165" class="label">  orales (ej. Captopril).</text>
+                               <text x="20" y="175" class="label">• NO usar Nifedipino SL.</text>
+
+                               <rect x="250" y="95" width="140" height="150" rx="3" class="d-box"></rect><text x="320" y="110" text-anchor="middle" class="title">EMERGENCIA Hipertensiva</text>
+                               <text x="260" y="125" class="label">• Con DAOB agudo.</text>
+                               <text x="260" y="135" class="label">• Objetivo: Reducir PAM</text>
+                               <text x="260" y="145" class="label">  10-20% en la 1ª hora.</text>
+                               <text x="260" y="155" class="label">• Manejo: Hospitalización</text>
+                               <text x="260" y="165" class="label">  y fármacos IV.</text>
+                               <text x="260" y="175" class="label">• Específico por condición:</text>
+                               <text x="265" y="185" class="label">- EVC: Labetalol</text>
+                               <text x="265" y="195" class="label">- IAM: Nitroglicerina</text>
+                               <text x="265" y="205" class="label">- Disección Aórtica:</text>
+                               <text x="265" y="215" class="label">  Esmolol + Nitroprusiato</text>
+                           </g>
+                       </svg>
+                    </div>
+                    <h3>Errores Comunes a Evitar</h3>
                     <ul>
-                        <li><strong>Definición:</strong> Elevación severa de la PA <strong>sin evidencia</strong> de DAOB nuevo o en progresión.</li>
-                        <li><strong>Objetivo Terapéutico:</strong> Reducir la PA de forma gradual en un lapso de <strong>24 a 48 horas</strong>. Una reducción demasiado rápida es peligrosa.</li>
-                        <li><strong>Manejo:</strong> Reposo, reiniciar o intensificar la terapia oral (ej. Captopril, Labetalol). El Nifedipino sublingual <strong>NO se recomienda</strong> por el riesgo de descensos bruscos.</li>
-                    </ul>
-                    <h3>2. Emergencia Hipertensiva</h3>
-                    <ul>
-                        <li><strong>Definición:</strong> Elevación severa de la PA <strong>con evidencia</strong> de DAOB nuevo o progresivo (EVC, IAM, edema pulmonar, etc.).</li>
-                        <li><strong>Manejo:</strong> Requiere <strong>hospitalización inmediata</strong> y tratamiento con fármacos intravenosos (IV) titulables.</li>
-                        <li><strong>Objetivo Terapéutico (General):</strong> Reducir la Presión Arterial Media (PAM) en un <strong>10-20% durante la primera hora</strong>, y un 5-15% adicional en las siguientes 23 horas.</li>
-                        <li><strong>Tratamiento IV por Condición Específica:</strong>
-                            <ul>
-                                <li><strong>Encefalopatía:</strong> Labetalol o Nicardipino.</li>
-                                <li><strong>Síndrome Coronario Agudo:</strong> Nitroglicerina.</li>
-                                <li><strong>Edema Agudo de Pulmón:</strong> Nitroglicerina + Furosemida.</li>
-                                <li><strong>Disección Aórtica Aguda:</strong> Esmolol + Nitroprusiato (objetivo PAS &lt;120 mmHg).</li>
-                            </ul>
-                        </li>
+                        <li><strong>Reducción Agresiva en Urgencias:</strong> Bajar la presión demasiado rápido en una urgencia puede provocar hipoperfusión cerebral, coronaria o renal.</li>
+                        <li><strong>Uso de Nifedipino Sublingual:</strong> Causa una vasodilatación rápida e impredecible, con riesgo de eventos isquémicos. Está contraindicado.</li>
+                        <li><strong>Tratar la "Pseudocrisis":</strong> La elevación de la PA por dolor, ansiedad o estrés debe manejarse tratando la causa subyacente, no con antihipertensivos potentes.</li>
                     </ul>
                 </article>
             </section>
