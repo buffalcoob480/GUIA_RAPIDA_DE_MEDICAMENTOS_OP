@@ -11,75 +11,116 @@
 </head>
 <body class="bg-slate-100 text-slate-800">
 
-<div class="main-container">
-    <aside id="families-sidebar" class="sidebar left-sidebar">
-        <div class="p-5">
-            <h3 class="sidebar-title">Familias de Medicamentos</h3>
-            <nav id="familyFilterContainer" class="space-y-1 overflow-y-auto" aria-label="Filtros por familia de medicamentos">
-                </nav>
-        </div>
-    </aside>
+<main class="main-content">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-5xl font-bold text-slate-900">Guía Farmacológica y Clínica</h1>
+            <p class="text-lg text-slate-600 mt-2">Centro de Salud Colonia Azteca</p>
+        </header>
 
-    <main class="main-content">
-        <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-            <header class="text-center mb-10">
-                <h1 class="text-3xl sm:text-5xl font-bold text-slate-900">Guía Farmacológica y Clínica</h1>
-                <p class="text-lg text-slate-600 mt-2">Centro de Salud Colonia Azteca</p>
-            </header>
-
-            <div class="mb-12 max-w-2xl mx-auto">
+        <section class="controls-container">
+            <div class="search-wrapper">
                 <input id="searchBar" type="text" placeholder="Buscar en todos los medicamentos..." aria-label="Buscar medicamento" class="w-full p-4 border border-slate-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
             </div>
 
-            <div id="view-container">
-                <section id="medication-section">
-                    <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-                    <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden">
-                        <p>No se encontraron medicamentos que coincidan con la búsqueda.</p>
+            <div class="filter-controls">
+                <div class="dropdown-wrapper">
+                    <button id="families-dropdown-btn" class="dropdown-btn">
+                        <span>Familias de Medicamentos</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                    </button>
+                    <div id="families-dropdown-panel" class="dropdown-panel">
+                        <nav id="familyFilterContainer" aria-label="Filtros por familia"></nav>
                     </div>
-                </section>
-                <section id="themes-section" class="hidden">
-                    <article id="theme-insulinas" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
-                        </article>
-                    <article id="theme-crisis-hipertensivas" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
-                        </article>
-                </section>
+                </div>
+
+                <div class="dropdown-wrapper">
+                    <button id="themes-dropdown-btn" class="dropdown-btn">
+                        <span>Temas de Interés</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                    </button>
+                    <div id="themes-dropdown-panel" class="dropdown-panel">
+                        <nav id="themesFilterContainer" aria-label="Temas de interés"></nav>
+                    </div>
+                </div>
             </div>
+        </section>
+
+        <div id="view-container" class="mt-8">
+            <section id="medication-section">
+                <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden">
+                    <p>No se encontraron medicamentos que coincidan con la búsqueda.</p>
+                </div>
+            </section>
+            <section id="themes-section" class="hidden">
+                <article id="theme-insulinas" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
+                    <h2>Guía de Insulinoterapia (ADA 2024)</h2>
+                    <p>El manejo con insulina en Diabetes Mellitus tipo 2 (DM2) es crucial cuando los agentes orales no alcanzan las metas de control glucémico (HbA1c > 10%, glucosa > 300 mg/dL o síntomas catabólicos). La estrategia debe ser individualizada, considerando el riesgo de hipoglucemia y comorbilidades.</p>
+                    <h3>1. Inicio con Insulina Basal</h3>
+                    <p>Es el primer paso recomendado para la intensificación del tratamiento.</p>
+                    <ul>
+                        <li><strong>Dosis de Inicio:</strong> Comenzar con <strong>10 unidades</strong> al día o calcular <strong>0.1-0.2 U/kg/día</strong>. Se administra usualmente por la noche.</li>
+                        <li><strong>Titulación:</strong> El objetivo es alcanzar la glucosa en ayuno meta (e.g., 80-130 mg/dL). Se puede aumentar la dosis en 2-4 unidades (o 10-15%) una o dos veces por semana hasta lograr el objetivo.</li>
+                        <li><strong>Manejo de Hipoglucemia:</strong> Si la glucosa es &lt;70 mg/dL sin causa aparente, se debe reducir la dosis en un 10-20%. Si es severa o &lt;40 mg/dL, la reducción puede ser del 20-40%.</li>
+                    </ul>
+                    <h3>2. Intensificación del Tratamiento (Añadir Insulina Prandial)</h3>
+                    <p>Se considera si la HbA1c permanece por encima del objetivo a pesar de una dosis de basal titulada y estable, o si la dosis de basal supera las 0.5 U/kg/día.</p>
+                    <h4>Opción A: Esquema "Basal-Plus"</h4>
+                    <ul>
+                        <li><strong>Dosis de Inicio:</strong> Añadir <strong>4 unidades</strong> (o el 10% de la dosis basal) de una insulina de acción rápida (Aspart, Lispro) o regular antes de la comida principal del día.</li>
+                        <li><strong>Ajuste:</strong> Aumentar 1-2 unidades (o 10-15%) una o dos veces por semana basándose en la glucosa postprandial. Si no se alcanza la meta, se pueden añadir dosis de insulina prandial en otras comidas.</li>
+                    </ul>
+                    <h4>Opción B: Cambio a Insulinas Premezcladas</h4>
+                    <ul>
+                        <li><strong>Uso:</strong> Se administran dos veces al día, antes del desayuno y la cena.</li>
+                        <li><strong>Conversión desde Basal:</strong> Si el paciente usaba insulina basal una vez al día, la dosis total de esta se administra como premezcla, dividida en 2/3 por la mañana y 1/3 por la noche.</li>
+                    </ul>
+                </article>
+                <article id="theme-crisis-hipertensivas" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
+                    <h2>Manejo de Crisis Hipertensivas (AHA/ACC)</h2>
+                    <p>Una crisis hipertensiva se define por una elevación severa de la Presión Arterial (PA): <strong>Sistólica ≥180 mmHg y/o Diastólica ≥120 mmHg</strong>. La clave del manejo es diferenciar entre urgencia y emergencia según la presencia de daño agudo a órgano blanco (DAOB).</p>
+                    <h3>1. Urgencia Hipertensiva</h3>
+                    <ul>
+                        <li><strong>Definición:</strong> Elevación severa de la PA <strong>sin evidencia</strong> de DAOB nuevo o en progresión.</li>
+                        <li><strong>Objetivo Terapéutico:</strong> Reducir la PA de forma gradual en un lapso de <strong>24 a 48 horas</strong>. Una reducción demasiado rápida es peligrosa.</li>
+                        <li><strong>Manejo:</strong> Reposo, reiniciar o intensificar la terapia oral (ej. Captopril, Labetalol). El Nifedipino sublingual <strong>NO se recomienda</strong> por el riesgo de descensos bruscos.</li>
+                    </ul>
+                    <h3>2. Emergencia Hipertensiva</h3>
+                    <ul>
+                        <li><strong>Definición:</strong> Elevación severa de la PA <strong>con evidencia</strong> de DAOB nuevo o progresivo (EVC, IAM, edema pulmonar, etc.).</li>
+                        <li><strong>Manejo:</strong> Requiere <strong>hospitalización inmediata</strong> y tratamiento con fármacos intravenosos (IV) titulables.</li>
+                        <li><strong>Objetivo Terapéutico (General):</strong> Reducir la Presión Arterial Media (PAM) en un <strong>10-20% durante la primera hora</strong>, y un 5-15% adicional en las siguientes 23 horas.</li>
+                        <li><strong>Tratamiento IV por Condición Específica:</strong>
+                            <ul>
+                                <li><strong>Encefalopatía:</strong> Labetalol o Nicardipino.</li>
+                                <li><strong>Síndrome Coronario Agudo:</strong> Nitroglicerina.</li>
+                                <li><strong>Edema Agudo de Pulmón:</strong> Nitroglicerina + Furosemida.</li>
+                                <li><strong>Disección Aórtica Aguda:</strong> Esmolol + Nitroprusiato (objetivo PAS &lt;120 mmHg).</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </article>
+            </section>
         </div>
         <footer class="text-center p-4 mt-8 text-sm text-slate-500 border-t">
             <p>Información de referencia. Consulte siempre a un profesional de la salud.</p>
         </footer>
     </main>
 
-    <aside id="themes-sidebar" class="sidebar right-sidebar">
-        <div class="p-5">
-            <h3 class="sidebar-title">Temas de Interés</h3>
-            <nav id="themesFilterContainer" class="space-y-1">
-                </nav>
-        </div>
-    </aside>
-</div>
+    <div id="medicationModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div id="modal-content-wrapper" class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0"></div>
+    </div>
+    <template id="medication-card-template">
+        <article class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col overflow-hidden">
+            <img alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/fecaca/991b1b?text=Imagen+no+disponible';">
+            <div class="p-5 flex flex-col flex-grow">
+                <div><h3 class="card-name font-bold text-lg text-slate-900"></h3><p class="card-presentation text-sm text-slate-600"></p></div>
+                <div class="mt-4 pt-4 border-t border-slate-200 text-xs flex-grow flex flex-col justify-end"><p class="card-family font-semibold text-blue-600"></p><p class="card-uses text-slate-500 mt-1"></p></div>
+            </div>
+        </article>
+    </template>
 
-<button id="openFamiliesSidebarBtn" aria-label="Abrir menú de familias" class="sidebar-toggle-btn left-4">
-    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-</button>
-<button id="openThemesSidebarBtn" aria-label="Abrir menú de temas" class="sidebar-toggle-btn right-4">
-    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-</button>
-
-<div id="medicationModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div id="modal-content-wrapper" class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0"></div>
-</div>
-<template id="medication-card-template">
-    <article class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col overflow-hidden">
-        <img alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/fecaca/991b1b?text=Imagen+no+disponible';">
-        <div class="p-5 flex flex-col flex-grow">
-            <div><h3 class="card-name font-bold text-lg text-slate-900"></h3><p class="card-presentation text-sm text-slate-600"></p></div>
-            <div class="mt-4 pt-4 border-t border-slate-200 text-xs flex-grow flex flex-col justify-end"><p class="card-family font-semibold text-blue-600"></p><p class="card-uses text-slate-500 mt-1"></p></div>
-        </div>
-    </article>
-</template>
-
-<script src="app.js" defer></script>
+    <script src="app.js" defer></script>
 </body>
 </html>
