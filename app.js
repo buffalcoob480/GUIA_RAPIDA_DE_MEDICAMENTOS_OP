@@ -1,26 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.addEventListener('DOMContentLoaded', () => {
-    // ... (El estado, selectores y lógica no cambian) ...
-
-    function initFilters() {
-        const families = ['Todos', ...new Set(state.medications.map(med => med.simpleFamily).sort())];
-        selectors.familyFilterContainer.innerHTML = families.map(f => `<button class="filter-btn" data-family="${f}">${f}</button>`).join('');
-        
-        // --- ARRAY DE TEMAS ACTUALIZADO Y LIMPIO ---
-        const themes = [ 
-            { id: 'gpc-insulina', name: 'Guía Clínica de Insulinoterapia' },
-            { id: 'dm2-inicio', name: 'Manejo Inicial DM2' },
-            { id: 'crisis-hipertensivas', name: 'Crisis Hipertensivas' },
-            { id: 'nac', name: 'Neumonía (NAC)' },
-            { id: 'asma', name: 'Crisis Asmática' }
-        ];
-        selectors.themesFilterContainer.innerHTML = themes.map(t => `<button class="theme-btn" data-theme="${t.id}">${t.name}</button>`).join('');
-    }
-
-    // ... (El resto de las funciones no cambian) ...
-
-    initializeApp();
-});
     // --- ESTADO DE LA APLICACIÓN ---
     const state = {
         medications: [],
@@ -198,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const themes = [ 
             { id: 'gpc-insulina', name: 'Guía Clínica de Insulinoterapia' },
             { id: 'dm2-inicio', name: 'Manejo Inicial DM2' },
-            { id: 'insulinas', name: 'Terapia con Insulina (Resumen)' },
             { id: 'crisis-hipertensivas', name: 'Crisis Hipertensivas' },
             { id: 'nac', name: 'Neumonía (NAC)' },
             { id: 'asma', name: 'Crisis Asmática' }
@@ -242,7 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function closeDropdowns() {
-        selectors.familiesDropdownPanel.classList.remove('is--open');
+        // CORRECCIÓN: Se cambió 'is--open' a 'is-open'
+        selectors.familiesDropdownPanel.classList.remove('is-open');
         selectors.themesDropdownPanel.classList.remove('is-open');
         selectors.familiesDropdownBtn.classList.remove('active');
         selectors.themesDropdownBtn.classList.remove('active');
@@ -250,11 +228,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function normalizeText(str) { 
         if (!str) return '';
-        // Normaliza el texto a NFD (Normalization Form D) y elimina los diacríticos.
-        // También elimina cualquier carácter que no sea ASCII para simplificar.
         return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
 
     initializeApp();
 });
-
