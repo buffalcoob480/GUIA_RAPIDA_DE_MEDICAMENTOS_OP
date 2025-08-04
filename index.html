@@ -14,14 +14,45 @@
 <main class="main-content">
     <div class="container mx-auto p-4 sm:p-6 lg:p-8">
         <header class="text-center mb-10">
-            </header>
+            <h1 class="text-3xl sm:text-5xl font-bold text-slate-900">Guía Farmacológica y Clínica</h1>
+            <p class="text-lg text-slate-600 mt-2">Centro de Salud Colonia Azteca</p>
+            <p class="text-sm text-slate-500 mt-4">Actualmente con <span id="med-count" class="font-bold text-slate-600">0</span> medicamentos en la base de datos.</p>
+        </header>
 
         <section class="controls-container">
-            </section>
+            <div class="search-wrapper">
+                <input id="searchBar" type="text" placeholder="Buscar por nombre, familia, uso..." aria-label="Buscar medicamento" class="w-full p-4 border border-slate-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+            </div>
+            <div class="filter-controls">
+                <div class="dropdown-wrapper">
+                    <button id="families-dropdown-btn" class="dropdown-btn">
+                        <span id="families-btn-text">Familias de Medicamentos</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                    </button>
+                    <div id="families-dropdown-panel" class="dropdown-panel">
+                        <nav id="familyFilterContainer" aria-label="Filtros por familia"></nav>
+                    </div>
+                </div>
+                <div class="dropdown-wrapper">
+                    <button id="themes-dropdown-btn" class="dropdown-btn">
+                        <span>Temas de Interés</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                    </button>
+                    <div id="themes-dropdown-panel" class="dropdown-panel">
+                        <nav id="themesFilterContainer" aria-label="Temas de interés"></nav>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <div id="view-container" class="mt-8">
             <section id="medication-section">
-                </section>
+                <div id="loading-indicator" class="text-center py-16 text-slate-500">
+                    <p>Cargando medicamentos...</p>
+                </div>
+                <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden"><p>No se encontraron medicamentos.</p></div>
+            </section>
             
             <section id="themes-section" class="hidden">
                 
@@ -143,10 +174,14 @@
                     </div>
                 </article>
 
-                <article id="theme-crisis-hipertensivas" class="theme-content hidden ..."></article>
-                <article id="theme-dm2-inicio" class="theme-content hidden ..."></article>
-                <article id="theme-nac" class="theme-content hidden ..."></article>
-                <article id="theme-asma" class="theme-content hidden ..."></article>
+                <article id="theme-crisis-hipertensivas" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
+                    </article>
+                <article id="theme-dm2-inicio" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
+                    </article>
+                <article id="theme-nac" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
+                    </article>
+                <article id="theme-asma" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
+                    </article>
 
             </section>
         </div>
@@ -155,5 +190,26 @@
         </footer>
     </main>
     
-    </body>
+    <div id="medicationModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div id="modal-content-wrapper" class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0"></div>
+    </div>
+
+    <template id="medication-card-template">
+        <article class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col overflow-hidden">
+            <img alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/fecaca/991b1b?text=Imagen+no+disponible';">
+            <div class="p-5 flex flex-col flex-grow">
+                <div>
+                    <h3 class="card-name font-bold text-lg text-slate-900"></h3>
+                    <p class="card-presentation text-sm text-slate-600"></p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-200 text-xs flex-grow flex flex-col justify-end">
+                    <p class="card-family font-semibold text-blue-600"></p>
+                    <p class="card-uses text-slate-500 mt-1"></p>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <script src="app.js" defer></script>
+</body>
 </html>
