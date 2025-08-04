@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- RENDERIZADO Y LÓGICA DEL MODAL (ARREGLADO) ---
+    // --- RENDERIZADO Y LÓGICA DEL MODAL (CON CALCULADORA) ---
     function renderMedications(meds) {
         const sortedMeds = meds.sort((a, b) => a.name.localeCompare(b.name));
         selectors.medicationList.innerHTML = '';
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sortedMeds.forEach(med => {
             const cardClone = selectors.cardTemplate.content.cloneNode(true);
             const cardElement = cardClone.querySelector('article');
-            cardElement.dataset.originalIndex = med.originalIndex; // Usamos un nombre más claro
+            cardElement.dataset.originalIndex = med.originalIndex;
             cardElement.querySelector('.card-img').src = med.image;
             cardElement.querySelector('.card-img').alt = `Imagen de ${med.name}`;
             cardElement.querySelector('.card-name').textContent = med.name;
@@ -88,8 +88,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function openModal(med) {
+        let calculatorHtml = '';
+        if (med.isCalculable) {
+            calculatorHtml = `
+                <div class="mt-6 pt-6 border-t border-slate-200">
+                    <h4 class="text-base font-semibold text-slate-800 mb-2">Calculadora de Dosis Pediátrica</h4>
+                    <div class="flex items-center space-x-3">
+                        <input type="number" placeholder="Peso en kg" class="weight-input-modal border border-slate-300 rounded-md p-2 w-28 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <button class="calculate-btn-modal bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Calcular</button>
+                    </div>
+                    <div class="result-div-modal mt-3 text-blue-800 font-semibold text-sm p-3 bg-blue-50 rounded-md min-h-[44px]"></div>
+                </div>
+            `;
+        }
+
         selectors.modalContent.innerHTML = `
-            <div class="flex justify-between items-center p-5 border-b border-slate-200 sticky top-0 bg-white">
+            <div class="flex justify-between items-center p-5 border-b border-slate-200 sticky top-0 bg-white z-10">
                 <h3 id="modalTitle" class="text-xl font-bold text-slate-900">${med.name} - ${med.presentation}</h3>
                 <button id="closeModalBtn" aria-label="Cerrar modal" class="text-slate-400 hover:text-slate-800 text-3xl">&times;</button>
             </div>
@@ -102,18 +116,55 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p><strong class="font-semibold text-slate-900">Dosis Pediátrica:</strong> ${med.dose_pediatric}</p>
                     <p><strong class="font-semibold text-red-600">Contraindicaciones:</strong> ${med.contraindications}</p>
                 </div>
+                ${calculatorHtml}
             </div>`;
+        
         selectors.modal.classList.remove('hidden');
         setTimeout(() => selectors.modalContent.classList.remove('scale-95', 'opacity-0'), 10);
+        
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+        if (med.isCalculable) {
+            document.querySelector('.calculate-btn-modal').addEventListener('click', () => calculateDose(med));
+        }
     }
 
     function closeModal() {
         selectors.modalContent.classList.add('scale-95', 'opacity-0');
         setTimeout(() => selectors.modal.classList.add('hidden'), 300);
     }
+    
+    function calculateDose(med) {
+        const weightInput = document.querySelector('.weight-input-modal');
+        const resultDiv = document.querySelector('.result-div-modal');
+        const weight = parseFloat(weightInput.value);
 
-    // --- INICIALIZACIÓN ---
+        if (!weight || weight <= 0) {
+            resultDiv.innerHTML = '<span class="text-red-500">Por favor, ingrese un peso válido.</span>';
+            return;
+        }
+        
+        let resultText = '';
+        if (med.doseMin_mg_kg_dia) { // Dosis por día
+            const intervals = parseInt(String(med.doseIntervals).split('-').pop(), 10);
+            const minMlPerTake = (weight * med.doseMin_mg_kg_dia / med.concentration) / intervals;
+            const maxMlPerTake = (weight * med.doseMax_mg_kg_dia / med.concentration) / intervals;
+            const perTakeText = (minMlPerTake.toFixed(2) === maxMlPerTake.toFixed(2))
+                ? `<strong>${minMlPerTake.toFixed(2)} ml</strong>`
+                : `<strong>${minMlPerTake.toFixed(2)} a ${maxMlPerTake.toFixed(2)} ml</strong>`;
+            resultText = `Administrar ${perTakeText} por toma (${med.doseIntervals} veces al día).`;
+        } else if (med.doseMin_mg_kg_dosis) { // Dosis por toma
+            const minMl = (weight * med.doseMin_mg_kg_dosis) / med.concentration;
+            const maxMl = (weight * med.doseMax_mg_kg_dosis) / med.concentration;
+            let doseMlText = (minMl.toFixed(2) === maxMl.toFixed(2))
+                ? `<strong>${minMl.toFixed(2)} ml</strong>`
+                : `<strong>${minMl.toFixed(2)} a ${maxMl.toFixed(2)} ml</strong>`;
+            let frequencyText = med.doseFreq ? ` cada ${Math.round(24 / med.doseFreq)} horas.` : '.';
+            resultText = `Dosis por toma: ${doseMlText}${frequencyText}`;
+        }
+        resultDiv.innerHTML = resultText;
+    }
+
+    // --- INICIALIZACIÓN DE EVENTOS Y FILTROS ---
     async function initializeApp() {
         try {
             const response = await fetch('medicamentos.json');
@@ -147,10 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initEventListeners() {
-        // Búsqueda
         selectors.searchBar.addEventListener('input', updateDisplay);
-
-        // Clic en tarjeta para abrir modal (ARREGLADO)
         selectors.medicationList.addEventListener('click', (e) => {
             const card = e.target.closest('[data-original-index]');
             if (card) {
@@ -160,23 +208,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        // Control de los menús desplegables
-        selectors.familiesDropdownBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            selectors.themesDropdownPanel.classList.remove('is-open');
-            selectors.themesDropdownBtn.classList.remove('active');
-            selectors.familiesDropdownPanel.classList.toggle('is-open');
-            selectors.familiesDropdownBtn.classList.toggle('active');
-        });
-        selectors.themesDropdownBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            selectors.familiesDropdownPanel.classList.remove('is-open');
-            selectors.familiesDropdownBtn.classList.remove('active');
-            selectors.themesDropdownPanel.classList.toggle('is-open');
-            selectors.themesDropdownBtn.classList.toggle('active');
-        });
+        // Control de menús desplegables
+        selectors.familiesDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown('families'); });
+        selectors.themesDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown('themes'); });
 
-        // Clic en una opción de Familia
         selectors.familyFilterContainer.addEventListener('click', (e) => {
             if (e.target.matches('.filter-btn')) {
                 state.view = 'medications';
@@ -187,8 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeDropdowns();
             }
         });
-
-        // Clic en una opción de Tema
         selectors.themesFilterContainer.addEventListener('click', (e) => {
             if (e.target.matches('.theme-btn')) {
                 state.view = 'themes';
@@ -199,11 +232,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Cerrar menús al hacer clic fuera
         document.addEventListener('click', () => closeDropdowns());
-        
-        // Modal
         selectors.modal.addEventListener('click', (e) => { if (e.target.id === 'medicationModal') closeModal(); });
+    }
+    
+    function toggleDropdown(type) {
+        if (type === 'families') {
+            selectors.themesDropdownPanel.classList.remove('is-open');
+            selectors.themesDropdownBtn.classList.remove('active');
+            selectors.familiesDropdownPanel.classList.toggle('is-open');
+            selectors.familiesDropdownBtn.classList.toggle('active');
+        } else {
+            selectors.familiesDropdownPanel.classList.remove('is-open');
+            selectors.familiesDropdownBtn.classList.remove('active');
+            selectors.themesDropdownPanel.classList.toggle('is-open');
+            selectors.themesDropdownBtn.classList.toggle('active');
+        }
     }
     
     function closeDropdowns() {
