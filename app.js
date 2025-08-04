@@ -16,10 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
         noResults: document.getElementById('no-results'),
         familyFilterContainer: document.getElementById('familyFilterContainer'),
         themesFilterContainer: document.getElementById('themesFilterContainer'),
-        familiesSidebar: document.getElementById('families-sidebar'),
-        themesSidebar: document.getElementById('themes-sidebar'),
-        openFamiliesBtn: document.getElementById('openFamiliesSidebarBtn'),
-        openThemesBtn: document.getElementById('openThemesSidebarBtn'),
+        familiesDropdownBtn: document.getElementById('families-dropdown-btn'),
+        themesDropdownBtn: document.getElementById('themes-dropdown-btn'),
+        familiesDropdownPanel: document.getElementById('families-dropdown-panel'),
+        themesDropdownPanel: document.getElementById('themes-dropdown-panel'),
         modal: document.getElementById('medicationModal'),
         modalContent: document.getElementById('modal-content-wrapper'),
         cardTemplate: document.getElementById('medication-card-template'),
@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateDisplay() {
         const searchTerm = normalizeText(selectors.searchBar.value);
 
-        // La búsqueda siempre tiene prioridad y muestra la vista de medicamentos
         if (searchTerm) {
             state.view = 'medications';
             const searchResults = state.medications.filter(med =>
@@ -40,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
             );
             renderMedications(searchResults);
         } else {
-            // Si no hay búsqueda, mostrar la vista activa (medicamentos o temas)
             if (state.view === 'medications') {
                 const filteredMeds = state.activeFamily === 'Todos'
                     ? state.medications
@@ -49,19 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // Sincronizar la visibilidad de las secciones
         selectors.medicationSection.classList.toggle('hidden', state.view !== 'medications');
         selectors.themesSection.classList.toggle('hidden', state.view !== 'themes');
         
-        // Sincronizar el contenido del tema activo
-        if(state.view === 'themes') {
+        if (state.view === 'themes') {
             document.querySelectorAll('.theme-content').forEach(tc => tc.classList.add('hidden'));
-            if(state.activeTheme) {
+            if (state.activeTheme) {
                 document.getElementById(`theme-${state.activeTheme}`).classList.remove('hidden');
             }
         }
-
-        // Sincronizar los botones activos
         updateActiveButtons();
     }
 
@@ -74,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- LÓGICA DE RENDERIZADO ---
+    // --- RENDERIZADO Y LÓGICA DEL MODAL (ARREGLADO) ---
     function renderMedications(meds) {
         const sortedMeds = meds.sort((a, b) => a.name.localeCompare(b.name));
         selectors.medicationList.innerHTML = '';
@@ -82,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sortedMeds.forEach(med => {
             const cardClone = selectors.cardTemplate.content.cloneNode(true);
             const cardElement = cardClone.querySelector('article');
-            cardElement.dataset.index = med.originalIndex;
+            cardElement.dataset.originalIndex = med.originalIndex; // Usamos un nombre más claro
             cardElement.querySelector('.card-img').src = med.image;
             cardElement.querySelector('.card-img').alt = `Imagen de ${med.name}`;
             cardElement.querySelector('.card-name').textContent = med.name;
@@ -93,7 +87,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- LÓGICA DE INICIALIZACIÓN ---
+    function openModal(med) {
+        selectors.modalContent.innerHTML = `
+            <div class="flex justify-between items-center p-5 border-b border-slate-200 sticky top-0 bg-white">
+                <h3 id="modalTitle" class="text-xl font-bold text-slate-900">${med.name} - ${med.presentation}</h3>
+                <button id="closeModalBtn" aria-label="Cerrar modal" class="text-slate-400 hover:text-slate-800 text-3xl">&times;</button>
+            </div>
+            <div class="overflow-y-auto p-6">
+                <p class="text-lg font-semibold text-blue-600 mb-4">${med.family}</p>
+                <div class="space-y-3 text-sm text-slate-700">
+                    <p><strong class="font-semibold text-slate-900">Usos:</strong> ${med.uses}</p>
+                    <p><strong class="font-semibold text-slate-900">Indicaciones:</strong> ${med.indications}</p>
+                    <p><strong class="font-semibold text-slate-900">Dosis Adulto:</strong> ${med.dose_adult}</p>
+                    <p><strong class="font-semibold text-slate-900">Dosis Pediátrica:</strong> ${med.dose_pediatric}</p>
+                    <p><strong class="font-semibold text-red-600">Contraindicaciones:</strong> ${med.contraindications}</p>
+                </div>
+            </div>`;
+        selectors.modal.classList.remove('hidden');
+        setTimeout(() => selectors.modalContent.classList.remove('scale-95', 'opacity-0'), 10);
+        document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+    }
+
+    function closeModal() {
+        selectors.modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => selectors.modal.classList.add('hidden'), 300);
+    }
+
+    // --- INICIALIZACIÓN ---
     async function initializeApp() {
         try {
             const response = await fetch('medicamentos.json');
@@ -111,18 +131,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Initialization failed:", error);
-            selectors.medicationSection.innerHTML = `<p class="text-center text-red-600">Error: No se pudo cargar la información de los medicamentos.</p>`;
+            selectors.medicationSection.innerHTML = `<p class="text-center text-red-600">Error: No se pudo cargar la información.</p>`;
         }
     }
 
     function initFilters() {
-        // Filtro de Familias
         const families = ['Todos', ...new Set(state.medications.map(med => med.simpleFamily).sort())];
         selectors.familyFilterContainer.innerHTML = families.map(family => 
             `<button class="filter-btn" data-family="${family}">${family}</button>`
         ).join('');
-
-        // Filtro de Temas
         const themes = [ { id: 'insulinas', name: 'Guía de Insulinas' }, { id: 'crisis-hipertensivas', name: 'Crisis Hipertensivas' }];
         selectors.themesFilterContainer.innerHTML = themes.map(theme =>
             `<button class="theme-btn" data-theme="${theme.id}">${theme.name}</button>`
@@ -133,47 +150,67 @@ document.addEventListener('DOMContentLoaded', () => {
         // Búsqueda
         selectors.searchBar.addEventListener('input', updateDisplay);
 
-        // Clic en Familias
+        // Clic en tarjeta para abrir modal (ARREGLADO)
+        selectors.medicationList.addEventListener('click', (e) => {
+            const card = e.target.closest('[data-original-index]');
+            if (card) {
+                const index = parseInt(card.dataset.originalIndex, 10);
+                const medication = state.medications.find(m => m.originalIndex === index);
+                if (medication) openModal(medication);
+            }
+        });
+        
+        // Control de los menús desplegables
+        selectors.familiesDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectors.themesDropdownPanel.classList.remove('is-open');
+            selectors.themesDropdownBtn.classList.remove('active');
+            selectors.familiesDropdownPanel.classList.toggle('is-open');
+            selectors.familiesDropdownBtn.classList.toggle('active');
+        });
+        selectors.themesDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectors.familiesDropdownPanel.classList.remove('is-open');
+            selectors.familiesDropdownBtn.classList.remove('active');
+            selectors.themesDropdownPanel.classList.toggle('is-open');
+            selectors.themesDropdownBtn.classList.toggle('active');
+        });
+
+        // Clic en una opción de Familia
         selectors.familyFilterContainer.addEventListener('click', (e) => {
             if (e.target.matches('.filter-btn')) {
                 state.view = 'medications';
                 state.activeFamily = e.target.dataset.family;
                 state.activeTheme = null;
-                selectors.searchBar.value = ''; // Limpiar búsqueda
+                selectors.searchBar.value = '';
                 updateDisplay();
-                closeMobileSidebars();
+                closeDropdowns();
             }
         });
 
-        // Clic en Temas
+        // Clic en una opción de Tema
         selectors.themesFilterContainer.addEventListener('click', (e) => {
             if (e.target.matches('.theme-btn')) {
                 state.view = 'themes';
                 state.activeTheme = e.target.dataset.theme;
                 state.activeFamily = null;
                 updateDisplay();
-                closeMobileSidebars();
+                closeDropdowns();
             }
         });
 
-        // Controles de Sidebars Móviles
-        selectors.openFamiliesBtn.addEventListener('click', (e) => { e.stopPropagation(); selectors.familiesSidebar.classList.toggle('is-open'); });
-        selectors.openThemesBtn.addEventListener('click', (e) => { e.stopPropagation(); selectors.themesSidebar.classList.toggle('is-open'); });
-        document.addEventListener('click', (e) => {
-            if (!selectors.familiesSidebar.contains(e.target) && !e.target.closest('#openFamiliesSidebarBtn')) {
-                selectors.familiesSidebar.classList.remove('is-open');
-            }
-            if (!selectors.themesSidebar.contains(e.target) && !e.target.closest('#openThemesSidebarBtn')) {
-                selectors.themesSidebar.classList.remove('is-open');
-            }
-        });
+        // Cerrar menús al hacer clic fuera
+        document.addEventListener('click', () => closeDropdowns());
         
-        // Modal (sin cambios)
+        // Modal
+        selectors.modal.addEventListener('click', (e) => { if (e.target.id === 'medicationModal') closeModal(); });
     }
     
-    function closeMobileSidebars() {
-        selectors.familiesSidebar.classList.remove('is-open');
-        selectors.themesSidebar.classList.remove('is-open');
+    function closeDropdowns() {
+        selectors.familiesDropdownPanel.classList.remove('is-open');
+        selectors.themesDropdownPanel.classList.remove('is-open');
+        selectors.familiesDropdownBtn.classList.remove('active');
+        selectors.themesDropdownBtn.classList.remove('active');
     }
     
     function normalizeText(str) {
