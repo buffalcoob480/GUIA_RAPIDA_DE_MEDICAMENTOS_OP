@@ -3,103 +3,90 @@ body {
     background-color: #f1f5f9;
 }
 
-/* --- NUEVA ESTRUCTURA DE LAYOUT CON GRID --- */
-.main-container {
-    display: grid;
-    grid-template-columns: 1fr; /* Layout móvil por defecto */
-}
-@media (min-width: 1024px) { /* En pantallas grandes (lg y superior) */
-    .main-container {
-        grid-template-columns: 256px 1fr 256px; /* Izquierda | Centro | Derecha */
-    }
-}
-.main-content {
-    grid-column: 1 / -1; /* Ocupa todo el ancho en móvil */
-}
-@media (min-width: 1024px) {
-    .main-content {
-        grid-column: 2 / 3; /* Ocupa la columna central en desktop */
-    }
-}
-
-/* --- ESTILOS GENERALES DE LAS BARRAS LATERALES --- */
-.sidebar {
-    position: fixed;
-    top: 0;
-    height: 100%;
-    width: 256px;
-    background-color: white;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    z-index: 40;
-    transition: transform 0.3s ease-in-out;
-    display: flex; /* Para permitir que el contenido interno sea scrollable */
+/* --- SECCIÓN DE CONTROLES Y DESPLEGABLES --- */
+.controls-container {
+    display: flex;
     flex-direction: column;
-}
-.sidebar-title {
-    font-weight: 700;
-    font-size: 1.125rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #e2e8f0;
+    gap: 1.5rem; /* 24px */
+    margin-bottom: 2rem; /* 32px */
 }
 
-/* Barra Izquierda (Familias) */
-.left-sidebar {
-    left: 0;
-    transform: translateX(-100%);
-}
-.left-sidebar.is-open {
-    transform: translateX(0);
-}
-@media (min-width: 1024px) {
-    .left-sidebar {
-        position: static; /* En desktop, forma parte del grid */
-        transform: none;
-        box-shadow: none;
-        border-right: 1px solid #e2e8f0;
+@media (min-width: 768px) { /* md */
+    .controls-container {
+        flex-direction: row;
+        align-items: center;
     }
 }
 
-/* Barra Derecha (Temas) */
-.right-sidebar {
-    right: 0;
-    transform: translateX(100%);
-}
-.right-sidebar.is-open {
-    transform: translateX(0);
-}
-@media (min-width: 1024px) {
-    .right-sidebar {
-        position: static;
-        transform: none;
-        box-shadow: none;
-        border-left: 1px solid #e2e8f0;
-    }
+.search-wrapper {
+    flex-grow: 1; /* La búsqueda ocupa el espacio disponible */
 }
 
-/* --- BOTONES DE CONTROL MÓVIL --- */
-.sidebar-toggle-btn {
-    position: fixed;
-    top: 1rem;
-    z-index: 45; /* Por encima de la barra */
+.filter-controls {
+    display: flex;
+    gap: 1rem; /* 16px */
+    justify-content: center;
+}
+
+.dropdown-wrapper {
+    position: relative;
+}
+
+.dropdown-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
     background-color: white;
-    padding: 0.5rem;
-    border-radius: 9999px;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    color: #1e293b;
+    border: 1px solid #cbd5e1; /* slate-300 */
+    border-radius: 9999px; /* rounded-full */
+    font-weight: 500;
+    color: #334155; /* slate-700 */
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
 }
-@media (min-width: 1024px) {
-    .sidebar-toggle-btn {
-        display: none; /* Ocultar en desktop */
-    }
+.dropdown-btn:hover {
+    background-color: #f8fafc; /* slate-50 */
+    border-color: #94a3b8; /* slate-400 */
+}
+.dropdown-btn.active {
+    background-color: #eff6ff; /* blue-50 */
+    border-color: #2563eb; /* blue-600 */
+    color: #2563eb;
+}
+.dropdown-btn svg {
+    transition: transform 0.2s;
+}
+.dropdown-btn.active svg {
+    transform: rotate(180deg);
+}
+
+.dropdown-panel {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    background-color: white;
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    border: 1px solid #e2e8f0; /* slate-200 */
+    width: 280px;
+    padding: 0.5rem;
+    z-index: 50;
+    max-height: 400px;
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    transition: all 0.2s ease-in-out;
+}
+.dropdown-panel.is-open {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
 }
 
 /* --- ESTILOS DE FILTROS Y CONTENIDO --- */
-#medication-section.hidden,
-#themes-section.hidden,
-.theme-content.hidden {
-    display: none;
-}
+#medication-section.hidden, #themes-section.hidden, .theme-content.hidden { display: none; }
 #medicationModal.hidden { display: none; }
 
 .filter-btn, .theme-btn {
