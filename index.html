@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicamentos Disponibles - Centro de Salud Colonia Azteca</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <button id="openSidebarBtn" aria-label="Abrir menú de filtros" class="md:hidden fixed top-4 left-4 z-40 bg-white p-2 rounded-full shadow-lg">
+        <svg class="h-6 w-6 text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div class="p-5">
+            <h3 class="font-bold text-lg mb-4 pb-2 border-b">Familias</h3>
+            <nav id="familyFilter" class="space-y-1 max-h-[90vh] overflow-y-auto" aria-label="Filtros por familia de medicamentos">
+                </nav>
+        </div>
+    </aside>
+
+    <main class="md:ml-64 transition-all duration-300 ease-in-out">
+        <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+            <header class="text-center mb-10">
+                <h1 class="text-3xl sm:text-5xl font-bold text-slate-900">Medicamentos Disponibles</h1>
+                <p class="text-lg text-slate-600 mt-2">Centro de Salud Colonia Azteca</p>
+            </header>
+
+            <div class="mb-8 max-w-2xl mx-auto">
+                <input id="searchBar" type="text" placeholder="Buscar en todos los medicamentos..." aria-label="Buscar por nombre, padecimiento, o familia" class="w-full p-4 border border-slate-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+            </div>
+            
+            <section id="themes-section" class="mb-12">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center">Temas de Interés</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <article class="theme-card">
+                        <div class="theme-icon bg-blue-100 text-blue-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                            </svg>
+                        </div>
+                        <div class="theme-content">
+                            <h3 class="theme-title">Guía de Manejo de Insulinas</h3>
+                            <div class="prose">
+                                <p>Esquemas simplificados para el inicio y ajuste de insulina en Diabetes Mellitus Tipo 2, basados en guías ADA/EASD.</p>
+                                <strong>1. Inicio con Insulina Basal:</strong>
+                                <ul>
+                                    <li><strong>Dosis Inicial:</strong> 10 unidades o 0.1-0.2 U/kg, administrada por la noche.</li>
+                                    <li><strong>Ajuste:</strong> Aumentar 2-4 U cada 3 días hasta alcanzar meta de glucosa en ayuno (80-130 mg/dL). Considerar reducir dosis si hay hipoglucemia.</li>
+                                </ul>
+                                <strong>2. Adición de Insulina Prandial (Rápida):</strong>
+                                <ul>
+                                    <li><strong>Cuándo:</strong> Si la HbA1c sigue fuera de meta a pesar de una dosis adecuada de insulina basal.</li>
+                                    <li><strong>Esquema "Basal-Plus":</strong> Añadir 4 unidades (o 10% de la dosis basal) antes de la comida principal.</li>
+                                    <li><strong>Ajuste:</strong> Aumentar 1-2 U cada 3 días para alcanzar meta posprandial (<180 mg/dL).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="theme-card">
+                        <div class="theme-icon bg-red-100 text-red-600">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <div class="theme-content">
+                            <h3 class="theme-title">Manejo de Crisis Hipertensivas</h3>
+                             <div class="prose">
+                                <p>Presión Arterial Sistólica (PAS) ≥180 mmHg o Presión Arterial Diastólica (PAD) ≥120 mmHg. Se clasifican en:</p>
+                                <strong>1. Urgencia Hipertensiva:</strong>
+                                <ul>
+                                    <li><strong>Definición:</strong> Elevación severa de la PA <strong>sin</strong> daño agudo a órgano blanco.</li>
+                                    <li><strong>Manejo:</strong> Reducción gradual de la PA en 24-48 horas con fármacos orales (ej. Captopril, Nifedipino). El objetivo es evitar una caída brusca.</li>
+                                </ul>
+                                <strong>2. Emergencia Hipertensiva:</strong>
+                                <ul>
+                                    <li><strong>Definición:</strong> Elevación severa de la PA <strong>con</strong> daño agudo a órgano blanco (ej. EVC, IAM, edema pulmonar, disección aórtica).</li>
+                                    <li><strong>Manejo:</strong> Requiere hospitalización y fármacos IV. El objetivo es reducir la Presión Arterial Media (PAM) en un 10-20% en la primera hora y otro 5-15% en las siguientes 23 horas.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                </div>
+            <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden">
+                <p>No se encontraron medicamentos que coincidan con la búsqueda.</p>
+            </div>
+
+        </div>
+
+        <footer class="text-center p-4 mt-8 text-sm text-slate-500 border-t">
+            <p>Información de referencia. Consulte siempre a un profesional de la salud. Desarrollado para el Centro de Salud Colonia Azteca.</p>
+            <p>Bibliografía de referencia: AHA/ACC 2023, GPC México, ADA Standards of Care 2024</p>
+        </footer>
+    </main>
+
+    <div id="medicationModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div id="modal-content-wrapper" class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0">
+            </div>
+    </div>
+
+    <template id="medication-card-template">
+        <article class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col overflow-hidden">
+            <img alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/fecaca/991b1b?text=Imagen+no+disponible';">
+            <div class="p-5 flex flex-col flex-grow">
+                <div>
+                    <h3 class="card-name font-bold text-lg text-slate-900"></h3>
+                    <p class="card-presentation text-sm text-slate-600"></p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-200 text-xs flex-grow flex flex-col justify-end">
+                    <p class="card-family font-semibold text-blue-600"></p>
+                    <p class="card-uses text-slate-500 mt-1"></p>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
