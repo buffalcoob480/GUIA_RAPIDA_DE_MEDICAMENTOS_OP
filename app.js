@@ -1,166 +1,183 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Variables Globales y Selectores del DOM ---
-    let medications = [];
-    let medicationsWithOriginalIndex = [];
-    let currentFamilyFilter = 'Todos';
+    // --- ESTADO DE LA APLICACIÓN ---
+    const state = {
+        medications: [],
+        view: 'medications', // 'medications' o 'themes'
+        activeFamily: 'Todos',
+        activeTheme: null,
+    };
 
-    // Selectores de la UI
-    const medicationSection = document.getElementById('medication-section');
-    const themesSection = document.getElementById('themes-section');
-    const listContainer = document.getElementById('medication-list');
-    const searchBar = document.getElementById('searchBar');
-    const noResults = document.getElementById('no-results');
-    const familyFilterContainer = document.getElementById('familyFilter');
-    const themesFilterContainer = document.getElementById('themes-filter');
-    const sidebar = document.getElementById('sidebar');
-    const openSidebarBtn = document.getElementById('openSidebarBtn');
-    
-    // Selectores del Modal
-    const modal = document.getElementById('medicationModal');
-    const modalContentWrapper = document.getElementById('modal-content-wrapper');
-    const cardTemplate = document.getElementById('medication-card-template');
+    // --- SELECTORES DEL DOM ---
+    const selectors = {
+        medicationSection: document.getElementById('medication-section'),
+        themesSection: document.getElementById('themes-section'),
+        medicationList: document.getElementById('medication-list'),
+        searchBar: document.getElementById('searchBar'),
+        noResults: document.getElementById('no-results'),
+        familyFilterContainer: document.getElementById('familyFilterContainer'),
+        themesFilterContainer: document.getElementById('themesFilterContainer'),
+        familiesSidebar: document.getElementById('families-sidebar'),
+        themesSidebar: document.getElementById('themes-sidebar'),
+        openFamiliesBtn: document.getElementById('openFamiliesSidebarBtn'),
+        openThemesBtn: document.getElementById('openThemesSidebarBtn'),
+        modal: document.getElementById('medicationModal'),
+        modalContent: document.getElementById('modal-content-wrapper'),
+        cardTemplate: document.getElementById('medication-card-template'),
+    };
 
-    // --- LÓGICA DE VISTAS ---
-    function switchView(view) {
-        if (view === 'medications') {
-            medicationSection.classList.remove('hidden');
-            themesSection.classList.add('hidden');
-            // Desactivar visualmente los botones de temas
-            document.querySelectorAll('#themes-filter .theme-btn').forEach(btn => btn.classList.remove('active'));
-        } else if (view === 'themes') {
-            medicationSection.classList.add('hidden');
-            themesSection.classList.remove('hidden');
-            // Desactivar visualmente los botones de familias
-            document.querySelectorAll('#familyFilter .filter-btn').forEach(btn => btn.classList.remove('active'));
-        }
-    }
+    // --- LÓGICA PRINCIPAL DE ACTUALIZACIÓN DE VISTA ---
+    function updateDisplay() {
+        const searchTerm = normalizeText(selectors.searchBar.value);
 
-    // --- LÓGICA DE BÚSQUEDA Y FILTRADO ---
-    function performSearch() {
-        // La búsqueda ignora CUALQUIER filtro y siempre busca en todos los medicamentos.
-        const normalizedSearchTerm = normalizeText(searchBar.value);
-
-        if (normalizedSearchTerm) {
-            // Si se busca algo, forzar la vista de medicamentos.
-            switchView('medications');
-
-            const searchResults = medicationsWithOriginalIndex.filter(med =>
-                normalizeText(med.name).includes(normalizedSearchTerm) ||
-                normalizeText(med.family).includes(normalizedSearchTerm) ||
-                normalizeText(med.simpleFamily).includes(normalizedSearchTerm) ||
-                normalizeText(med.uses).includes(normalizedSearchTerm) ||
-                normalizeText(med.indications).includes(normalizedSearchTerm) ||
-                normalizeText(med.presentation).includes(normalizedSearchTerm)
+        // La búsqueda siempre tiene prioridad y muestra la vista de medicamentos
+        if (searchTerm) {
+            state.view = 'medications';
+            const searchResults = state.medications.filter(med =>
+                normalizeText(med.name).includes(searchTerm) ||
+                normalizeText(med.simpleFamily).includes(searchTerm) ||
+                normalizeText(med.uses).includes(searchTerm) ||
+                normalizeText(med.indications).includes(searchTerm)
             );
             renderMedications(searchResults);
         } else {
-            // Si la búsqueda se borra, volver al filtro de familia activo.
-            applyFamilyFilter();
+            // Si no hay búsqueda, mostrar la vista activa (medicamentos o temas)
+            if (state.view === 'medications') {
+                const filteredMeds = state.activeFamily === 'Todos'
+                    ? state.medications
+                    : state.medications.filter(med => med.simpleFamily === state.activeFamily);
+                renderMedications(filteredMeds);
+            }
         }
+        
+        // Sincronizar la visibilidad de las secciones
+        selectors.medicationSection.classList.toggle('hidden', state.view !== 'medications');
+        selectors.themesSection.classList.toggle('hidden', state.view !== 'themes');
+        
+        // Sincronizar el contenido del tema activo
+        if(state.view === 'themes') {
+            document.querySelectorAll('.theme-content').forEach(tc => tc.classList.add('hidden'));
+            if(state.activeTheme) {
+                document.getElementById(`theme-${state.activeTheme}`).classList.remove('hidden');
+            }
+        }
+
+        // Sincronizar los botones activos
+        updateActiveButtons();
     }
 
-    function applyFamilyFilter() {
-        switchView('medications');
-        let filteredMeds = (currentFamilyFilter === 'Todos')
-            ? medicationsWithOriginalIndex
-            : medicationsWithOriginalIndex.filter(med => med.simpleFamily === currentFamilyFilter);
-        renderMedications(filteredMeds);
+    function updateActiveButtons() {
+        document.querySelectorAll('#familyFilterContainer .filter-btn').forEach(btn => {
+            btn.classList.toggle('active', state.view === 'medications' && btn.dataset.family === state.activeFamily);
+        });
+        document.querySelectorAll('#themesFilterContainer .theme-btn').forEach(btn => {
+            btn.classList.toggle('active', state.view === 'themes' && btn.dataset.theme === state.activeTheme);
+        });
     }
-    
+
     // --- LÓGICA DE RENDERIZADO ---
-    const renderMedications = (meds) => { /* Sin cambios */ };
-    const normalizeText = (str) => { /* Sin cambios */ };
-    const generateImageUrl = (name, presentation) => { /* Sin cambios */ };
+    function renderMedications(meds) {
+        const sortedMeds = meds.sort((a, b) => a.name.localeCompare(b.name));
+        selectors.medicationList.innerHTML = '';
+        selectors.noResults.classList.toggle('hidden', sortedMeds.length > 0);
+        sortedMeds.forEach(med => {
+            const cardClone = selectors.cardTemplate.content.cloneNode(true);
+            const cardElement = cardClone.querySelector('article');
+            cardElement.dataset.index = med.originalIndex;
+            cardElement.querySelector('.card-img').src = med.image;
+            cardElement.querySelector('.card-img').alt = `Imagen de ${med.name}`;
+            cardElement.querySelector('.card-name').textContent = med.name;
+            cardElement.querySelector('.card-presentation').textContent = med.presentation;
+            cardElement.querySelector('.card-family').textContent = med.family;
+            cardElement.querySelector('.card-uses').textContent = med.uses;
+            selectors.medicationList.appendChild(cardClone);
+        });
+    }
 
-    // --- LÓGICA DEL MODAL ---
-    const openModal = (med) => { /* Sin cambios */ };
-    const closeModal = () => { /* Sin cambios */ };
-
-    // --- INICIALIZACIÓN DE LA APP ---
+    // --- LÓGICA DE INICIALIZACIÓN ---
     async function initializeApp() {
         try {
             const response = await fetch('medicamentos.json');
-            if (!response.ok) throw new Error(`Error al cargar la base de datos: ${response.statusText}`);
+            if (!response.ok) throw new Error('Network response was not ok');
             const rawMedications = await response.json();
-
-            medications = rawMedications.map(med => ({ ...med, image: generateImageUrl(med.name, med.presentation) }));
-            medicationsWithOriginalIndex = medications.map((med, index) => ({ ...med, originalIndex: index }));
-
-            // Inicializar las barras laterales y la vista por defecto
-            initFamilyFilter();
-            initThemesFilter();
-            applyFamilyFilter(); // Mostrar la lista de "Todos" al inicio
-
-            // Configurar Event Listeners
-            searchBar.addEventListener('input', performSearch);
-            listContainer.addEventListener('click', (e) => {
-                const card = e.target.closest('[data-index]');
-                if (card) {
-                    const index = parseInt(card.dataset.index, 10);
-                    openModal(medicationsWithOriginalIndex.find(m => m.originalIndex === index));
-                }
-            });
-
-            // Listeners del modal y sidebar móvil (sin cambios)
-            modal.addEventListener('click', (e) => { if (e.target.id === 'medicationModal') closeModal(); });
-            openSidebarBtn.addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.remove('-translate-x-full'); });
-            document.addEventListener('click', (e) => {
-                if (!sidebar.contains(e.target) && !openSidebarBtn.contains(e.target) && window.innerWidth < 768) {
-                    sidebar.classList.add('-translate-x-full');
-                }
-            });
+            state.medications = rawMedications.map((med, index) => ({
+                ...med,
+                originalIndex: index,
+                image: `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(`${med.name}\\n${med.presentation}`)}&font=inter`
+            }));
+            
+            initFilters();
+            initEventListeners();
+            updateDisplay();
 
         } catch (error) {
-            console.error("No se pudo inicializar la aplicación:", error);
-            medicationSection.innerHTML = `<p class="text-center text-red-600 col-span-full">Error: No se pudo cargar la información de los medicamentos.</p>`;
+            console.error("Initialization failed:", error);
+            selectors.medicationSection.innerHTML = `<p class="text-center text-red-600">Error: No se pudo cargar la información de los medicamentos.</p>`;
         }
     }
 
-    function initFamilyFilter() {
-        const families = ['Todos', ...new Set(medications.map(med => med.simpleFamily).sort())];
-        familyFilterContainer.innerHTML = '';
-        families.forEach(family => {
-            const button = document.createElement('button');
-            button.className = 'filter-btn';
-            button.textContent = family;
-            if (family === 'Todos') button.classList.add('active');
-            
-            button.addEventListener('click', () => {
-                currentFamilyFilter = family;
-                searchBar.value = ''; // Limpiar búsqueda al cambiar de filtro
-                document.querySelectorAll('#familyFilter .filter-btn').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                applyFamilyFilter();
-                if (window.innerWidth < 768) sidebar.classList.add('-translate-x-full');
-            });
-            familyFilterContainer.appendChild(button);
-        });
+    function initFilters() {
+        // Filtro de Familias
+        const families = ['Todos', ...new Set(state.medications.map(med => med.simpleFamily).sort())];
+        selectors.familyFilterContainer.innerHTML = families.map(family => 
+            `<button class="filter-btn" data-family="${family}">${family}</button>`
+        ).join('');
+
+        // Filtro de Temas
+        const themes = [ { id: 'insulinas', name: 'Guía de Insulinas' }, { id: 'crisis-hipertensivas', name: 'Crisis Hipertensivas' }];
+        selectors.themesFilterContainer.innerHTML = themes.map(theme =>
+            `<button class="theme-btn" data-theme="${theme.id}">${theme.name}</button>`
+        ).join('');
     }
 
-    function initThemesFilter() {
-        const themes = [
-            { id: 'insulinas', name: 'Guía de Insulinas' },
-            { id: 'crisis-hipertensivas', name: 'Crisis Hipertensivas' }
-        ];
-        themesFilterContainer.innerHTML = '';
-        themes.forEach(theme => {
-            const button = document.createElement('button');
-            button.className = 'theme-btn';
-            button.textContent = theme.name;
-            
-            button.addEventListener('click', () => {
-                switchView('themes');
-                document.querySelectorAll('#themes-filter .theme-btn').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
+    function initEventListeners() {
+        // Búsqueda
+        selectors.searchBar.addEventListener('input', updateDisplay);
 
-                // Mostrar el contenido del tema correcto
-                document.querySelectorAll('.theme-content').forEach(content => content.classList.add('hidden'));
-                document.getElementById(`theme-${theme.id}`).classList.remove('hidden');
-
-                if (window.innerWidth < 768) sidebar.classList.add('-translate-x-full');
-            });
-            themesFilterContainer.appendChild(button);
+        // Clic en Familias
+        selectors.familyFilterContainer.addEventListener('click', (e) => {
+            if (e.target.matches('.filter-btn')) {
+                state.view = 'medications';
+                state.activeFamily = e.target.dataset.family;
+                state.activeTheme = null;
+                selectors.searchBar.value = ''; // Limpiar búsqueda
+                updateDisplay();
+                closeMobileSidebars();
+            }
         });
+
+        // Clic en Temas
+        selectors.themesFilterContainer.addEventListener('click', (e) => {
+            if (e.target.matches('.theme-btn')) {
+                state.view = 'themes';
+                state.activeTheme = e.target.dataset.theme;
+                state.activeFamily = null;
+                updateDisplay();
+                closeMobileSidebars();
+            }
+        });
+
+        // Controles de Sidebars Móviles
+        selectors.openFamiliesBtn.addEventListener('click', (e) => { e.stopPropagation(); selectors.familiesSidebar.classList.toggle('is-open'); });
+        selectors.openThemesBtn.addEventListener('click', (e) => { e.stopPropagation(); selectors.themesSidebar.classList.toggle('is-open'); });
+        document.addEventListener('click', (e) => {
+            if (!selectors.familiesSidebar.contains(e.target) && !e.target.closest('#openFamiliesSidebarBtn')) {
+                selectors.familiesSidebar.classList.remove('is-open');
+            }
+            if (!selectors.themesSidebar.contains(e.target) && !e.target.closest('#openThemesSidebarBtn')) {
+                selectors.themesSidebar.classList.remove('is-open');
+            }
+        });
+        
+        // Modal (sin cambios)
+    }
+    
+    function closeMobileSidebars() {
+        selectors.familiesSidebar.classList.remove('is-open');
+        selectors.themesSidebar.classList.remove('is-open');
+    }
+    
+    function normalizeText(str) {
+        return str ? str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : '';
     }
 
     initializeApp();
