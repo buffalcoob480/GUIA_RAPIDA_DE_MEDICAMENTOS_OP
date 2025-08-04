@@ -122,8 +122,22 @@
             </div>
         </div>
     </template>
-
+<div style="position: relative; display: inline-block; margin: 1rem;">
+  <button onclick="toggleDropdown()" style="padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; border-radius: 4px;">
+    Temas
+  </button>
+  <div id="dropdown-content" style="display: none; position: absolute; background-color: #f1f1f1; min-width: 200px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 1; border-radius: 4px;">
+    <a href="#tema1" style="color: black; padding: 12px 16px; display: block; text-decoration: none;">Infecciones urinarias</a>
+    <a href="#tema2" style="color: black; padding: 12px 16px; display: block; text-decoration: none;">Antibióticos más usados</a>
+    <a href="#tema3" style="color: black; padding: 12px 16px; display: block; text-decoration: none;">Cálculo de dosis pediátrica</a>
+    <a href="#tema4" style="color: black; padding: 12px 16px; display: block; text-decoration: none;">Contraindicaciones frecuentes</a>
+  </div>
+</div>
     <script>
+        function toggleDropdown() {
+  const content = document.getElementById("dropdown-content");
+  content.style.display = content.style.display === "block" ? "none" : "block";
+}
         // --- INICIO: Base de Datos de Medicamentos (simulando un archivo JSON) ---
         const medicationsJSON = `
         [
@@ -644,7 +658,17 @@
                 familyFilterContainer.appendChild(button);
             });
         };
-        
+        <h2 id="tema1">Infecciones urinarias</h2>
+<p>Descripción de tratamientos, antibióticos sugeridos como nitrofurantoína, fosfomicina, etc.</p>
+
+<h2 id="tema2">Antibióticos más usados</h2>
+<p>Amoxicilina, cefalexina, metronidazol, entre otros.</p>
+
+<h2 id="tema3">Cálculo de dosis pediátrica</h2>
+<p>Cómo usar el peso corporal y la concentración para obtener la dosis correcta.</p>
+
+<h2 id="tema4">Contraindicaciones frecuentes</h2>
+<p>Factores como insuficiencia renal, embarazo, alergias comunes.</p>
         // --- Función para renderizar la guía de insulinas ---
         const renderInsulinGuide = () => {
             insulinGuideContainer.innerHTML = `
@@ -723,5 +747,6 @@
     </script>
 </body>
 </html>
+
 
 
