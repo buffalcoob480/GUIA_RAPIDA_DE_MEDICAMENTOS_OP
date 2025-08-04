@@ -14,133 +14,139 @@
 <main class="main-content">
     <div class="container mx-auto p-4 sm:p-6 lg:p-8">
         <header class="text-center mb-10">
-            <h1 class="text-3xl sm:text-5xl font-bold text-slate-900">Guía Farmacológica y Clínica</h1>
-            <p class="text-lg text-slate-600 mt-2">Centro de Salud Colonia Azteca</p>
-            <p class="text-sm text-slate-500 mt-4">Actualmente con <span id="med-count" class="font-bold text-slate-600">0</span> medicamentos en la base de datos.</p>
-        </header>
+            </header>
 
         <section class="controls-container">
-            <div class="search-wrapper">
-                <input id="searchBar" type="text" placeholder="Buscar por nombre, familia, uso..." aria-label="Buscar medicamento" class="w-full p-4 border border-slate-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-            </div>
-            <div class="filter-controls">
-                <div class="dropdown-wrapper">
-                    <button id="families-dropdown-btn" class="dropdown-btn"><span id="families-btn-text">Familias de Medicamentos</span><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg></button>
-                    <div id="families-dropdown-panel" class="dropdown-panel"><nav id="familyFilterContainer" aria-label="Filtros por familia"></nav></div>
-                </div>
-                <div class="dropdown-wrapper">
-                    <button id="themes-dropdown-btn" class="dropdown-btn"><span>Temas de Interés</span><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg></button>
-                    <div id="themes-dropdown-panel" class="dropdown-panel"><nav id="themesFilterContainer" aria-label="Temas de interés"></nav></div>
-                </div>
-            </div>
-        </section>
+            </section>
 
         <div id="view-container" class="mt-8">
             <section id="medication-section">
-                <div id="loading-indicator" class="text-center py-16 text-slate-500"><p>Cargando medicamentos...</p></div>
-                <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-                <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden"><p>No se encontraron medicamentos.</p></div>
-            </section>
+                </section>
+            
             <section id="themes-section" class="hidden">
                 
-                <article id="theme-dm2-inicio" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
-                    <h2>Manejo Farmacológico Inicial de la Diabetes Mellitus Tipo 2</h2>
-                    <p>El manejo se centra en el control glucémico y la reducción del riesgo cardiovascular y renal. La metformina sigue siendo la terapia de primera línea, pero la elección de agentes adicionales se basa en las comorbilidades del paciente.</p>
-                    <div class="svg-container">
-                        <svg viewBox="0 0 400 300" class="w-full"><text x="200" y="20" text-anchor="middle" class="font-bold text-base">Algoritmo de Terapia Inicial en DM2</text><rect x="100" y="40" width="200" height="30" rx="3" class="fill-blue-100 stroke-blue-500"></rect><text x="200" y="60" text-anchor="middle" class="font-semibold text-sm">Diagnóstico de DM2</text><path d="M200,70 L200,90" class="stroke-gray-600 fill-none marker-end"></path><rect x="50" y="90" width="300" height="30" rx="3" class="fill-blue-100 stroke-blue-500"></rect><text x="200" y="110" text-anchor="middle" class="font-semibold text-sm">Metformina + Cambios en Estilo de Vida</text><path d="M200,120 L200,140" class="stroke-gray-600 fill-none marker-end"></path><path d="M125,160 L200,140 L275,160 Z" class="fill-yellow-100 stroke-yellow-500"></path><text x="200" y="162" text-anchor="middle" class="font-semibold text-sm">Evaluar Comorbilidades</text><path d="M75,190 L125,160" class="stroke-gray-600 fill-none marker-end"></path><path d="M200,175 L200,190" class="stroke-gray-600 fill-none marker-end"></path><path d="M325,190 L275,160" class="stroke-gray-600 fill-none marker-end"></path><rect x="10" y="190" width="130" height="50" rx="3" class="fill-green-100 stroke-green-500"></rect><text x="75" y="205" text-anchor="middle" class="font-semibold text-sm">ASCVD</text><text x="75" y="225" text-anchor="middle" class="text-xs">aGLP-1 o iSGLT2</text><text x="75" y="235" text-anchor="middle" class="text-xs">(con beneficio CV probado)</text><rect x="150" y="190" width="100" height="50" rx="3" class="fill-green-100 stroke-green-500"></rect><text x="200" y="205" text-anchor="middle" class="font-semibold text-sm">ICC o ERC</text><text x="200" y="225" text-anchor="middle" class="text-xs">iSGLT2</text><text x="200" y="235" text-anchor="middle" class="text-xs">(aGLP-1 si no se tolera)</text><rect x="260" y="190" width="130" height="50" rx="3" class="fill-green-100 stroke-green-500"></rect><text x="325" y="205" text-anchor="middle" class="font-semibold text-sm">Sin Comorbilidades</text><text x="325" y="225" text-anchor="middle" class="text-xs">Considerar costo,</text><text x="325" y="235" text-anchor="middle" class="text-xs">peso, riesgo hipoglucemia</text></svg>
-                    </div>
-                    <h4>Terapia de Primera Línea</h4>
-                    <p><strong>Metformina</strong> es el agente inicial de elección si no hay contraindicaciones (TFG &lt;30 ml/min). Se inicia con 500 mg una o dos veces al día con alimentos y se titula cada 1-2 semanas hasta una dosis de 1000 mg dos veces al día para maximizar eficacia.</p>
-                    <h4>Selección de Segundo Agente</h4>
-                    <p>Si la HbA1c permanece por encima de la meta después de 3 meses, se añade un segundo agente basado en el perfil del paciente:</p>
-                    <ul>
-                        <li><strong>Con Enfermedad Cardiovascular Aterosclerótica (ASCVD) establecida:</strong> Se prefiere un <strong>agonista del receptor de GLP-1 (aGLP-1)</strong> o un <strong>inhibidor de SGLT2 (iSGLT2)</strong> con beneficio cardiovascular demostrado.</li>
-                        <li><strong>Con Insuficiencia Cardíaca (IC) o Enfermedad Renal Crónica (ERC):</strong> La elección es un <strong>iSGLT2</strong>. Si no es tolerado o está contraindicado, se puede usar un aGLP-1.</li>
-                        <li><strong>Sin Comorbilidades de Alto Riesgo:</strong> La elección se individualiza. Para minimizar hipoglucemia, se prefieren iDPP-4, aGLP-1, iSGLT2 o tiazolidinedionas. Para promover la pérdida de peso, los más efectivos son los aGLP-1 y los iSGLT2.</li>
-                    </ul>
-                    <div class="bibliografia"><h4>Bibliografía</h4><p>American Diabetes Association. 9. Pharmacologic Approaches to Glycemic Treatment: Standards of Care in Diabetes—2024. Diabetes Care 2024;47(Suppl. 1):S158–S178.</p></div>
-                </article>
-
                 <article id="theme-insulinas" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
-                    </article>
-
-                <article id="theme-crisis-hipertensivas" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
-                    </article>
-
-                <article id="theme-nac" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
-                    <h2>Manejo de la Neumonía Adquirida en la Comunidad (NAC) en Adultos</h2>
-                    <p>La NAC es una infección aguda del parénquima pulmonar en un paciente no hospitalizado. El manejo se estratifica según la gravedad, utilizando escalas como CURB-65.</p>
-                    <h3>Estratificación del Riesgo: Escala CURB-65</h3>
-                    <p>Se asigna 1 punto por cada uno de los siguientes criterios:</p>
-                    <ul>
-                        <li><strong>C</strong>onfusión (Test mental abreviado ≤8/10).</li>
-                        <li><strong>U</strong>rea > 7 mmol/L (o BUN > 19 mg/dL).</li>
-                        <li><strong>R</strong>espiración (FR ≥ 30/min).</li>
-                        <li><strong>B</strong>lood pressure (Presión arterial): PAS &lt;90 mmHg o PAD ≤60 mmHg.</li>
-                        <li>Edad ≥ <strong>65</strong> años.</li>
-                    </ul>
-                    <div class="svg-container">
-                        <svg viewBox="0 0 400 250" class="w-full"><text x="200" y="20" text-anchor="middle" class="font-bold text-base">Algoritmo de Manejo de NAC con CURB-65</text><rect x="100" y="40" width="200" height="30" rx="3" class="fill-blue-100 stroke-blue-500"></rect><text x="200" y="60" text-anchor="middle" class="font-semibold text-sm">Sospecha Clínica de NAC</text><path d="M200,70 L200,90" class="stroke-gray-600 fill-none marker-end"></path><rect x="125" y="90" width="150" height="30" rx="3" class="fill-yellow-100 stroke-yellow-500"></rect><text x="200" y="110" text-anchor="middle" class="font-semibold text-sm">Calcular CURB-65</text><path d="M75,140 L125,120" class="stroke-gray-600 fill-none marker-end"></path><path d="M200,120 L200,140" class="stroke-gray-600 fill-none marker-end"></path><path d="M325,140 L275,120" class="stroke-gray-600 fill-none marker-end"></path><rect x="10" y="140" width="130" height="60" rx="3" class="fill-green-100 stroke-green-500"></rect><text x="75" y="155" text-anchor="middle" class="font-semibold text-sm">Puntaje 0-1</text><text x="75" y="175" text-anchor="middle" class="text-xs">Bajo riesgo</text><text x="75" y="185" text-anchor="middle" class="text-xs">Manejo Ambulatorio</text><rect x="150" y="140" width="100" height="60" rx="3" class="fill-orange-100 stroke-orange-500"></rect><text x="200" y="155" text-anchor="middle" class="font-semibold text-sm">Puntaje 2</text><text x="200" y="175" text-anchor="middle" class="text-xs">Riesgo Moderado</text><text x="200" y="185" text-anchor="middle" class="text-xs">Hospitalización</text><rect x="260" y="140" width="130" height="60" rx="3" class="fill-red-100 stroke-red-500"></rect><text x="325" y="155" text-anchor="middle" class="font-semibold text-sm">Puntaje ≥3</text><text x="325" y="175" text-anchor="middle" class="text-xs">Alto riesgo (Grave)</text><text x="325" y="185" text-anchor="middle" class="text-xs">Hospitalización / UCI</text></svg>
+                    <h2>Guía Completa de Terapia con Insulina (Basada en ADA 2025)</h2>
+                    
+                    <h3>Introducción</h3>
+                    <p>La terapia con insulina es fundamental para el tratamiento de todos los pacientes con Diabetes Mellitus tipo 1 (DM1) y para muchos pacientes con Diabetes Mellitus tipo 2 (DM2) que no alcanzan las metas glucémicas con agentes no insulínicos. El principio rector del manejo es la individualización, equilibrando la eficacia en el control glucémico con el riesgo de hipoglucemia y la carga del tratamiento.</p>
+                    
+                    <h3>1. Clasificación de Insulinas por Perfil Farmacocinético</h3>
+                    <p>La selección de la insulina se basa en su perfil de acción para simular la secreción fisiológica pancreática (basal y prandial).</p>
+                    <div class="overflow-x-auto my-6 shadow-sm rounded-lg">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-100">
+                                <tr>
+                                    <th class="p-3 font-semibold">Tipo de Insulina</th>
+                                    <th class="p-3 font-semibold">Inicio</th>
+                                    <th class="p-3 font-semibold">Pico</th>
+                                    <th class="p-3 font-semibold">Duración</th>
+                                    <th class="p-3 font-semibold">Consideraciones Clínicas Clave</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y">
+                                <tr>
+                                    <td class="p-3 font-medium">Ultrarrápida (Análogo)</td>
+                                    <td class="p-3">5-15 min</td>
+                                    <td class="p-3">1-2 horas</td>
+                                    <td class="p-3">3-5 horas</td>
+                                    <td class="p-3"><strong>Ideal para bolos prandiales.</strong> Administrar 0-15 min antes de comer. Menor riesgo de hipoglucemia posprandial tardía que la Regular.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Rápida (Humana)</td>
+                                    <td class="p-3">30-60 min</td>
+                                    <td class="p-3">2-4 horas</td>
+                                    <td class="p-3">6-10 horas</td>
+                                    <td class="p-3"><strong>Bolo prandial económico.</strong> Requiere administrarse 30 min antes de comer. Mayor riesgo de hipoglucemia si la comida se retrasa.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Intermedia (Humana)</td>
+                                    <td class="p-3">1-2 horas</td>
+                                    <td class="p-3">4-8 horas</td>
+                                    <td class="p-3">10-18 horas</td>
+                                    <td class="p-3"><strong>Opción para insulina basal de bajo costo.</strong> Su pico pronunciado aumenta el riesgo de hipoglucemia nocturna. Requiere 1-2 aplicaciones diarias.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Prolongada (Análogo)</td>
+                                    <td class="p-3">1-2 horas</td>
+                                    <td class="p-3">Sin pico</td>
+                                    <td class="p-3">~24 horas</td>
+                                    <td class="p-3"><strong>Excelente opción basal.</strong> Perfil plano que reduce el riesgo de hipoglucemia, especialmente la nocturna. Una aplicación diaria.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Ultraprolongada (Análogo)</td>
+                                    <td class="p-3">1-2 horas</td>
+                                    <td class="p-3">Sin pico</td>
+                                    <td class="p-3">&gt;24 - 42 horas</td>
+                                    <td class="p-3"><strong>Máxima flexibilidad y menor riesgo de hipoglucemia.</strong> Permite variabilidad en el horario de aplicación diaria.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">Inhalada</td>
+                                    <td class="p-3">~15 min</td>
+                                    <td class="p-3">~50 min</td>
+                                    <td class="p-3">~3 horas</td>
+                                    <td class="p-3"><strong>Opción prandial no inyectable.</strong> Contraindicada en fumadores y pacientes con enfermedad pulmonar crónica (EPOC, asma).</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <h4>Tratamiento Ambulatorio (CURB-65: 0-1)</h4>
+
+                    <h3>2. Principios Fundamentales del Tratamiento Basal-Bolus</h3>
+                    <p>Este esquema es el que mejor simula la fisiología normal y se basa en tres componentes clave:</p>
+                    <h4>a. Dosis Diaria Total (DDT)</h4>
+                    <p>Es el punto de partida para calcular todas las dosis. Se divide en <strong>50% Basal</strong> y <strong>50% Prandial (Bolus)</strong>.</p>
+                    
+                    <h4>b. Ratio Insulina-Carbohidrato (RIC)</h4>
+                    <p>Define los gramos de carbohidratos cubiertos por 1 UI de insulina rápida. Se calcula con la "Regla de 500":</p>
+                    <div class="formula-box">RIC = 500 / DDT</div>
+
+                    <h4>c. Factor de Corrección (FC) o Factor de Sensibilidad (FSI)</h4>
+                    <p>Define cuántos mg/dL de glucosa son reducidos por 1 UI de insulina rápida. Se usa para corregir hiperglucemias. Se calcula con la "Regla de 1800":</p>
+                    <div class="formula-box">FC = 1800 / DDT</div>
+
+                    <h3>3. Inicio y Ajuste de Terapia</h3>
+                    <h4>A. En Diabetes Mellitus Tipo 1</h4>
+                    <p>El tratamiento requiere un esquema Basal-Bolus desde el diagnóstico.</p>
+                    <ol>
+                        <li><strong>Calcular DDT:</strong> Usar <strong>0.4 a 0.5 UI/kg/día</strong>. Para un paciente de 70 kg, la DDT inicial sería 70 kg * 0.4 UI/kg = 28 UI.</li>
+                        <li><strong>Dividir Dosis:</strong>
+                            <ul>
+                                <li><strong>Basal (50%):</strong> 14 UI de insulina prolongada (ej. Glargina U-100).</li>
+                                <li><strong>Prandial (50%):</strong> 14 UI de insulina ultrarrápida a dividir entre las comidas.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Distribuir Bolus Prandial:</strong> Dividir las 14 UI prandiales entre las tres comidas (ej. 5 UI desayuno, 5 UI comida, 4 UI cena), ajustando según la ingesta.</li>
+                    </ol>
+
+                    <h4>B. En Diabetes Mellitus Tipo 2</h4>
+                    <p>Se considera iniciar insulina ante una falla del tratamiento oral, síntomas de catabolismo (pérdida de peso, poliuria) o una HbA1c > 10%.</p>
                     <ul>
-                        <li><strong>Paciente previamente sano sin comorbilidades:</strong> Monoterapia con <strong>Amoxicilina</strong> 1g c/8h, o Doxiciclina 100mg c/12h.</li>
-                        <li><strong>Paciente con comorbilidades (EPOC, DM, ERC, IC):</strong> Terapia combinada: <strong>Amoxicilina/clavulanato</strong> 875/125mg c/12h MÁS un macrólido (Azitromicina 500mg día 1, luego 250mg/día) o Doxiciclina.</li>
+                        <li><strong>Paso 1: Iniciar con Insulina Basal:</strong> La dosis de inicio es <strong>10 UI</strong> al día o <strong>0.1 - 0.2 UI/kg/día</strong>. Se titula aumentando 2 UI cada 3 días hasta que la glucosa en ayunas esté en objetivo (80-130 mg/dL).</li>
+                        <li><strong>Paso 2: Intensificación:</strong> Si la HbA1c sigue fuera de meta, la opción preferente es añadir un <strong>Agonista del Receptor de GLP-1 (aGLP-1)</strong>. Si no es posible o insuficiente, se procede a añadir insulina prandial (esquema Basal-Plus) iniciando con 4 UI antes de la comida principal.</li>
                     </ul>
-                    <h4>Tratamiento Hospitalario (CURB-65: 2)</h4>
-                    <ul>
-                        <li><strong>Opción 1 (preferida):</strong> Betalactámico IV (ej. <strong>Ceftriaxona</strong> 1-2g/día) MÁS un macrólido IV (ej. Azitromicina 500mg/día).</li>
-                        <li><strong>Opción 2 (alergia):</strong> Fluoroquinolona respiratoria IV (ej. Levofloxacino 750mg/día).</li>
-                    </ul>
-                    <h4>Tratamiento en UCI (CURB-65: ≥3)</h4>
-                    <ul>
-                        <li>El tratamiento es similar al hospitalario pero siempre con terapia combinada IV.</li>
-                        <li>Si hay riesgo de <em>Pseudomonas aeruginosa</em> (ej. EPOC grave, bronquiectasias), usar un betalactámico antipseudomónico (Piperacilina/tazobactam, Cefepime) más una fluoroquinolona.</li>
-                        <li>Si hay riesgo de <em>S. aureus</em> Meticilino-Resistente (MRSA), añadir Vancomicina o Linezolid.</li>
-                    </ul>
-                    <div class="bibliografia"><h4>Bibliografía</h4><p>Metlay, J. P., Waterer, G. W., et al. (2019). Diagnosis and Treatment of Adults with Community-acquired Pneumonia. An Official Clinical Practice Guideline of the American Thoracic Society and Infectious Diseases Society of America. American Journal of Respiratory and Critical Care Medicine, 200(7), e45–e67.</p></div>
+
+                    <h3>4. Manejo de la Hipoglucemia (Glucosa < 70 mg/dL)</h3>
+                    <p>La educación del paciente es la piedra angular para la prevención y el tratamiento. Se utiliza la "Regla de 15":</p>
+                    <ol>
+                        <li><strong>Consumir 15 gramos</strong> de carbohidratos de acción rápida (1/2 taza de jugo, 3-4 tabletas de glucosa).</li>
+                        <li><strong>Esperar 15 minutos</strong> y volver a medir la glucosa.</li>
+                        <li><strong>Repetir</strong> si la glucosa sigue por debajo de 70 mg/dL.</li>
+                    </ol>
+                    <p>En caso de hipoglucemia severa con alteración del estado de conciencia, se debe administrar <strong>glucagón</strong>.</p>
+                    
+                    <div class="bibliografia">
+                        <h4>Bibliografía</h4>
+                        <ul>
+                            <li>American Diabetes Association. 9. Pharmacologic Approaches to Glycemic Treatment: Standards of Care in Diabetes—2025. <em>Diabetes Care</em> 2025;48(Suppl. 1).</li>
+                            <li>American Diabetes Association. 6. Glycemic Targets: Standards of Care in Diabetes—2025. <em>Diabetes Care</em> 2025;48(Suppl. 1).</li>
+                        </ul>
+                    </div>
                 </article>
 
-                <article id="theme-asma" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
-                    <h2>Manejo de la Crisis Asmática en Adultos</h2>
-                    <p>El objetivo es revertir la obstrucción del flujo aéreo y la hipoxemia rápidamente. El manejo es escalonado según la gravedad.</p>
-                    <h3>Evaluación de la Gravedad</h3>
-                    <div class="overflow-x-auto"><table class="w-full text-sm text-left">
-                        <thead class="bg-slate-100"><tr><th class="p-3">Parámetro</th><th class="p-3">Leve-Moderada</th><th class="p-3">Grave</th><th class="p-3">Riesgo Vital</th></tr></thead>
-                        <tbody>
-                            <tr class="border-b"><td class="p-3 font-semibold">Habla</td><td class="p-3">Frases</td><td class="p-3">Palabras</td><td class="p-3">Silente</td></tr>
-                            <tr class="border-b"><td class="p-3 font-semibold">FR</td><td class="p-3">&lt;25/min</td><td class="p-3">&gt;25/min</td><td class="p-3">Tórax silente, bradipnea</td></tr>
-                            <tr class="border-b"><td class="p-3 font-semibold">FC</td><td class="p-3">&lt;110/min</td><td class="p-3">&gt;110/min</td><td class="p-3">Bradicardia</td></tr>
-                            <tr class="border-b"><td class="p-3 font-semibold">SatO2</td><td class="p-3">&gt;92%</td><td class="p-3">90-92%</td><td class="p-3">&lt;90%</td></tr>
-                        </tbody>
-                    </table></div>
-                    <h3>Tratamiento Escalado</h3>
-                    <ol>
-                        <li><strong>Oxígeno Suplementario:</strong> Mantener SatO2 >92%.</li>
-                        <li><strong>SABA (Salbutamol):</strong> Es la piedra angular.
-                            <ul>
-                                <li><strong>Leve-Moderada:</strong> 4-10 disparos con espaciador, repetir cada 20 minutos durante la primera hora.</li>
-                                <li><strong>Grave:</strong> Nebulización continua o dosis frecuentes (2.5-5 mg cada 20 minutos).</li>
-                            </ul>
-                        </li>
-                        <li><strong>Corticosteroides Sistémicos:</strong> Administrar a todos los pacientes, excepto en crisis muy leves.
-                            <ul>
-                                <li><strong>Dosis:</strong> Prednisona 40-50 mg VO o Hidrocortisona 100 mg IV. El efecto no es inmediato (tarda 4-6 horas).</li>
-                            </ul>
-                        </li>
-                        <li><strong>Bromuro de Ipratropio:</strong> Anticolinérgico que se añade en crisis moderadas a graves.
-                            <ul>
-                                <li><strong>Dosis:</strong> Nebulizar 0.5 mg junto con el Salbutamol cada 20 minutos por 3 dosis.</li>
-                            </ul>
-                        </li>
-                        <li><strong>Sulfato de Magnesio:</strong> Considerar en crisis graves que no responden al tratamiento inicial.
-                            <ul>
-                                <li><strong>Dosis:</strong> 2 g IV a pasar en 20 minutos.</li>
-                            </ul>
-                        </li>
-                    </ol>
-                    <div class="bibliografia"><h4>Bibliografía</h4><p>Global Initiative for Asthma. Global Strategy for Asthma Management and Prevention, 2024. Disponible en: www.ginasthma.org</p></div>
-                </article>
+                <article id="theme-crisis-hipertensivas" class="theme-content hidden ..."></article>
+                <article id="theme-dm2-inicio" class="theme-content hidden ..."></article>
+                <article id="theme-nac" class="theme-content hidden ..."></article>
+                <article id="theme-asma" class="theme-content hidden ..."></article>
 
             </section>
         </div>
@@ -148,10 +154,6 @@
             <p>Información de referencia. Consulte siempre a un profesional de la salud.</p>
         </footer>
     </main>
-
-    <div id="medicationModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div id="modal-content-wrapper" class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0"></div></div>
-    <template id="medication-card-template"><article class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col overflow-hidden"><img alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/fecaca/991b1b?text=Imagen+no+disponible';"><div class="p-5 flex flex-col flex-grow"><div><h3 class="card-name font-bold text-lg text-slate-900"></h3><p class="card-presentation text-sm text-slate-600"></p></div><div class="mt-4 pt-4 border-t border-slate-200 text-xs flex-grow flex flex-col justify-end"><p class="card-family font-semibold text-blue-600"></p><p class="card-uses text-slate-500 mt-1"></p></div></div></article></template>
-
-    <script src="app.js" defer></script>
-</body>
+    
+    </body>
 </html>
