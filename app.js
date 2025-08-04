@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         familyFilterContainer: document.getElementById('familyFilterContainer'),
         themesFilterContainer: document.getElementById('themesFilterContainer'),
         familiesDropdownBtn: document.getElementById('families-dropdown-btn'),
+        familiesBtnText: document.getElementById('families-btn-text'),
         themesDropdownBtn: document.getElementById('themes-dropdown-btn'),
         familiesDropdownPanel: document.getElementById('families-dropdown-panel'),
         themesDropdownPanel: document.getElementById('themes-dropdown-panel'),
@@ -24,30 +25,43 @@ document.addEventListener('DOMContentLoaded', () => {
         modalContent: document.getElementById('modal-content-wrapper'),
         cardTemplate: document.getElementById('medication-card-template'),
         medCount: document.getElementById('med-count'),
+        loadingIndicator: document.getElementById('loading-indicator'),
     };
 
-    // --- LÓGICA DE BÚSQUEDA Y VISUALIZACIÓN ---
+    // --- FUNCIÓN DE "DEBOUNCE" PARA OPTIMIZAR LA BÚSQUEDA ---
+    const debounce = (func, delay = 300) => {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                func.apply(this, args);
+            }, delay);
+        };
+    };
+    const debouncedSearch = debounce(() => updateDisplay());
+
+    // --- LÓGICA PRINCIPAL DE VISUALIZACIÓN ---
     function updateDisplay() {
         const searchTerm = normalizeText(selectors.searchBar.value);
+        let results = [];
 
         if (searchTerm) {
             state.view = 'medications';
-            const searchResults = state.medications.map(med => ({
+            results = state.medications.map(med => ({
                 ...med,
                 score: calculateRelevance(med, searchTerm)
             }))
             .filter(med => med.score > 0)
             .sort((a, b) => b.score - a.score);
-            
-            renderMedications(searchResults);
         } else {
             if (state.view === 'medications') {
-                const filteredMeds = state.activeFamily === 'Todos'
+                results = state.activeFamily === 'Todos'
                     ? state.medications
                     : state.medications.filter(med => med.simpleFamily === state.activeFamily);
-                renderMedications(filteredMeds);
             }
         }
+        
+        if (state.view === 'medications') renderMedications(results);
         
         selectors.medicationSection.classList.toggle('hidden', state.view !== 'medications');
         selectors.themesSection.classList.toggle('hidden', state.view !== 'themes');
@@ -74,23 +88,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateActiveButtons() {
         document.querySelectorAll('#familyFilterContainer .filter-btn').forEach(btn => btn.classList.toggle('active', state.view === 'medications' && btn.dataset.family === state.activeFamily));
         document.querySelectorAll('#themesFilterContainer .theme-btn').forEach(btn => btn.classList.toggle('active', state.view === 'themes' && btn.dataset.theme === state.activeTheme));
+        
+        if (state.view === 'medications' && state.activeFamily !== 'Todos') {
+            selectors.familiesBtnText.textContent = `Familia: ${state.activeFamily}`;
+        } else {
+            selectors.familiesBtnText.textContent = 'Familias de Medicamentos';
+        }
     }
 
-    // --- RENDERIZADO Y LÓGICA DEL MODAL ---
     function renderMedications(meds) {
+        selectors.loadingIndicator.classList.add('hidden');
         selectors.medicationList.innerHTML = '';
-        selectors.noResults.classList.toggle('hidden', meds.length === 0);
+        selectors.noResults.classList.toggle('hidden', meds.length > 0);
         meds.forEach(med => {
             const cardClone = selectors.cardTemplate.content.cloneNode(true);
             const cardElement = cardClone.querySelector('article');
             cardElement.dataset.originalIndex = med.originalIndex;
             cardElement.querySelector('.card-img').src = med.image;
-            cardElement.querySelector('.card-img').alt = `Imagen de ${med.name}`;
             cardElement.querySelector('.card-name').textContent = med.name;
             cardElement.querySelector('.card-presentation').textContent = med.presentation;
             cardElement.querySelector('.card-family').textContent = med.family;
             cardElement.querySelector('.card-uses').textContent = med.uses;
-            selectors.medicationList.appendChild(cardClone);
+            selectors.medicationList.appendChild(cardElement);
         });
     }
 
@@ -115,12 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const weightInput = selectors.modalContent.querySelector('.weight-input-modal');
         const resultDiv = selectors.modalContent.querySelector('.result-div-modal');
         const weight = parseFloat(weightInput.value);
-
         if (!weight || weight <= 0) {
-            resultDiv.innerHTML = '<span class="text-red-500">Por favor, ingrese un peso válido.</span>';
-            return;
+            resultDiv.innerHTML = '<span class="text-red-500">Ingrese un peso válido.</span>'; return;
         }
-        
         let resultText = '';
         if (med.doseMin_mg_kg_dia) {
             const intervals = parseInt(String(med.doseIntervals).split('-').pop(), 10);
@@ -136,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
         resultDiv.innerHTML = resultText;
     }
 
-    // --- INICIALIZACIÓN DE LA APLICACIÓN ---
     async function initializeApp() {
         try {
             const response = await fetch('medicamentos.json');
@@ -149,19 +164,28 @@ document.addEventListener('DOMContentLoaded', () => {
             updateDisplay();
         } catch (error) {
             console.error("Initialization failed:", error);
-            selectors.medicationSection.innerHTML = `<p class="text-center text-red-600">Error: No se pudo cargar la información.</p>`;
+            selectors.loadingIndicator.textContent = "Error: No se pudo cargar la información.";
+            selectors.loadingIndicator.classList.add('text-red-600');
         }
     }
 
     function initFilters() {
         const families = ['Todos', ...new Set(state.medications.map(med => med.simpleFamily).sort())];
         selectors.familyFilterContainer.innerHTML = families.map(f => `<button class="filter-btn" data-family="${f}">${f}</button>`).join('');
-        const themes = [ { id: 'insulinas', name: 'Guía de Insulinas' }, { id: 'crisis-hipertensivas', name: 'Crisis Hipertensivas' }];
+        
+        // --- ARRAY DE TEMAS ACTUALIZADO ---
+        const themes = [ 
+            { id: 'dm2-inicio', name: 'Manejo Inicial DM2' },
+            { id: 'insulinas', name: 'Terapia con Insulina' },
+            { id: 'crisis-hipertensivas', name: 'Crisis Hipertensivas' },
+            { id: 'nac', name: 'Neumonía (NAC)' },
+            { id: 'asma', name: 'Crisis Asmática' }
+        ];
         selectors.themesFilterContainer.innerHTML = themes.map(t => `<button class="theme-btn" data-theme="${t.id}">${t.name}</button>`).join('');
     }
 
     function initEventListeners() {
-        selectors.searchBar.addEventListener('input', updateDisplay);
+        selectors.searchBar.addEventListener('input', debouncedSearch);
         selectors.medicationList.addEventListener('click', e => {
             const card = e.target.closest('[data-original-index]');
             if (card) {
@@ -179,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         selectors.themesFilterContainer.addEventListener('click', e => {
             if (e.target.matches('.theme-btn')) {
-                state.view = 'themes'; state.activeTheme = e.target.dataset.theme; state.activeFamily = null;
+                state.view = 'themes'; state.activeTheme = e.target.dataset.theme; state.activeFamily = 'Todos';
                 updateDisplay(); closeDropdowns();
             }
         });
@@ -202,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.themesDropdownBtn.classList.remove('active');
     }
     
-    function normalizeText(str) { return str ? str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : ''; }
+    function normalizeText(str) { return str ? str.toLowerCase().normalize("NFD").replace(/[\u0000-\u007F]/g, (c) => String.fromCharCode(c.charCodeAt(0) & 0x7F)) : ''; }
 
     initializeApp();
 });
