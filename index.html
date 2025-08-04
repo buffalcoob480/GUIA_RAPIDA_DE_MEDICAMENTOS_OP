@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicamentos Disponibles - Centro de Salud Colonia Azteca</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-100 text-slate-800">
+    <button id="openSidebarBtn" aria-label="Abrir menú de filtros" class="md:hidden fixed top-4 left-4 z-40 bg-white p-2 rounded-full shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+    </button>
+
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div class="p-5">
+            <h3 class="font-bold text-lg mb-4 pb-2 border-b">Familias</h3>
+            <div id="familyFilter" class="space-y-1 max-h-[90vh] overflow-y-auto">
+                <!-- Los botones de filtro se insertarán aquí -->
+            </div>
+        </div>
+    </aside>
+
+    <div class="md:ml-64 transition-all duration-300 ease-in-out">
+        <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+            <header class="text-center mb-10">
+                <h1 class="text-3xl sm:text-5xl font-bold text-slate-900">Medicamentos Disponibles</h1>
+                <p class="text-lg text-slate-600 mt-2">Centro de Salud Colonia Azteca</p>
+            </header>
+
+            <div class="mb-8 max-w-2xl mx-auto">
+                <input type="text" id="searchBar"
+                       class="w-full p-4 border border-slate-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                       placeholder="Buscar por nombre, padecimiento, o familia..."
+                       aria-label="Buscar por nombre, padecimiento, o familia">
+            </div>
+
+            <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Las tarjetas de medicamentos se insertarán aquí dinámicamente -->
+            </div>
+
+            <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden">
+                <p>No se encontraron medicamentos que coincidan con la búsqueda.</p>
+            </div>
+
+            <div id="insulin-guide" class="mt-16 bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
+                <!-- El contenido de la guía de insulinas se insertará aquí -->
+            </div>
+        </div>
+    </div>
+
+    <div id="medicationModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+        <div id="modal-content-wrapper" class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0">
+            <!-- El contenido del modal se insertará aquí -->
+        </div>
+    </div>
+
+    <template id="medication-card-template">
+        <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col overflow-hidden">
+            <img src="" alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/fecaca/991b1b?text=Imagen+no+disponible';">
+            <div class="p-5 flex flex-col flex-grow">
+                <div>
+                    <h3 class="card-name font-bold text-lg text-slate-900"></h3>
+                    <p class="card-presentation text-sm text-slate-600"></p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-200 text-xs flex-grow flex flex-col justify-end">
+                    <p class="card-family font-semibold text-blue-600"></p>
+                    <p class="card-uses text-slate-500 mt-1"></p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
