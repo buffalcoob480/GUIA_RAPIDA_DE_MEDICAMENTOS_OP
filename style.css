@@ -117,3 +117,39 @@ body {
 .prose strong { font-weight: 600; }
 .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-top: 0.5em; margin-bottom: 1em; }
 .prose ul ul { margin-top: 0.25em; margin-bottom: 0.5em; }
+
+/* ... (todos los estilos anteriores permanecen igual) ... */
+
+/* --- NUEVOS ESTILOS PARA GUÍAS CLÍNICAS --- */
+.formula-box {
+    background-color: #f8fafc; /* slate-50 */
+    border-left: 3px solid #3b82f6; /* blue-500 */
+    padding: 0.75rem 1.25rem;
+    margin: 1rem 0;
+    font-family: monospace;
+    font-size: 1rem;
+    color: #1e293b; /* slate-800 */
+    border-radius: 0.25rem;
+}
+
+.bibliografia {
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0; /* slate-200 */
+    font-size: 0.875rem;
+    color: #64748b; /* slate-500 */
+}
+.bibliografia h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155; /* slate-700 */
+    margin-bottom: 0.5rem;
+}
+.bibliografia ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+.bibliografia em {
+    font-style: italic;
+}
+
