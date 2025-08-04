@@ -20,27 +20,50 @@
         </header>
 
         <section class="controls-container">
-            </section>
+            <div class="search-wrapper">
+                <input id="searchBar" type="text" placeholder="Buscar por nombre, familia, uso..." aria-label="Buscar medicamento" class="w-full p-4 border border-slate-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+            </div>
+            <div class="filter-controls">
+                <div class="dropdown-wrapper">
+                    <button id="families-dropdown-btn" class="dropdown-btn">
+                        <span id="families-btn-text">Familias de Medicamentos</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                    </button>
+                    <div id="families-dropdown-panel" class="dropdown-panel">
+                        <nav id="familyFilterContainer" aria-label="Filtros por familia"></nav>
+                    </div>
+                </div>
+                <div class="dropdown-wrapper">
+                    <button id="themes-dropdown-btn" class="dropdown-btn">
+                        <span>Temas de Interés</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                    </button>
+                    <div id="themes-dropdown-panel" class="dropdown-panel">
+                        <nav id="themesFilterContainer" aria-label="Temas de interés"></nav>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <div id="view-container" class="mt-8">
             <section id="medication-section">
-                </section>
+                <div id="loading-indicator" class="text-center py-16 text-slate-500"><p>Cargando medicamentos...</p></div>
+                <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden"><p>No se encontraron medicamentos.</p></div>
+            </section>
             
             <section id="themes-section" class="hidden">
                 
                 <article id="theme-gpc-insulina" class="theme-content hidden bg-white p-6 sm:p-8 rounded-xl shadow-md prose max-w-none">
                     <h2>Compendio Clínico sobre Insulinoterapia (Basado en Evidencia)</h2>
-
                     <h3>Sección 1: Fundamentos Farmacológicos</h3>
                     <p>La insulinoterapia es el pilar en el manejo de la DM1 y una herramienta indispensable en la DM2 avanzada. La comprensión de la farmacología es esencial para emular la secreción fisiológica endógena, minimizando riesgos. Los análogos modernos superan las limitaciones de las insulinas humanas (picos de NPH, inicio lento de la Regular), ofreciendo perfiles más predecibles y seguros.</p>
-                    
                     <h4>1.1. Clasificación de las Insulinas</h4>
                     <p>Las insulinas se clasifican por su origen y, clínicamente más importante, por su perfil de acción. Los análogos de insulina son modificaciones de la insulina humana diseñados para optimizar sus propiedades.</p>
                     <ul>
                         <li><strong>Análogos de Acción Rápida y Ultrarrápida (Prandiales):</strong> Diseñados para controlar la hiperglucemia posprandial. Su absorción es más veloz que la insulina regular.</li>
                         <li><strong>Análogos de Acción Prolongada y Ultraprolongada (Basales):</strong> Proporcionan una cobertura basal constante y predecible, con un perfil plano que reduce significativamente el riesgo de hipoglucemia nocturna.</li>
                     </ul>
-
                     <h4>1.2. Principios Farmacocinéticos y Farmacodinámicos</h4>
                     <p>Los parámetros clave que definen el perfil de una insulina son:</p>
                     <ul>
@@ -48,7 +71,6 @@
                         <li><strong>Pico de acción:</strong> Momento de máxima actividad. Un pico pronunciado aumenta el riesgo de hipoglucemia.</li>
                         <li><strong>Duración de la acción:</strong> Período total de efecto clínicamente significativo.</li>
                     </ul>
-
                     <h3>Sección 2: Objetivos Glucémicos y Monitorización Avanzada</h3>
                     <p>El control glucémico moderno integra la HbA1c con métricas de la Monitorización Continua de Glucosa (MCG), priorizando la calidad del control diario y la minimización de la hipoglucemia.</p>
                     <h4>2.1. Individualización de Objetivos</h4>
@@ -58,13 +80,11 @@
                         <li><strong>Tiempo Bajo el Rango (TBR <70 mg/dL):</strong> <4%.</li>
                         <li><strong>Objetivos Menos Estrictos (HbA1c < 8.0-8.5%):</strong> Para pacientes con alto riesgo de hipoglucemia, esperanza de vida limitada o comorbilidades significativas.</li>
                     </ul>
-
                     <h3>Sección 3: Regímenes Terapéuticos para DM1</h3>
                     <p>El estándar de oro es un régimen basal-bolo intensivo, administrado mediante Inyecciones Diarias Múltiples (IDM) o Infusión Subcutánea Continua de Insulina (ISCI) con una bomba.</p>
                     <ul>
                         <li><strong>Sistemas de Administración Automatizada de Insulina (AID):</strong> También conocidos como lazo cerrado híbrido (HCL), son ahora el método preferido. Integran una MCG, una bomba y un algoritmo que ajusta automáticamente la infusión basal para maximizar el TIR y minimizar la hipoglucemia.</li>
                     </ul>
-
                     <h3>Sección 4: Regímenes Terapéuticos para DM2</h3>
                     <p>La insulina se ha reposicionado en el algoritmo de la DM2. Para la mayoría de los pacientes que requieren una terapia inyectable, un <strong>agonista del receptor de GLP-1 (aGLP-1) es el agente de primera línea preferido sobre la insulina</strong>, debido a sus beneficios cardiorrenales y de control de peso con bajo riesgo de hipoglucemia.</p>
                     <h4>Indicaciones para Iniciar Insulina en DM2:</h4>
@@ -73,7 +93,6 @@
                         <li>Niveles de glucosa muy elevados (HbA1c >10% o glucosa >300 mg/dL).</li>
                         <li>Sospecha de DM1 tipo LADA.</li>
                     </ul>
-
                     <h3>Sección 5: Algoritmos Prácticos para Inicio y Titulación</h3>
                     <h4>5.1. Inicio de Insulina Basal en DM2</h4>
                     <div class="overflow-x-auto my-6 shadow-sm rounded-lg">
@@ -87,7 +106,6 @@
                             </tbody>
                         </table>
                     </div>
-                    
                     <h3>Sección 6: Manejo en Poblaciones y Escenarios Especiales</h3>
                     <ul>
                         <li><strong>Paciente Hospitalizado:</strong> El régimen basal-bolo es superior a la escala móvil. El objetivo de glucosa es 140-180 mg/dL para pacientes críticos.</li>
@@ -95,19 +113,16 @@
                         <li><strong>Adultos Mayores:</strong> La prioridad es evitar la hipoglucemia. Se recomiendan objetivos de HbA1c menos estrictos (<8.0-8.5%) y la simplificación de regímenes.</li>
                         <li><strong>Enfermedad Renal Crónica (ERC):</strong> El aclaramiento de insulina disminuye. Las dosis deben reducirse a medida que la TFG baja.</li>
                     </ul>
-
                     <div class="bibliografia">
                         <h4>Bibliografía</h4>
                         <p>Este compendio se basa en una revisión de las guías de práctica clínica más recientes, incluyendo los Standards of Care de la American Diabetes Association (ADA), guías de la AACE, reportes de consenso ADA/EASD, guías KDIGO para ERC y guías ISPAD para pediatría.</p>
                     </div>
                 </article>
                 
-                <article id="theme-insulinas" class="theme-content hidden ..."></article>
-                <article id="theme-crisis-hipertensivas" class="theme-content hidden ..."></article>
                 <article id="theme-dm2-inicio" class="theme-content hidden ..."></article>
+                <article id="theme-crisis-hipertensivas" class="theme-content hidden ..."></article>
                 <article id="theme-nac" class="theme-content hidden ..."></article>
                 <article id="theme-asma" class="theme-content hidden ..."></article>
-
             </section>
         </div>
         <footer class="text-center p-4 mt-8 text-sm text-slate-500 border-t">
