@@ -100,6 +100,16 @@ body {
 }
 .filter-btn.active:hover, .theme-btn.active:hover { background-color: #1d4ed8; }
 
+/* --- NUEVO ESTILO PARA CONTENEDOR DE SVG --- */
+.svg-container {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f8fafc; /* slate-50 */
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0; /* slate-200 */
+}
+
 /* Estilos de Prose (Sin cambios) */
 .prose h2 { font-size: 1.75rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; }
 .prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 2em; margin-bottom: 0.75em; }
