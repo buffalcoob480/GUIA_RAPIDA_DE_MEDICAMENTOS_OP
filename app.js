@@ -1,11 +1,3 @@
-
-function generarIndicacionDosis(dosis, frecuencia, dias, presentacion) {
-    const unidad = presentacion.includes("gota") ? "gotas" : "mL";
-    const via = "vía oral";
-    return `${dosis} ${unidad} ${via} cada ${frecuencia} horas por ${dias} días`;
-}
-
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- ESTADO DE LA APLICACIÓN ---
     const state = {
