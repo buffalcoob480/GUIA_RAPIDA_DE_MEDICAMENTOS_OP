@@ -151,7 +151,6 @@ body {
     font-style: italic;
 }
 
-
 /* Modo Alfredo (oscuro) */
 .dark {
     background-color: #0f172a !important;
@@ -183,7 +182,6 @@ summary::-webkit-details-marker {
     display: none;
 }
 
-
 /* Mejoras móviles */
 @media (max-width: 640px) {
     button, input, select, textarea {
@@ -197,5 +195,19 @@ summary::-webkit-details-marker {
 
     .main-content, .container {
         padding: 1rem !important;
+    }
+}
+
+/* --- ESTILOS PARA TEXTO ANIMADO (AÑADIDO) --- */
+.animated-text {
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0073e6, 0 0 20px #0073e6;
+    }
+    to {
+        text-shadow: 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #0073e6, 0 0 25px #0073e6;
     }
 }
