@@ -22,28 +22,6 @@
         "contraindications": "Úlcera péptica activa, hipersensibilidad."
     },
     {
-        "name": "Acarbosa",
-        "presentation": "Tabletas 50mg / 100mg",
-        "family": "Inhibidor de la Alfa-glucosidasa",
-        "simpleFamily": "Antidiabéticos",
-        "uses": "Control de glucosa en sangre para diabetes tipo 2.",
-        "indications": "Diabetes mellitus tipo 2, especialmente en pacientes con picos de glucosa después de comer (hiperglucemia posprandial).",
-        "dose_adult": "Inicial: 25-50 mg tres veces al día con el primer bocado de cada comida. Máximo: 100 mg tres veces al día.",
-        "dose_pediatric": "No recomendado.",
-        "contraindications": "Enfermedad inflamatoria intestinal, obstrucción intestinal, hipersensibilidad."
-    },
-    {
-        "name": "Acetilcisteína",
-        "presentation": "Polvo / Granulado para solución oral",
-        "family": "Mucolítico",
-        "simpleFamily": "Respiratorios",
-        "uses": "Fluidifica y facilita la expulsión de flemas.",
-        "indications": "Afecciones respiratorias con secreción mucosa densa y viscosa, como bronquitis, EPOC. Antídoto en intoxicación por paracetamol.",
-        "dose_adult": "200 mg cada 8 horas o 600 mg una vez al día.",
-        "dose_pediatric": "Niños >2 años: 100 mg cada 8-12 horas.",
-        "contraindications": "Úlcera péptica activa, hipersensibilidad."
-    },
-    {
         "name": "Aciclovir",
         "presentation": "Tabletas 200mg",
         "family": "Análogo Nucleósido de Guanina",
@@ -417,7 +395,7 @@
         "simpleFamily": "Respiratorios",
         "uses": "Tratamiento del broncoespasmo en EPOC.",
         "indications": "Enfermedad Pulmonar Obstructiva Crónica (EPOC), incluyendo bronquitis crónica y enfisema.",
-        "dose_adult": "2 inhalaciones (40 mcg) cuatro veces al día.",
+        "dose_adult": "2 inhalaciones (40 mcg) quatro veces al día.",
         "dose_pediatric": "Niños >6 años: 1-2 inhalaciones cada 6-8 horas.",
         "contraindications": "Hipersensibilidad a la atropina o sus derivados, glaucoma de ángulo estrecho, hiperplasia prostática."
     },
@@ -723,6 +701,17 @@
         "doseIntervals": "2"
     },
     {
+        "name": "Celecoxib",
+        "presentation": "Cápsulas 200 mg",
+        "family": "AINE (Inhibidor selectivo de la COX-2)",
+        "simpleFamily": "Antiinflamatorios",
+        "uses": "Alivio del dolor y la inflamación.",
+        "indications": "Osteoartritis, artritis reumatoide, espondilitis anquilosante, dolor agudo, dismenorrea.",
+        "dose_adult": "200 mg una vez al día o 100 mg dos veces al día.",
+        "dose_pediatric": "No recomendado en menores de 18 años.",
+        "contraindications": "Hipersensibilidad a AINEs o sulfonamidas, úlcera péptica activa, insuficiencia cardíaca grave."
+    },
+    {
         "name": "Cilostazol",
         "presentation": "Tabletas 100mg",
         "family": "Inhibidor de la Fosfodiesterasa III",
@@ -875,6 +864,17 @@
         "dose_adult": "Aplicar una capa delgada en el área afectada 2-3 veces al día.",
         "dose_pediatric": "Misma dosis que adultos.",
         "contraindications": "Hipersensibilidad al clioquinol o al yodo."
+    },
+    {
+        "name": "Clopidogrel",
+        "presentation": "Tabletas 75 mg",
+        "family": "Antiagregante plaquetario",
+        "simpleFamily": "Anticoagulantes",
+        "uses": "Prevención de eventos aterotrombóticos.",
+        "indications": "Prevención de infarto de miocardio, ictus y enfermedad arterial periférica en pacientes con antecedentes de estos eventos.",
+        "dose_adult": "75 mg una vez al día.",
+        "dose_pediatric": "No recomendado.",
+        "contraindications": "Sangrado activo, insuficiencia hepática grave, hipersensibilidad."
     },
     {
         "name": "Clorfenamina",
@@ -1064,6 +1064,17 @@
         "doseIntervals": "2-3"
     },
     {
+        "name": "Digoxina",
+        "presentation": "Tabletas 0.25 mg",
+        "family": "Glucósido cardíaco",
+        "simpleFamily": "Cardiovasculares",
+        "uses": "Tratamiento de la insuficiencia cardíaca y ciertas arritmias.",
+        "indications": "Insuficiencia cardíaca congestiva, fibrilación auricular, aleteo auricular.",
+        "dose_adult": "Dosis de mantenimiento: 0.125 a 0.5 mg al día. Requiere digitalización inicial.",
+        "dose_pediatric": "Dosis ajustada por peso y función renal. Requiere monitoreo estricto.",
+        "contraindications": "Bloqueo auriculoventricular completo, síndrome de Wolff-Parkinson-White, miocardiopatía hipertrófica obstructiva."
+    },
+    {
         "name": "Dimenhidrinato",
         "presentation": "Tabletas 50mg",
         "family": "Antihistamínico H1 de 1ª Generación (Etanolamina)",
@@ -1226,6 +1237,17 @@
         "dose_adult": "Hipertensión: 5-40 mg/día en una o duas dosis. Insuficiencia cardíaca: 2.5-20 mg dos veces al día.",
         "dose_pediatric": "0.08 mg/kg/día (máx. 5 mg).",
         "contraindications": "Antecedentes de angioedema relacionado con IECA, embarazo."
+    },
+    {
+        "name": "Enoxaparina",
+        "presentation": "Jeringa prellenada 60 mg/0.6 ml",
+        "family": "Heparina de Bajo Peso Molecular (HBPM)",
+        "simpleFamily": "Anticoagulantes",
+        "uses": "Prevención y tratamiento de la trombosis venosa y la embolia pulmonar.",
+        "indications": "Profilaxis de trombosis venosa profunda (TVP) en cirugía, tratamiento de TVP establecida, síndrome coronario agudo.",
+        "dose_adult": "Profilaxis: 40 mg SC cada 24 h. Tratamiento: 1 mg/kg SC cada 12 h o 1.5 mg/kg SC cada 24 h.",
+        "dose_pediatric": "Requiere consulta con hematología. Dosis ajustada por peso y edad.",
+        "contraindications": "Sangrado activo, trombocitopenia inducida por heparina, hipersensibilidad, endocarditis bacteriana."
     },
     {
         "name": "Empagliflozina",
@@ -3022,6 +3044,17 @@
         "contraindications": "Antecedentes personales o familiares de carcinoma medular de tiroides, hipersensibilidad."
     },
     {
+        "name": "Sertralina",
+        "presentation": "Tabletas 50 mg",
+        "family": "ISRS (Inhibidor Selectivo de la Recaptura de Serotonina)",
+        "simpleFamily": "Psiquiatría",
+        "uses": "Antidepresivo y ansiolítico.",
+        "indications": "Trastorno depresivo mayor, trastorno de pánico, trastorno de ansiedad social, trastorno obsesivo-compulsivo (TOC).",
+        "dose_adult": "Dosis inicial de 50 mg una vez al día. Se puede incrementar hasta un máximo de 200 mg/día.",
+        "dose_pediatric": "Para TOC en niños de 6-12 años: iniciar con 25 mg/día. Bajo estricta supervisión médica.",
+        "contraindications": "Uso concomitante con inhibidores de la MAO, hipersensibilidad al fármaco."
+    },
+    {
         "name": "Sildenafil",
         "presentation": "Tabletas 50mg / 100mg",
         "family": "Inhibidor de la Fosfodiesterasa-5 (PDE5)",
@@ -3423,6 +3456,17 @@
         "contraindications": "Hipotensión severa, shock cardiogénico, disfunción ventricular izquierda severa."
     },
     {
+        "name": "Warfarina",
+        "presentation": "Tabletas 5 mg",
+        "family": "Anticoagulante cumarínico",
+        "simpleFamily": "Anticoagulantes",
+        "uses": "Prevención y tratamiento de la trombosis.",
+        "indications": "Trombosis venosa profunda, embolia pulmonar, prevención de tromboembolismo en pacientes con fibrilación auricular o válvulas cardíacas protésicas.",
+        "dose_adult": "Dosis individualizada según el INR (International Normalized Ratio).",
+        "dose_pediatric": "Requiere consulta con hematología. Dosis ajustada por peso, edad e INR.",
+        "contraindications": "Embarazo, sangrado activo, hipertensión arterial no controlada, úlcera péptica activa."
+    },
+    {
         "name": "Fosfomicina",
         "presentation": "Granulado para solución oral 3 g (en 60 ml)",
         "family": "Derivado del ácido fosfónico",
@@ -3437,274 +3481,5 @@
         "doseMin_mg_kg_dia": 50,
         "doseMax_mg_kg_dia": 75,
         "doseIntervals": "1"
-    },
-    {
-        "name": "Fosfomicina",
-        "presentation": "Granulado para solución oral 3 g (en 60 ml)",
-        "family": "Derivado del ácido fosfónico",
-        "simpleFamily": "Antibióticos",
-        "uses": "Tratamiento de infecciones urinarias no complicadas.",
-        "indications": "Cistitis aguda no complicada en mujeres.",
-        "dose_adult": "3 g en una sola dosis, disuelta en agua.",
-        "dose_pediatric": ">12 años: 2‑3 g cada 24 h por 1‑2 días.",
-        "contraindications": "Hipersensibilidad a la fosfomicina, insuficiencia renal grave (ClCr < 10 mL/min), pacientes en hemodiálisis.",
-        "isCalculable": true,
-        "concentration": 50,
-        "doseMin_mg_kg_dia": 50,
-        "doseMax_mg_kg_dia": 75,
-        "doseIntervals": "1"
-    },
-    {
-        "name": "Acarbosa",
-        "presentation": "Tabletas 50mg / 100mg",
-        "family": "Inhibidor de la Alfa-glucosidasa",
-        "simpleFamily": "Antidiabéticos",
-        "uses": "Control de glucosa en sangre para diabetes tipo 2.",
-        "indications": "Diabetes mellitus tipo 2, especialmente en pacientes con picos de glucosa después de comer (hiperglucemia posprandial).",
-        "dose_adult": "Inicial: 25-50 mg tres veces al día con el primer bocado de cada comida. Máximo: 100 mg tres veces al día.",
-        "dose_pediatric": "No recomendado.",
-        "contraindications": "Enfermedad inflamatoria intestinal, obstrucción intestinal, hipersensibilidad."
-    },
-    {
-        "name": "Insulina Aspart (Análogo Ultrarrápido)",
-        "presentation": "Solución Inyectable 100 UI/ml (NovoRapid®)",
-        "family": "Análogo de Insulina Ultrarrápida",
-        "simpleFamily": "Antidiabéticos",
-        "uses": "Control de glucosa prandial. Inicio 10-20 min, Pico 1-3 h, Duración 3-5 h.",
-        "indications": "Diabetes tipo 1 y 2. Se aplica 5-10 min antes de comer. Dosis individualizada según conteo de carbohidratos y factor de corrección.",
-        "dose_adult": "Dosis individualizada.",
-        "dose_pediatric": "Dosis individualizada.",
-        "contraindications": "Episodios de hipoglucemia, hipersensibilidad."
-    },
-    {
-        "name": "Insulina Lispro (Análogo Rápido)",
-        "presentation": "Solución Inyectable 100 UI/ml (Humalog®)",
-        "family": "Análogo de Insulina Rápida",
-        "simpleFamily": "Antidiabéticos",
-        "uses": "Control de glucosa en las comidas. Inicio 15-30 min, Pico 0.5-2.5 h, Duración 3-6 h.",
-        "indications": "Diabetes tipo 1 y 2. Se aplica 15 min antes de comer. Dosis individualizada.",
-        "dose_adult": "Dosis individualizada.",
-        "dose_pediatric": "Dosis individualizada.",
-        "contraindications": "Episodios de hipoglucemia."
-    },
-    {
-        "name": "Insulina Regular Humana (Acción Corta)",
-        "presentation": "Solución Inyectable 100 UI/ml (Humulin® R)",
-        "family": "Insulina Humana",
-        "simpleFamily": "Antidiabéticos",
-        "uses": "Control de glucosa prandial. Inicio 30-60 min, Pico 2-4 h, Duración 6-10 h.",
-        "indications": "Diabetes tipo 1 y 2, cetoacidosis diabética (IV). Se aplica 30 min antes de comer.",
-        "dose_adult": "Dosis individualizada.",
-        "dose_pediatric": "Dosis individualizada.",
-        "contraindications": "Episodios de hipoglucemia."
-    },
-    {
-        "name": "Insulina NPH (Acción Intermedia)",
-        "presentation": "Suspensión Inyectable 100 UI/ml (Humulin® N)",
-        "family": "Insulina Humana",
-        "simpleFamily": "Antidiabéticos",
-        "uses": "Control de glucosa basal. Inicio 1-2 h, Pico 4-8 h, Duración 10-18 h.",
-        "indications": "Diabetes tipo 1 y 2. Dosis total diaria: 0.3-0.5 U/kg. Esquema común: 2/3 AM y 1/3 PM.",
-        "dose_adult": "Dosis individualizada.",
-        "dose_pediatric": "Dosis individualizada.",
-        "contraindications": "Episodios de hipoglucemia."
-    },
-    {
-        "name": "Insulina Glargina U-100 (Análogo Lento)",
-        "presentation": "Solución Inyectable 100 UI/ml (Lantus®)",
-        "family": "Análogo de Insulina Lenta",
-        "simpleFamily": "Antidiabéticos",
-        "uses": "Control de glucosa basal sin picos. Inicio 1-2 h, Sin Pico, Duración hasta 24 h.",
-        "indications": "Diabetes tipo 1 y 2. Dosis inicial: 10 unidades o 0.2 U/kg, usualmente por la noche.",
-        "dose_adult": "Dosis individualizada.",
-        "dose_pediatric": "Dosis individualizada.",
-        "contraindications": "Episodios de hipoglucemia."
-    },
-    {
-        "name": "Insulina Degludec U-100 (Análogo Ultra Lento)",
-        "presentation": "Solución Inyectable 100 UI/ml (Tresiba®)",
-        "family": "Análogo de Insulina Ultra Lenta",
-        "simpleFamily": "Antidiabéticos",
-        "uses": "Control de glucosa basal estable y prolongado. Inicio 1 h, Sin Pico, Duración >42 h.",
-        "indications": "Diabetes tipo 1 y 2. Ofrece mayor flexibilidad en el horario de aplicación.",
-        "dose_adult": "Dosis individualizada.",
-        "dose_pediatric": "Dosis individualizada.",
-        "contraindications": "Episodios de hipoglucemia."
-    },
-    {
-        "name": "Acetilcisteína",
-        "presentation": "Polvo / Granulado para solución oral",
-        "family": "Mucolítico",
-        "simpleFamily": "Respiratorios",
-        "uses": "Fluidifica y facilita la expulsión de flemas.",
-        "indications": "Afecciones respiratorias con secreción mucosa densa y viscosa, como bronquitis, EPOC. Antídoto en intoxicación por paracetamol.",
-        "dose_adult": "200 mg cada 8 horas o 600 mg una vez al día.",
-        "dose_pediatric": "Niños >2 años: 100 mg cada 8-12 horas.",
-        "contraindications": "Úlcera péptica activa, hipersensibilidad."
-    },
-    {
-        "name": "Aciclovir",
-        "presentation": "Tabletas 200mg",
-        "family": "Análogo Nucleósido de Guanina",
-        "simpleFamily": "Antivirales",
-        "uses": "Tratamiento de infecciones virales por herpes.",
-        "indications": "Herpes labial (fuegos), herpes genital, varicela, herpes zóster (culebrilla).",
-        "dose_adult": "Herpes simple: 200 mg 5 veces/día. Herpes zóster: 800 mg 5 veces/día.",
-        "dose_pediatric": "Varicela: 20 mg/kg/dosis (máx. 800 mg) 4 veces/día.",
-        "contraindications": "Hipersensibilidad."
-    },
-    {
-        "name": "Metformina",
-        "presentation": "850 mg tabletas",
-        "family": "Biguanida",
-        "simpleFamily": "Antidiabéticos",
-        "uses": "Control de glucosa en DM2.",
-        "indications": "Diabetes mellitus tipo 2, resistencia a la insulina.",
-        "dose_adult": "850 mg cada 12 h o 500 mg cada 8 h con alimentos.",
-        "dose_pediatric": "10 años en adelante: 500 mg/día, ajustar según respuesta.",
-        "contraindications": "Insuficiencia renal, acidosis láctica, insuficiencia hepática."
-    },
-    {
-        "name": "Clonidina",
-        "presentation": "150 mcg tabletas",
-        "family": "Agonista alfa-2",
-        "simpleFamily": "Antihipertensivos",
-        "uses": "Hipertensión, síndrome de abstinencia.",
-        "indications": "Crisis hipertensiva, abstinencia de opioides o benzodiacepinas.",
-        "dose_adult": "0.1 a 0.2 mg cada 8-12 h.",
-        "dose_pediatric": "5-10 mcg/kg/día divididos en 3 tomas.",
-        "contraindications": "Bradicardia severa, hipotensión, hipersensibilidad."
-    },
-    {
-        "name": "Enoxaparina",
-        "presentation": "60 mg/0.6 ml jeringa prellenada",
-        "family": "Anticoagulante (HBPM)",
-        "simpleFamily": "Anticoagulantes",
-        "uses": "Profilaxis y tratamiento de trombosis.",
-        "indications": "TVP, embolia pulmonar, profilaxis postoperatoria.",
-        "dose_adult": "1 mg/kg cada 12 h SC o 1.5 mg/kg cada 24 h SC.",
-        "dose_pediatric": "Consultoría hematológica especializada.",
-        "contraindications": "Trombocitopenia, sangrado activo, alergia a heparina."
-    },
-    {
-        "name": "Sertralina",
-        "presentation": "50 mg tabletas",
-        "family": "ISRS",
-        "simpleFamily": "Psiquiatría",
-        "uses": "Antidepresivo y ansiolítico.",
-        "indications": "Depresión, ansiedad, TOC, trastorno de pánico.",
-        "dose_adult": "50-100 mg/día.",
-        "dose_pediatric": "6-12 años: 25-50 mg/día bajo supervisión.",
-        "contraindications": "Uso concomitante con IMAO, hipersensibilidad."
-    },
-    {
-        "name": "Omeprazol suspensión",
-        "presentation": "2 mg/ml",
-        "family": "Inhibidor de bomba de protones",
-        "simpleFamily": "Pediátricos",
-        "uses": "Reflujo gastroesofágico y úlcera péptica.",
-        "indications": "Enfermedad por reflujo, esofagitis erosiva.",
-        "dose_adult": "20 mg una vez al día.",
-        "dose_pediatric": "1 mg/kg/día en 1 o 2 tomas.",
-        "contraindications": "Hipersensibilidad, uso prolongado sin vigilancia médica."
-    },
-    {
-        "name": "Loratadina en gotas",
-        "presentation": "1 mg/ml",
-        "family": "Antihistamínico",
-        "simpleFamily": "Pediátricos",
-        "uses": "Alergia, rinitis, urticaria.",
-        "indications": "Rinitis alérgica, urticaria crónica.",
-        "dose_adult": "10 mg/día.",
-        "dose_pediatric": "2-6 años: 5 gotas (5 mg) una vez al día.",
-        "contraindications": "Hipersensibilidad, insuficiencia hepática grave."
-    },
-    {
-        "name": "Fenilefrina + Clorfenamina gotas",
-        "presentation": "Fenilefrina 2.5 mg/ml + Clorfenamina 0.5 mg/ml",
-        "family": "Descongestionante / Antihistamínico",
-        "simpleFamily": "Pediátricos",
-        "uses": "Congestión nasal, resfriado común.",
-        "indications": "Rinorrea, congestión, estornudos por alergia o resfriado.",
-        "dose_adult": "No recomendado.",
-        "dose_pediatric": "0.25 ml cada 6-8 h según edad.",
-        "contraindications": "Hipertensión, glaucoma, enfermedad cardíaca, menores de 1 año."
-    },
-    {
-        "name": "Albendazol suspensión",
-        "presentation": "200 mg/5 ml",
-        "family": "Antiparasitario",
-        "simpleFamily": "Pediátricos",
-        "uses": "Infecciones por helmintos.",
-        "indications": "Lombrices intestinales, oxiuros, ascariasis.",
-        "dose_adult": "400 mg dosis única.",
-        "dose_pediatric": "10-15 mg/kg dosis única.",
-        "contraindications": "Embarazo, hipersensibilidad."
-    },
-    {
-        "name": "Nistatina suspensión oral",
-        "presentation": "100,000 UI/ml",
-        "family": "Antifúngico",
-        "simpleFamily": "Pediátricos",
-        "uses": "Candidiasis oral (muguet).",
-        "indications": "Infección por cándida en boca/lengua/labios.",
-        "dose_adult": "4-6 ml al día divididos en 4 dosis.",
-        "dose_pediatric": "1-2 ml cada 6 h.",
-        "contraindications": "Hipersensibilidad a la nistatina."
-    },
-    {
-        "name": "Paracetamol en gotas",
-        "presentation": "100 mg/ml",
-        "family": "Analgésico/Antipirético",
-        "simpleFamily": "Pediátricos",
-        "uses": "Fiebre y dolor.",
-        "indications": "Fiebre en lactantes, dolor leve a moderado.",
-        "dose_adult": "500-1000 mg cada 6-8 h.",
-        "dose_pediatric": "10-15 mg/kg/dosis cada 6 h.",
-        "contraindications": "Insuficiencia hepática grave."
-    },
-    {
-        "name": "Amoxicilina suspensión",
-        "presentation": "125 mg/5 ml",
-        "family": "Penicilina",
-        "simpleFamily": "Pediátricos",
-        "uses": "Tratamiento de infecciones bacterianas.",
-        "indications": "Otitis media, amigdalitis, infecciones respiratorias leves.",
-        "dose_adult": "No aplicable.",
-        "dose_pediatric": "20-40 mg/kg/día divididos cada 8 h.",
-        "contraindications": "Alergia a penicilinas."
-    },
-    {
-        "name": "Amoxicilina 125 mg/5 mL suspensión",
-        "presentation": "Frasco con 60 mL",
-        "family": "Penicilina",
-        "simpleFamily": "Antibióticos",
-        "uses": "Tratamiento de infecciones respiratorias, faringitis, otitis.",
-        "indications": "Infecciones bacterianas sensibles.",
-        "dose_adult": "No aplicable.",
-        "dose_pediatric": "25-50 mg/kg/día dividida cada 8-12 h.",
-        "contraindications": "Alergia a penicilinas."
-    },
-    {
-        "name": "Paracetamol gotas 100 mg/mL",
-        "presentation": "Frasco con gotero",
-        "family": "Analgésico y antipirético",
-        "simpleFamily": "Antipiréticos y analgésicos",
-        "uses": "Alivio de fiebre y dolor leve a moderado.",
-        "indications": "Fiebre, dolor en niños pequeños.",
-        "dose_adult": "No aplicable.",
-        "dose_pediatric": "10-15 mg/kg/dosis cada 4-6 h.",
-        "contraindications": "Insuficiencia hepática grave."
-    },
-    {
-        "name": "Metoclopramida solución 4 mg/5 mL",
-        "presentation": "Frasco con 120 mL",
-        "family": "Antiemético",
-        "simpleFamily": "Gastrointestinales",
-        "uses": "Control de náusea y vómito.",
-        "indications": "Gastroenteritis, vómito de causa funcional.",
-        "dose_adult": "10 mg cada 8 h.",
-        "dose_pediatric": "0.1-0.5 mg/kg/dosis cada 8 h.",
-        "contraindications": "Epilepsia, hemorragia GI, obstrucción mecánica."
     }
 ]
