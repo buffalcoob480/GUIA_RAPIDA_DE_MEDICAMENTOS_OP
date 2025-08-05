@@ -1,11 +1,3 @@
-
-function generarIndicacionDosis(dosis, frecuencia, dias, presentacion) {
-    const unidad = presentacion.includes("gota") ? "gotas" : "mL";
-    const via = "vía oral";
-    return `${dosis} ${unidad} ${via} cada ${frecuencia} horas por ${dias} días`;
-}
-
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- ESTADO DE LA APLICACIÓN ---
     const state = {
@@ -107,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderMedications(meds) {
         selectors.loadingIndicator.classList.add('hidden');
         selectors.medicationList.innerHTML = '';
-        selectors.noResults.classList.toggle('hidden', meds.length === 0);
+        selectors.noResults.classList.toggle('hidden', meds.length > 0);
         meds.forEach(med => {
             const cardClone = selectors.cardTemplate.content.cloneNode(true);
             const cardElement = cardClone.querySelector('article');
@@ -220,10 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function toggleDropdown(type) {
         const isFamilies = type === 'families';
-        selectors.familiesDropdownPanel.classList.toggle('is-open', isFamilies ? undefined : false);
-        selectors.familiesDropdownBtn.classList.toggle('active', isFamilies ? undefined : false);
-        selectors.themesDropdownPanel.classList.toggle('is-open', !isFamilies ? undefined : false);
-        selectors.themesDropdownBtn.classList.toggle('active', !isFamilies ? undefined : false);
+        selectors.familiesDropdownPanel.classList.toggle('is-open', isFamilies);
+        selectors.familiesDropdownBtn.classList.toggle('active', isFamilies);
+        selectors.themesDropdownPanel.classList.toggle('is-open', !isFamilies);
+        selectors.themesDropdownBtn.classList.toggle('active', !isFamilies);
     }
     
     function closeDropdowns() {
@@ -241,8 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initializeApp();
 });
-
-
 
 // Fragmento agregado dentro del cálculo de dosis pediátrica
 function generarLeyendaDosis(medicamento, dosisCalculada, frecuenciaHoras) {
