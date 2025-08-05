@@ -1,4 +1,4 @@
-const CACHE_NAME = 'medapp-v2'; // Cambiamos el nombre para forzar la actualización
+const CACHE_NAME = 'medapp-v3'; // <-- ¡Hemos cambiado el nombre aquí!
 const URLS_TO_CACHE = [
     './',
     './index.html',
@@ -6,7 +6,6 @@ const URLS_TO_CACHE = [
     './app.js',
     './manifest.webmanifest',
     './icon-512.png'
-    // Quitamos medicamentos.json de aquí para que no se cachee en la instalación
 ];
 
 // Evento de instalación: guarda los archivos principales de la app
@@ -27,6 +26,7 @@ self.addEventListener('activate', event => {
             return Promise.all(
                 cacheNames.map(cacheName => {
                     if (cacheName !== CACHE_NAME) {
+                        console.log('Service Worker: Borrando caché antiguo', cacheName);
                         return caches.delete(cacheName);
                     }
                 })
