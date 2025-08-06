@@ -1,7 +1,6 @@
 body {
     font-family: 'Inter', sans-serif;
     background-color: #f1f5f9;
-    /* MEJORA: Transición suave para el modo oscuro */
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -9,11 +8,11 @@ body {
 .controls-container {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* 24px */
-    margin-bottom: 2rem; /* 32px */
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-@media (min-width: 768px) { /* md */
+@media (min-width: 768px) {
     .controls-container {
         flex-direction: row;
         align-items: center;
@@ -21,13 +20,13 @@ body {
 }
 
 .search-wrapper {
-    flex-grow: 1; /* La búsqueda ocupa el espacio disponible */
+    flex-grow: 1;
 }
 
 .filter-controls {
     display: flex;
-    gap: 1rem; /* 16px */
-    flex-wrap: wrap; /* Permite que los botones pasen a la siguiente línea en móviles */
+    gap: 1rem;
+    flex-wrap: wrap;
     justify-content: center;
 }
 
@@ -41,21 +40,20 @@ body {
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
     background-color: white;
-    border: 1px solid #cbd5e1; /* slate-300 */
-    border-radius: 9999px; /* rounded-full */
+    border: 1px solid #cbd5e1;
+    border-radius: 9999px;
     font-weight: 500;
-    color: #334155; /* slate-700 */
-    transition: all 0.2s ease-in-out;
+    color: #334155;
+    transition: all 0.3s ease-in-out;
     cursor: pointer;
 }
 .dropdown-btn:hover {
-    background-color: #f8fafc; /* slate-50 */
-    border-color: #94a3b8; /* slate-400 */
+    background-color: #f8fafc;
+    border-color: #94a3b8;
 }
-/* MEJORA: Se aplica la clase .active a los botones de filtro */
 .dropdown-btn.active {
-    background-color: #eff6ff; /* blue-50 */
-    border-color: #2563eb; /* blue-600 */
+    background-color: #eff6ff;
+    border-color: #2563eb;
     color: #2563eb;
 }
 .dropdown-btn svg {
@@ -70,9 +68,9 @@ body {
     top: calc(100% + 0.5rem);
     left: 0;
     background-color: white;
-    border-radius: 0.75rem; /* rounded-xl */
+    border-radius: 0.75rem;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    border: 1px solid #e2e8f0; /* slate-200 */
+    border: 1px solid #e2e8f0;
     width: 280px;
     padding: 0.5rem;
     z-index: 50;
@@ -104,17 +102,25 @@ body {
 }
 .filter-btn.active:hover, .theme-btn.active:hover { background-color: #1d4ed8; }
 
+.card-content-wrapper {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-/* --- AÑADIDO: Estilos para el botón de favorito --- */
+.card-content-wrapper:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* --- BOTÓN DE FAVORITO --- */
 .favorite-btn-card {
-    -webkit-text-stroke: 1.5px #a1a1aa; /* Borde para el icono */
+    -webkit-text-stroke: 1.5px #a1a1aa;
 }
 .favorite-btn-card.is-favorite, .favorite-btn-modal.is-favorite {
-    color: #facc15; /* yellow-400 */
-    -webkit-text-stroke: 1.5px #ca8a04; /* Borde más oscuro cuando es favorito */
+    color: #facc15;
+    -webkit-text-stroke: 1.5px #ca8a04;
 }
 
-/* --- AÑADIDO: Animación para las tarjetas --- */
+/* --- ANIMACIÓN DE TARJETAS --- */
 .animate-fade-in {
     animation: fadeIn 0.5s ease-in-out forwards;
 }
@@ -130,8 +136,7 @@ body {
     }
 }
 
-
-/* Estilos de Prose (para los temas) */
+/* ESTILOS DE PROSE (TEMAS) */
 .prose h2 { font-size: 1.75rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; }
 .prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 2em; margin-bottom: 0.75em; }
 .prose p, .prose li { font-size: 1rem; line-height: 1.6; }
@@ -140,40 +145,26 @@ body {
 .prose ul ul { margin-top: 0.25em; margin-bottom: 0.5em; }
 
 .bibliografia {
-    margin-top: 2.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e2e8f0; /* slate-200 */
-    font-size: 0.875rem;
-    color: #64748b; /* slate-500 */
+    margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; font-size: 0.875rem; color: #64748b;
 }
 .bibliografia h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #334155; /* slate-700 */
-    margin-bottom: 0.5rem;
+    font-size: 1rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;
 }
 
-/* Modo Alfredo (oscuro) */
-.dark {
+/* MODO OSCURO (ALFREDO) */
+body.dark {
     background-color: #0f172a !important;
     color: #f1f5f9 !important;
 }
-.dark .text-slate-600, .dark .text-slate-800, .dark .text-slate-900 {
-    color: #f1f5f9 !important;
-}
-.dark .bg-slate-100 {
-    background-color: #0f172a !important;
-}
-/* MEJORA: Transición suave para el modo oscuro */
-.dark .bg-white {
-    background-color: #1e293b !important;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-.dark .text-black {
-    color: #f8fafc !important;
-}
+.dark .text-slate-600, .dark .text-slate-800, .dark .text-slate-900 { color: #f1f5f9 !important; }
+.dark .bg-slate-100 { background-color: #0f172a !important; }
+.dark .bg-white { background-color: #1e293b !important; }
+.dark .text-black { color: #f8fafc !important; }
+.dark .border-slate-200, .dark .border-slate-300 { border-color: #334155 !important; }
+.dark .prose { color: #cbd5e1; }
+.dark .prose h2, .dark .prose h3, .dark .prose h4 { color: white; }
 
-/* Mejoras móviles */
+/* MEJORAS MÓVILES */
 @media (max-width: 640px) {
     button, input, select, textarea {
         font-size: 1rem !important;
