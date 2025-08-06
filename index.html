@@ -35,7 +35,7 @@
                 <input id="searchBar" type="text" placeholder="Buscar por nombre, familia, uso..." aria-label="Buscar medicamento" class="w-full p-4 border border-slate-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" list="search-history">
                 <datalist id="search-history"></datalist>
             </div>
-            <div class="filter-controls">
+            <nav class="filter-controls" aria-label="Filtros principales">
                 <button id="favorites-btn" class="dropdown-btn">
                     <span>★ Favoritos</span>
                 </button>
@@ -57,12 +57,17 @@
                         <nav id="themesFilterContainer" aria-label="Temas de interés"></nav>
                     </div>
                 </div>
-            </div>
+            </nav>
         </section>
 
         <div id="view-container" class="mt-8">
             <section id="medication-section">
-                <div id="loading-indicator" class="text-center py-16 text-slate-500"><p>Cargando medicamentos...</p></div>
+                <div id="loading-indicator" class="text-center py-16 text-slate-500">
+                    <div class="flex justify-center items-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    </div>
+                    <p class="mt-4">Cargando medicamentos...</p>
+                </div>
                 <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
                 <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden"><p>No se encontraron medicamentos.</p></div>
             </section>
@@ -79,7 +84,7 @@
     
     <template id="medication-card-template">
       <article class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col overflow-hidden relative animate-fade-in">
-        <button class="favorite-btn-card absolute top-2 right-2 text-2xl text-slate-300 hover:text-yellow-400 transition-colors z-10">★</button>
+        <button class="favorite-btn-card absolute top-2 right-2 text-2xl text-slate-300 hover:text-yellow-400 transition-colors z-10" aria-label="Añadir a favoritos">★</button>
         <div class="card-content-wrapper cursor-pointer">
             <img alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/fecaca/991b1b?text=Imagen+no+disponible';">
             <div class="p-5 flex flex-col flex-grow">
