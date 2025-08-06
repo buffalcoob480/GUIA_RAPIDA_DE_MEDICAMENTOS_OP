@@ -105,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.themesSection.classList.toggle('hidden', state.ui.view !== 'themes');
 
         if (state.ui.view === 'themes' && state.ui.activeTheme) {
-            // Aquí se renderizaría el contenido de los temas clínicos
             selectors.themesSection.innerHTML = `<div class="prose max-w-none"><h2>${state.ui.activeTheme.name}</h2><p>El contenido para este tema clínico estará disponible próximamente.</p></div>`;
         }
 
@@ -245,7 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => selectors.modal.classList.add('hidden'), 300);
     }
 
-    // --- LÓGICA DE CALCULADORA MEJORADA ---
     function calculateDose(med) {
         const weightInput = selectors.modalContent.querySelector('.weight-input-modal');
         const resultDiv = selectors.modalContent.querySelector('.result-div-modal');
@@ -265,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let totalDoseMgDia = 0;
         const durationText = med.duration ? `, ${med.duration}` : '';
 
-        const calculateRange = (minMg, maxMg, concentration, freq) => {
+        const calculateRange = (minMg, maxMg, concentration) => {
             const minMl = (weight * minMg) / concentration;
             const maxMl = (weight * maxMg) / concentration;
 
@@ -286,14 +284,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (med.doseMin_mg_kg_dia) {
             const intervals = String(med.doseIntervals).split('-').map(Number);
-            const minTakes = intervals[0];
-            const maxTakes = intervals.length > 1 ? intervals[1] : minTakes;
+            const minTakes = intervals[intervals.length - 1]; // Use the highest frequency for calculation
+            const maxTakes = intervals[0]; // Use the lowest frequency for calculation
+            
+            const doseMinPerTake = med.doseMin_mg_kg_dia / maxTakes;
+            const doseMaxPerTake = med.doseMax_mg_kg_dia / minTakes;
+
             const hoursMin = Math.round(24 / maxTakes);
             const hoursMax = Math.round(24 / minTakes);
-            const doseRangeText = calculateRange(med.doseMin_mg_kg_dia / minTakes, med.doseMax_mg_kg_dia / minTakes, med.concentration);
-            const frequencyText = (hoursMin === hoursMax) ? `cada ${hoursMax} horas` : `cada ${hoursMax} a ${hoursMin} horas`;
+
+            const doseRangeText = calculateRange(doseMinPerTake, doseMaxPerTake, med.concentration);
+            const frequencyText = (hoursMin === hoursMax) ? `cada ${hoursMax} horas` : `cada ${hoursMin} a ${hoursMax} horas`;
             resultText = `Dosis: ${doseRangeText}, ${frequencyText}${durationText}.`;
             totalDoseMgDia = weight * med.doseMax_mg_kg_dia;
+
         } else if (med.doseMin_mg_kg_dosis) {
             const frequency = med.doseFreq || 1;
             const hours = Math.round(24 / frequency);
@@ -303,8 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         resultDiv.innerHTML = resultText;
-        if (med.name.toLowerCase().includes("paracetamol") && totalDoseMgDia > 4000) {
-            warningDiv.innerHTML = '⚠️ La dosis diaria calculada podría superar el máximo recomendado para un adulto.';
+        if (med.name.toLowerCase().includes("paracetamol") && totalDoseMgDia > (weight * 90)) { // Safety margin
+             warningDiv.innerHTML = '⚠️ La dosis diaria total podría exceder el máximo recomendado. Verifique la dosis.';
         }
     }
 
@@ -319,7 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     };
 
-    // --- FUNCIÓN DE INICIALIZACIÓN ---
     async function initializeApp() {
         try {
             loadStateFromStorage();
@@ -431,7 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.themesDropdownPanel.classList.remove('is-open');
     }
 
-    // --- FUNCIONES DE UTILIDAD ---
     function normalizeText(str) {
         if (!str) return '';
         return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -449,6 +451,5 @@ document.addEventListener('DOMContentLoaded', () => {
         return score;
     }
 
-    // --- INICIAR LA APP ---
     initializeApp();
 });
