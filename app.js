@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 calculateBtn.disabled = true;
                 setTimeout(() => {
                     calculateDose(med);
-                    calculateBtn.textContent = 'Calcular';
+                    calculateBtn.textContent = 'Calcular Dosis';
                     calculateBtn.disabled = false;
                 }, 250);
             });
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h4 class="text-base font-semibold text-slate-800 mb-2">Calculadora de Dosis Pediátrica</h4>
                     <div class="flex items-center space-x-3">
                         <input type="number" placeholder="Peso en kg" class="weight-input-modal border border-slate-300 rounded-md p-2 w-28 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <button class="calculate-btn-modal bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Calcular</button>
+                        <button class="calculate-btn-modal bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Calcular Dosis</button>
                     </div>
                     <div class="result-div-modal mt-3 text-blue-800 font-semibold text-sm p-3 bg-blue-50 rounded-md min-h-[44px]"></div>
                     <div class="dose-warning-modal text-xs text-amber-600 mt-2"></div>
@@ -212,7 +212,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         let notesHtml = '';
         if (med.notes) {
-            notesHtml = `<p class="mt-2 text-xs text-slate-500"><strong class="font-semibold text-slate-600">Nota:</strong> ${med.notes}</p>`;
+            notesHtml = `<p class="mt-2 text-sm text-slate-500 bg-gray-100 p-2 rounded-md"><strong class="font-semibold text-slate-600">Nota:</strong> ${med.notes}</p>`;
+        }
+        let warningsHtml = '';
+        if (med.warnings) {
+            warningsHtml = `<div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800">
+                <strong class="font-bold">Advertencia:</strong>
+                <p>${med.warnings}</p>
+            </div>`;
         }
 
         return `
@@ -222,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="text-lg font-semibold text-blue-600">${med.family}</p>
                 </div>
                 <div class="flex items-center gap-4">
-                    <button class="favorite-btn-modal text-3xl ${isFav ? 'is-favorite' : 'text-slate-300'} hover:text-yellow-400 transition-colors">★</button>
+                    <button class="favorite-btn-modal text-3xl ${isFav ? 'is-favorite' : 'text-slate-300'} hover:text-yellow-400 transition-colors" aria-label="Añadir a favoritos">★</button>
                     <button id="closeModalBtn" aria-label="Cerrar modal" class="text-slate-400 hover:text-slate-800 text-3xl">&times;</button>
                 </div>
             </div>
@@ -232,7 +239,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p><strong class="font-semibold text-slate-900">Indicaciones:</strong> ${med.indications}</p>
                     <p><strong class="font-semibold text-slate-900">Dosis Adulto:</strong> ${med.dose_adult}</p>
                     <p><strong class="font-semibold text-slate-900">Dosis Pediátrica:</strong> ${med.dose_pediatric}</p>
-                    <p><strong class="font-semibold text-red-600">Contraindicaciones:</strong> ${med.contraindications}</p>
+                    <div class="mt-4 p-3 bg-red-50 border-l-4 border-red-400 text-red-800">
+                        <strong class="font-bold">Contraindicaciones:</strong>
+                        <p>${med.contraindications}</p>
+                    </div>
+                    ${warningsHtml}
                     ${notesHtml}
                 </div>
                 ${calculatorHtml}
@@ -255,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         warningDiv.innerHTML = '';
 
         if (!weight || weight <= 0) {
-            resultDiv.innerHTML = '<span class="text-red-500">Ingrese un peso válido.</span>';
+            resultDiv.innerHTML = '<span class="text-red-500">Ingrese un peso válido en kg.</span>';
             return;
         }
 
@@ -284,8 +295,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (med.doseMin_mg_kg_dia) {
             const intervals = String(med.doseIntervals).split('-').map(Number);
-            const minTakes = intervals[intervals.length - 1]; // Use the highest frequency for calculation
-            const maxTakes = intervals[0]; // Use the lowest frequency for calculation
+            const minTakes = intervals[intervals.length - 1]; 
+            const maxTakes = intervals[0];
             
             const doseMinPerTake = med.doseMin_mg_kg_dia / maxTakes;
             const doseMaxPerTake = med.doseMax_mg_kg_dia / minTakes;
@@ -307,8 +318,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         resultDiv.innerHTML = resultText;
-        if (med.name.toLowerCase().includes("paracetamol") && totalDoseMgDia > (weight * 90)) { // Safety margin
-             warningDiv.innerHTML = '⚠️ La dosis diaria total podría exceder el máximo recomendado. Verifique la dosis.';
+        if (med.name.toLowerCase().includes("paracetamol") && totalDoseMgDia > (weight * 90)) {
+             warningDiv.innerHTML = '<div class="mt-2 p-2 bg-amber-100 border border-amber-300 rounded-md">⚠️ <strong>¡Atención!</strong> La dosis diaria total podría exceder el máximo recomendado. Verifique la dosis.</div>';
         }
     }
 
@@ -367,7 +378,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function initEventListeners() {
         selectors.searchBar.addEventListener('input', debounce((e) => {
             state.ui.searchTerm = e.target.value;
-            if (state.ui.searchTerm) state.ui.view = 'medications';
+            if (state.ui.searchTerm) {
+                state.ui.view = 'medications';
+                state.ui.activeFamily = 'Todos';
+            }
             updateDisplay();
         }));
         selectors.searchBar.addEventListener('keydown', (e) => {
@@ -387,6 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
             state.ui.searchTerm = '';
             selectors.searchBar.value = '';
             updateDisplay();
+            closeDropdowns();
         });
 
         selectors.familyFilterContainer.addEventListener('click', e => {
@@ -442,12 +457,22 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateRelevance(med, term) {
         let score = 0;
         if (!term) return 0;
+        
         const normName = normalizeText(med.name);
-        if (normName.startsWith(term)) score += 20;
-        else if (normName.includes(term)) score += 10;
-        if (normalizeText(med.family).includes(term)) score += 5;
-        if (normalizeText(med.uses).includes(term)) score += 3;
-        if (normalizeText(med.indications).includes(term)) score += 1;
+        const normFamily = normalizeText(med.family);
+        const normUses = normalizeText(med.uses);
+        const normIndications = normalizeText(med.indications);
+
+        if (normName.startsWith(term)) {
+            score += 50;
+        } else if (normName.includes(term)) {
+            score += 20;
+        }
+
+        if (normFamily.includes(term)) score += 5;
+        if (normUses.includes(term)) score += 3;
+        if (normIndications.includes(term)) score += 1;
+        
         return score;
     }
 
