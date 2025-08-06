@@ -1,6 +1,8 @@
 body {
     font-family: 'Inter', sans-serif;
     background-color: #f1f5f9;
+    /* MEJORA: Transición suave para el modo oscuro */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* --- SECCIÓN DE CONTROLES Y DESPLEGABLES --- */
@@ -25,6 +27,7 @@ body {
 .filter-controls {
     display: flex;
     gap: 1rem; /* 16px */
+    flex-wrap: wrap; /* Permite que los botones pasen a la siguiente línea en móviles */
     justify-content: center;
 }
 
@@ -49,6 +52,7 @@ body {
     background-color: #f8fafc; /* slate-50 */
     border-color: #94a3b8; /* slate-400 */
 }
+/* MEJORA: Se aplica la clase .active a los botones de filtro */
 .dropdown-btn.active {
     background-color: #eff6ff; /* blue-50 */
     border-color: #2563eb; /* blue-600 */
@@ -100,35 +104,40 @@ body {
 }
 .filter-btn.active:hover, .theme-btn.active:hover { background-color: #1d4ed8; }
 
-/* --- NUEVO ESTILO PARA CONTENEDOR DE SVG --- */
-.svg-container {
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background-color: #f8fafc; /* slate-50 */
-    border-radius: 0.5rem;
-    border: 1px solid #e2e8f0; /* slate-200 */
+
+/* --- AÑADIDO: Estilos para el botón de favorito --- */
+.favorite-btn-card {
+    -webkit-text-stroke: 1.5px #a1a1aa; /* Borde para el icono */
+}
+.favorite-btn-card.is-favorite, .favorite-btn-modal.is-favorite {
+    color: #facc15; /* yellow-400 */
+    -webkit-text-stroke: 1.5px #ca8a04; /* Borde más oscuro cuando es favorito */
 }
 
-/* Estilos de Prose */
+/* --- AÑADIDO: Animación para las tarjetas --- */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Estilos de Prose (para los temas) */
 .prose h2 { font-size: 1.75rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; }
 .prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 2em; margin-bottom: 0.75em; }
 .prose p, .prose li { font-size: 1rem; line-height: 1.6; }
 .prose strong { font-weight: 600; }
 .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-top: 0.5em; margin-bottom: 1em; }
 .prose ul ul { margin-top: 0.25em; margin-bottom: 0.5em; }
-
-/* --- ESTILOS PARA GUÍAS CLÍNICAS --- */
-.formula-box {
-    background-color: #f8fafc; /* slate-50 */
-    border-left: 3px solid #3b82f6; /* blue-500 */
-    padding: 0.75rem 1.25rem;
-    margin: 1rem 0;
-    font-family: monospace;
-    font-size: 1rem;
-    color: #1e293b; /* slate-800 */
-    border-radius: 0.25rem;
-}
 
 .bibliografia {
     margin-top: 2.5rem;
@@ -143,13 +152,6 @@ body {
     color: #334155; /* slate-700 */
     margin-bottom: 0.5rem;
 }
-.bibliografia ul {
-    list-style-type: none;
-    padding-left: 0;
-}
-.bibliografia em {
-    font-style: italic;
-}
 
 /* Modo Alfredo (oscuro) */
 .dark {
@@ -162,24 +164,13 @@ body {
 .dark .bg-slate-100 {
     background-color: #0f172a !important;
 }
+/* MEJORA: Transición suave para el modo oscuro */
 .dark .bg-white {
     background-color: #1e293b !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 .dark .text-black {
     color: #f8fafc !important;
-}
-
-details > summary {
-    list-style: none;
-    padding: 0.5rem;
-    background-color: #e2e8f0;
-    border-radius: 0.5rem;
-}
-details[open] > summary {
-    background-color: #cbd5e1;
-}
-summary::-webkit-details-marker {
-    display: none;
 }
 
 /* Mejoras móviles */
@@ -188,26 +179,7 @@ summary::-webkit-details-marker {
         font-size: 1rem !important;
         padding: 0.75rem !important;
     }
-
-    h1, h2, h3 {
-        font-size: 1.25rem !important;
-    }
-
     .main-content, .container {
         padding: 1rem !important;
-    }
-}
-
-/* --- ESTILOS PARA TEXTO ANIMADO (AÑADIDO) --- */
-.animated-text {
-    animation: glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes glow {
-    from {
-        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0073e6, 0 0 20px #0073e6;
-    }
-    to {
-        text-shadow: 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #0073e6, 0 0 25px #0073e6;
     }
 }
