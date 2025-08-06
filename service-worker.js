@@ -1,4 +1,5 @@
-const CACHE_NAME = 'medapp-v3'; // <-- ¡Hemos cambiado el nombre aquí!
+// MEJORA: Versión del caché actualizada
+const CACHE_NAME = 'medapp-v4'; 
 const URLS_TO_CACHE = [
     './',
     './index.html',
@@ -8,7 +9,6 @@ const URLS_TO_CACHE = [
     './icon-512.png'
 ];
 
-// Evento de instalación: guarda los archivos principales de la app
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -19,7 +19,6 @@ self.addEventListener('install', event => {
     );
 });
 
-// Evento de activación: limpia cachés antiguos
 self.addEventListener('activate', event => {
     event.waitUntil(
         caches.keys().then(cacheNames => {
@@ -35,30 +34,32 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Evento de fetch: decide cómo manejar las solicitudes
+// MEJORA: Estrategia de Fetch actualizada
 self.addEventListener('fetch', event => {
-    // Estrategia: Para medicamentos.json, siempre busca en la red primero.
-    // Para todo lo demás, usa la caché primero.
-    if (event.request.url.includes('medicamentos.json')) {
+    const { request } = event;
+
+    // Estrategia Stale-While-Revalidate para medicamentos.json
+    // Muestra el contenido cacheado inmediatamente (stale)
+    // mientras busca una nueva versión en la red (revalidate).
+    if (request.url.includes('medicamentos.json')) {
         event.respondWith(
             caches.open(CACHE_NAME).then(cache => {
-                return fetch(event.request).then(response => {
-                    // Si la respuesta de la red es exitosa, la guardamos en caché y la devolvemos
-                    cache.put(event.request, response.clone());
-                    return response;
-                }).catch(() => {
-                    // Si la red falla, busca en la caché como último recurso
-                    return caches.match(event.request);
+                return cache.match(request).then(cachedResponse => {
+                    const fetchPromise = fetch(request).then(networkResponse => {
+                        // Si la petición a la red es exitosa, la guardamos en caché
+                        cache.put(request, networkResponse.clone());
+                        return networkResponse;
+                    });
+                    // Devolvemos la respuesta cacheada si existe, si no, esperamos la de la red
+                    return cachedResponse || fetchPromise;
                 });
             })
         );
-    } else {
-        // Para todos los demás archivos, usa la estrategia "cache-first"
+    } else if (URLS_TO_CACHE.includes(request.pathname) || request.destination === 'image') {
+        // Para los archivos principales y las imágenes, usamos "Cache First"
         event.respondWith(
-            caches.match(event.request)
-            .then(response => {
-                // Si está en caché, la devuelve. Si no, la busca en la red.
-                return response || fetch(event.request);
+            caches.match(request).then(response => {
+                return response || fetch(request);
             })
         );
     }
