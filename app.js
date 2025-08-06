@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- LÓGICA DE DATOS Y ESTADO ---
 
-    // MEJORA: Cargar estado desde localStorage
     function loadStateFromStorage() {
         const favs = localStorage.getItem('medFavorites');
         if (favs) {
@@ -51,29 +50,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // MEJORA: Guardar favoritos en localStorage
     function saveFavorites() {
         localStorage.setItem('medFavorites', JSON.stringify(Array.from(state.medications.favorites)));
     }
 
-    // MEJORA: Guardar historial en localStorage
     function saveSearchHistory() {
-        // Limitar el historial a los últimos 10 términos
         if (state.searchHistory.length > 10) {
             state.searchHistory.shift();
         }
-        localStorage.setItem('medSearchHistory', JSON.parse(JSON.stringify(state.searchHistory)));
+        localStorage.setItem('medSearchHistory', JSON.stringify(state.searchHistory));
     }
     
-    // MEJORA: Función para añadir al historial
     function addToSearchHistory(term) {
         if (!term || state.searchHistory.includes(term)) return;
-        state.searchHistory.unshift(term); // Añadir al principio
+        state.searchHistory.unshift(term);
         saveSearchHistory();
         renderSearchHistory();
     }
     
-    // MEJORA: Funciones para manejar favoritos
     function toggleFavorite(medId) {
         if (state.medications.favorites.has(medId)) {
             state.medications.favorites.delete(medId);
@@ -81,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             state.medications.favorites.add(medId);
         }
         saveFavorites();
-        updateDisplay(); // Actualizar la vista para reflejar el cambio
+        updateDisplay();
     }
 
     // --- LÓGICA DE RENDERIZADO Y UI ---
@@ -90,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let results = [];
         const searchTerm = normalizeText(state.ui.searchTerm);
         
-        // Determinar qué lista de medicamentos mostrar
         if (state.ui.view === 'favorites') {
             results = state.medications.all.filter(med => state.medications.favorites.has(med.originalIndex));
         } else if (searchTerm) {
@@ -106,17 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 : state.medications.all.filter(med => med.simpleFamily === state.ui.activeFamily);
         }
         
-        // Renderizar la vista correcta
         if (state.ui.view === 'medications' || state.ui.view === 'favorites') {
             renderMedications(results);
         }
         
-        // Mostrar u ocultar las secciones principales
         selectors.medicationSection.classList.toggle('hidden', state.ui.view === 'themes');
         selectors.themesSection.classList.toggle('hidden', state.ui.view !== 'themes');
         
         if (state.ui.view === 'themes') {
-            // Lógica para mostrar temas (puede ser expandida)
             selectors.themesSection.innerHTML = `<h2>${state.activeTheme.name}</h2><p>Contenido del tema aquí...</p>`;
         }
 
@@ -134,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // MEJORA: Función separada para crear una tarjeta
     function createMedicationCard(med) {
         const cardClone = selectors.cardTemplate.content.cloneNode(true);
         const cardElement = cardClone.querySelector('article');
@@ -148,18 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
         cardElement.querySelector('.card-family').textContent = med.family;
         cardElement.querySelector('.card-uses').textContent = med.uses;
         
-        // Marcar si es favorito
         if (state.medications.favorites.has(med.originalIndex)) {
             favoriteBtn.classList.add('is-favorite');
         }
 
-        // Event listener para el botón de favorito
         favoriteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             toggleFavorite(med.originalIndex);
         });
 
-        // Event listener para abrir el modal
         contentWrapper.addEventListener('click', () => {
             const medication = state.medications.all.find(m => m.originalIndex === med.originalIndex);
             if (medication) openModal(medication);
@@ -168,14 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return cardElement;
     }
 
-    // MEJORA: Función para renderizar el historial de búsqueda
     function renderSearchHistory() {
         selectors.searchHistory.innerHTML = state.searchHistory.map(term => `<option value="${term}"></option>`).join('');
     }
 
-    // MEJORA: Lógica de UI para los botones activos
     function updateActiveButtons() {
-        // Desactivar todos primero
         document.querySelectorAll('.filter-controls .active').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.dropdown-panel .active').forEach(btn => btn.classList.remove('active'));
 
@@ -196,14 +179,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // MEJORA: Modal refactorizado
     function openModal(med) {
         selectors.modalContent.innerHTML = createModalHtml(med);
         selectors.modal.classList.remove('hidden');
         
         setTimeout(() => selectors.modalContent.classList.remove('scale-95', 'opacity-0'), 10);
         
-        // Añadir event listeners del modal
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
         document.querySelector('.favorite-btn-modal').addEventListener('click', () => {
              toggleFavorite(med.originalIndex);
@@ -213,10 +194,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (med.isCalculable) {
             const calculateBtn = document.querySelector('.calculate-btn-modal');
             calculateBtn.addEventListener('click', () => {
-                // Feedback visual
                 calculateBtn.textContent = 'Calculando...';
                 calculateBtn.disabled = true;
-                setTimeout(() => { // Simula un pequeño retraso
+                setTimeout(() => {
                     calculateDose(med);
                     calculateBtn.textContent = 'Calcular';
                     calculateBtn.disabled = false;
@@ -260,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => selectors.modal.classList.add('hidden'), 300);
     }
     
-    // MEJORA: Calculadora con alertas
+    // --- NUEVA LÓGICA DE LA CALCULADORA ---
     function calculateDose(med) {
         const weightInput = selectors.modalContent.querySelector('.weight-input-modal');
         const resultDiv = selectors.modalContent.querySelector('.result-div-modal');
@@ -276,24 +256,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let resultText = '';
         let totalDoseMgDia = 0;
+        const unit = med.isDrops ? 'gotas' : 'ml';
+        const concentration = med.concentration || 1;
 
         if (med.doseMin_mg_kg_dia) {
-            const intervals = parseInt(String(med.doseIntervals).split('-').pop(), 10);
-            const minMlPerTake = (weight * med.doseMin_mg_kg_dia / med.concentration) / intervals;
-            const maxMlPerTake = (weight * med.doseMax_mg_kg_dia / med.concentration) / intervals;
-            resultText = `Administrar <strong>${minMlPerTake.toFixed(1)} a ${maxMlPerTake.toFixed(1)} ml</strong> por toma (${med.doseIntervals} veces al día).`;
+            const intervals = String(med.doseIntervals).split('-').map(Number);
+            const minTakes = intervals[0];
+            const maxTakes = intervals.length > 1 ? intervals[1] : minTakes;
+            
+            const minDosePerTake = (weight * med.doseMin_mg_kg_dia / concentration) / maxTakes;
+            const maxDosePerTake = (weight * med.doseMax_mg_kg_dia / concentration) / minTakes;
+            
+            const hoursMin = Math.round(24 / maxTakes);
+            const hoursMax = Math.round(24 / minTakes);
+
+            let doseRangeText;
+            if (minDosePerTake.toFixed(1) === maxDosePerTake.toFixed(1)) {
+                doseRangeText = `<strong>${maxDosePerTake.toFixed(1)} ${unit}</strong>`;
+            } else {
+                doseRangeText = `<strong>${minDosePerTake.toFixed(1)} a ${maxDosePerTake.toFixed(1)} ${unit}</strong>`;
+            }
+
+            let frequencyText = (hoursMin === hoursMax) ? `cada ${hoursMax} horas.` : `cada ${hoursMax} a ${hoursMin} horas.`;
+            resultText = `Dosis recomendada: ${doseRangeText}, ${frequencyText}`;
             totalDoseMgDia = weight * med.doseMax_mg_kg_dia;
+
         } else if (med.doseMin_mg_kg_dosis) {
-            const minMl = (weight * med.doseMin_mg_kg_dosis) / med.concentration;
-            const maxMl = (weight * med.doseMax_mg_kg_dosis) / med.concentration;
-            const frequencyText = med.doseFreq ? ` cada ${Math.round(24 / med.doseFreq)} horas.` : '.';
-            resultText = `Dosis: <strong>${minMl.toFixed(1)} a ${maxMl.toFixed(1)} ml</strong>${frequencyText}`;
-            totalDoseMgDia = weight * med.doseMax_mg_kg_dosis * (med.doseFreq || 1);
+            const minDose = (weight * med.doseMin_mg_kg_dosis) / concentration;
+            const maxDose = (weight * med.doseMax_mg_kg_dosis) / concentration;
+            
+            const frequency = med.doseFreq || 1;
+            const hours = Math.round(24 / frequency);
+            
+            let doseRangeText;
+            if (minDose.toFixed(1) === maxDose.toFixed(1)) {
+                 doseRangeText = `<strong>${maxDose.toFixed(1)} ${unit}</strong>`;
+            } else {
+                 doseRangeText = `<strong>${minDose.toFixed(1)} a ${maxDose.toFixed(1)} ${unit}</strong>`;
+            }
+
+            resultText = `Dosis: ${doseRangeText} cada ${hours} horas.`;
+            totalDoseMgDia = weight * med.doseMax_mg_kg_dosis * frequency;
         }
 
         resultDiv.innerHTML = resultText;
         
-        // Alerta de dosis máxima (ejemplo con Paracetamol)
         if (med.name.toLowerCase().includes("paracetamol") && totalDoseMgDia > 4000) {
             warningDiv.innerHTML = '⚠️ La dosis diaria calculada podría superar el máximo recomendado para un adulto.';
         }
@@ -312,12 +319,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FUNCIÓN DE INICIALIZACIÓN ---
     async function initializeApp() {
         try {
-            loadStateFromStorage(); // Cargar favoritos e historial
+            loadStateFromStorage();
             const response = await fetch('medicamentos.json');
             if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
             const rawMedications = await response.json();
             
-            // Procesar y guardar medicamentos en el estado
             state.medications.all = rawMedications.map((med, index) => ({
                 ...med, 
                 originalIndex: index, 
@@ -329,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initFilters();
             initEventListeners();
             renderSearchHistory();
-            updateDisplay(); // Primera renderización
+            updateDisplay();
         } catch (error) {
             console.error("Initialization failed:", error);
             selectors.loadingIndicator.innerHTML = `<p class="text-red-600">Error: No se pudo cargar la información.<br>Por favor, revisa tu conexión o intenta más tarde.</p>`;
@@ -337,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initFilters() {
-        const families = ['Todos', ...new Set(state.medications.all.map(med => med.simpleFamily).sort())];
+        const families = ['Todos', ...new Set(state.medications.all.map(med => med.simpleFamily).filter(f => f).sort())];
         selectors.familyFilterContainer.innerHTML = families.map(f => `<button class="filter-btn" data-family="${f}">${f}</button>`).join('');
         
         const themes = [ 
@@ -349,35 +355,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initEventListeners() {
-        // Debounced search
         selectors.searchBar.addEventListener('input', debounce((e) => {
             state.ui.searchTerm = e.target.value;
-            // Si hay búsqueda, cambiamos la vista a medicamentos
             if (state.ui.searchTerm) {
                 state.ui.view = 'medications';
             }
             updateDisplay();
         }));
         
-        // Guardar en historial cuando se presiona Enter
         selectors.searchBar.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 addToSearchHistory(e.target.value.trim());
             }
         });
 
-        // Dropdowns
         selectors.familiesDropdownBtn.addEventListener('click', e => { e.stopPropagation(); toggleDropdown('families'); });
         selectors.themesDropdownBtn.addEventListener('click', e => { e.stopPropagation(); toggleDropdown('themes'); });
         
-        // Botón de Favoritos
         selectors.favoritesBtn.addEventListener('click', () => {
              state.ui.view = 'favorites';
              state.ui.searchTerm = '';
              updateDisplay();
         });
         
-        // Contenedores de filtros
         selectors.familyFilterContainer.addEventListener('click', e => {
             const btn = e.target.closest('.filter-btn');
             if (btn) {
@@ -398,7 +398,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Clics globales para cerrar modales/dropdowns
         document.addEventListener('click', () => closeDropdowns());
         selectors.modal.addEventListener('click', e => { if (e.target.id === 'medicationModal') closeModal(); });
         window.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
@@ -407,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleDropdown(type) {
         const isFamiliesOpen = selectors.familiesDropdownPanel.classList.contains('is-open');
         const isThemesOpen = selectors.themesDropdownPanel.classList.contains('is-open');
-        closeDropdowns(); // Cerrar todo primero
+        closeDropdowns();
 
         if (type === 'families' && !isFamiliesOpen) {
             selectors.familiesDropdownPanel.classList.add('is-open');
@@ -421,7 +420,6 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.themesDropdownPanel.classList.remove('is-open');
     }
 
-    // --- FUNCIONES DE UTILIDAD ---
     function normalizeText(str) { 
         if (!str) return '';
         return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -439,6 +437,5 @@ document.addEventListener('DOMContentLoaded', () => {
         return score;
     }
 
-    // --- INICIAR LA APP ---
     initializeApp();
 });
