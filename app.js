@@ -178,7 +178,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
         document.querySelector('.favorite-btn-modal').addEventListener('click', () => {
             toggleFavorite(med.originalIndex);
-            document.querySelector('.favorite-btn-modal').classList.toggle('is-favorite');
+            const favButtonInModal = document.querySelector('.favorite-btn-modal');
+            favButtonInModal.classList.toggle('is-favorite');
+            // Actualizar la tarjeta en la lista principal sin recargar todo
+            const cardInList = document.querySelector(`.card-content-wrapper[data-original-index='${med.originalIndex}']`);
+            cardInList?.closest('article').querySelector('.favorite-btn-card').classList.toggle('is-favorite');
         });
 
         if (med.isCalculable) {
@@ -201,24 +205,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (med.isCalculable) {
             calculatorHtml = `
                 <div class="mt-6 pt-6 border-t border-slate-200">
-                    <h4 class="text-base font-semibold text-slate-800 mb-2">Calculadora de Dosis Pediátrica</h4>
+                    <h4 class="text-base font-semibold text-slate-800 mb-3">Calculadora de Dosis Pediátrica</h4>
                     <div class="flex items-center space-x-3">
                         <input type="number" placeholder="Peso en kg" class="weight-input-modal border border-slate-300 rounded-md p-2 w-28 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <button class="calculate-btn-modal bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Calcular Dosis</button>
                     </div>
                     <div class="result-div-modal mt-3 text-blue-800 font-semibold text-sm p-3 bg-blue-50 rounded-md min-h-[44px]"></div>
-                    <div class="dose-warning-modal text-xs text-amber-600 mt-2"></div>
+                    <div class="dose-warning-modal mt-2"></div>
                 </div>`;
         }
         let notesHtml = '';
         if (med.notes) {
-            notesHtml = `<p class="mt-2 text-sm text-slate-500 bg-gray-100 p-2 rounded-md"><strong class="font-semibold text-slate-600">Nota:</strong> ${med.notes}</p>`;
+            notesHtml = `<div class="mt-4 p-3 bg-gray-100 border-l-4 border-gray-400 text-gray-800">
+                <strong class="font-bold">Nota:</strong>
+                <p class="text-sm">${med.notes}</p>
+            </div>`;
         }
         let warningsHtml = '';
         if (med.warnings) {
             warningsHtml = `<div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800">
-                <strong class="font-bold">Advertencia:</strong>
-                <p>${med.warnings}</p>
+                <strong class="font-bold">⚠️ Advertencia:</strong>
+                <p class="text-sm">${med.warnings}</p>
             </div>`;
         }
 
@@ -240,8 +247,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p><strong class="font-semibold text-slate-900">Dosis Adulto:</strong> ${med.dose_adult}</p>
                     <p><strong class="font-semibold text-slate-900">Dosis Pediátrica:</strong> ${med.dose_pediatric}</p>
                     <div class="mt-4 p-3 bg-red-50 border-l-4 border-red-400 text-red-800">
-                        <strong class="font-bold">Contraindicaciones:</strong>
-                        <p>${med.contraindications}</p>
+                        <strong class="font-bold">🚫 Contraindicaciones:</strong>
+                        <p class="text-sm">${med.contraindications}</p>
                     </div>
                     ${warningsHtml}
                     ${notesHtml}
@@ -319,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resultDiv.innerHTML = resultText;
         if (med.name.toLowerCase().includes("paracetamol") && totalDoseMgDia > (weight * 90)) {
-             warningDiv.innerHTML = '<div class="mt-2 p-2 bg-amber-100 border border-amber-300 rounded-md">⚠️ <strong>¡Atención!</strong> La dosis diaria total podría exceder el máximo recomendado. Verifique la dosis.</div>';
+             warningDiv.innerHTML = '<div class="p-2 bg-amber-100 border border-amber-300 rounded-md text-xs text-amber-700">⚠️ <strong>¡Atención!</strong> La dosis diaria total podría exceder el máximo recomendado. Verifique la dosis.</div>';
         }
     }
 
@@ -378,9 +385,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function initEventListeners() {
         selectors.searchBar.addEventListener('input', debounce((e) => {
             state.ui.searchTerm = e.target.value;
+            // Si el usuario empieza a buscar, reseteamos la vista a la búsqueda general
             if (state.ui.searchTerm) {
                 state.ui.view = 'medications';
-                state.ui.activeFamily = 'Todos';
+                state.ui.activeFamily = 'Todos'; 
             }
             updateDisplay();
         }));
@@ -463,12 +471,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const normUses = normalizeText(med.uses);
         const normIndications = normalizeText(med.indications);
 
+        // Puntuación más alta si el término coincide con el inicio del nombre
         if (normName.startsWith(term)) {
             score += 50;
         } else if (normName.includes(term)) {
-            score += 20;
+            score += 20; // Puntuación alta por coincidencia en el nombre
         }
 
+        // Puntuaciones menores para otros campos
         if (normFamily.includes(term)) score += 5;
         if (normUses.includes(term)) score += 3;
         if (normIndications.includes(term)) score += 1;
