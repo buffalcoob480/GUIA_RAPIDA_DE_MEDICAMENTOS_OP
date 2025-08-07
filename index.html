@@ -13,9 +13,9 @@
 </head>
 <body class="bg-slate-100 text-slate-800">
 
-<div class="fixed top-4 right-4 z-50">
+<div class="fixed top-4 right-4 z-[60]">
     <button id="modoAlfredoToggle" class="px-4 py-2 bg-slate-900 text-white rounded shadow-md hover:bg-slate-700 transition">
-        Activar Modo Alfredo
+        Modo Alfredo
     </button>
 </div>
 
@@ -25,9 +25,6 @@
             <h1 class="text-3xl sm:text-5xl font-bold text-slate-900">Guía Farmacológica y Clínica</h1>
             <p class="text-lg text-slate-600 mt-2">Centro de Salud Colonia Azteca</p>
             <p class="text-sm text-slate-500 mt-4">Actualmente con <span id="med-count" class="font-bold text-slate-600">0</span> medicamentos en la base de datos.</p>
-            
-            <p class="text-lg font-semibold text-sky-600 mt-4 animated-text">SE ESPERAN MÁS ACTUALIZACIONES EN EL FUTURO 🚀</p>
-            <p class="text-md text-slate-500 mt-2">SALUDOS PARA EL NGRATA DE AFREDO 😜</p>
         </header>
 
         <section class="controls-container">
@@ -36,26 +33,21 @@
                 <datalist id="search-history"></datalist>
             </div>
             <nav class="filter-controls" aria-label="Filtros principales">
-                <button id="favorites-btn" class="dropdown-btn">
-                    <span>★ Favoritos</span>
-                </button>
+                <button id="favorites-btn" class="dropdown-btn"><span>★ Favoritos</span></button>
+                <button id="interaction-checker-btn" class="dropdown-btn"><span>⇆ Interacciones</span></button>
                 <div class="dropdown-wrapper">
                     <button id="families-dropdown-btn" class="dropdown-btn">
                         <span id="families-btn-text">Familias</span>
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
                     </button>
-                    <div id="families-dropdown-panel" class="dropdown-panel">
-                        <nav id="familyFilterContainer" aria-label="Filtros por familia"></nav>
-                    </div>
+                    <div id="families-dropdown-panel" class="dropdown-panel"><nav id="familyFilterContainer" aria-label="Filtros por familia"></nav></div>
                 </div>
                 <div class="dropdown-wrapper">
                     <button id="themes-dropdown-btn" class="dropdown-btn">
                         <span>Temas</span>
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
                     </button>
-                    <div id="themes-dropdown-panel" class="dropdown-panel">
-                        <nav id="themesFilterContainer" aria-label="Temas de interés"></nav>
-                    </div>
+                    <div id="themes-dropdown-panel" class="dropdown-panel"><nav id="themesFilterContainer" aria-label="Temas de interés"></nav></div>
                 </div>
             </nav>
         </section>
@@ -63,58 +55,37 @@
         <div id="view-container" class="mt-8">
             <section id="medication-section">
                 <div id="loading-indicator" class="text-center py-16 text-slate-500">
-                    <div class="flex justify-center items-center">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                    </div>
+                    <div class="flex justify-center items-center"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
                     <p class="mt-4">Cargando medicamentos...</p>
                 </div>
                 <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
                 <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden"><p>No se encontraron medicamentos.</p></div>
             </section>
             
-            <section id="themes-section" class="hidden prose max-w-none bg-white p-6 sm:p-8 rounded-xl shadow-md">
-                </section>
+            <section id="themes-section" class="hidden prose max-w-none"></section>
+            <section id="interaction-section" class="hidden"></section>
         </div>
-        <footer class="text-center p-4 mt-8 text-sm text-slate-500 border-t">
-            <p>Información de referencia. Consulte siempre a un profesional de la salud.</p>
-        </footer>
+        <footer class="text-center p-4 mt-8 text-sm text-slate-500 border-t"><p>Información de referencia. Consulte siempre a un profesional de la salud.</p></footer>
     </main>
     
     <div id="medicationModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div id="modal-content-wrapper" class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0"></div></div>
     
     <template id="medication-card-template">
-      <article class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col overflow-hidden relative animate-fade-in">
+      <article class="bg-white rounded-xl shadow-md flex flex-col overflow-hidden relative animate-fade-in">
         <button class="favorite-btn-card absolute top-2 right-2 text-2xl text-slate-300 hover:text-yellow-400 transition-colors z-10" aria-label="Añadir a favoritos">★</button>
         <div class="card-content-wrapper cursor-pointer">
-            <img alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/fecaca/991b1b?text=Imagen+no+disponible';">
+            <img alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/e0f2fe/083344?text=Imagen+no+disponible';">
             <div class="p-5 flex flex-col flex-grow">
                 <div>
-                    <h3 class="card-name font-bold text-lg text-slate-900"></h3>
-                    <p class="card-presentation text-sm text-slate-600"></p>
+                    <h3 class="card-name font-bold text-lg text-slate-900"></h3><p class="card-presentation text-sm text-slate-600"></p>
                 </div>
                 <div class="mt-4 pt-4 border-t border-slate-200 text-xs flex-grow flex flex-col justify-end">
-                    <p class="card-family font-semibold text-blue-600"></p>
-                    <p class="card-uses text-slate-500 mt-1"></p>
+                    <p class="card-family font-semibold text-blue-600"></p><p class="card-uses text-slate-500 mt-1"></p>
                 </div>
             </div>
         </div>
       </article>
     </template>
-
     <script src="app.js" defer></script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js')
-  .then(reg => console.log('Service worker registrado ✔️'))
-  .catch(err => console.error('Error al registrar service worker:', err));
-}
-
-document.getElementById('modoAlfredoToggle').addEventListener('click', function () {
-    document.body.classList.toggle('dark');
-    document.documentElement.classList.toggle('dark');
-});
-</script>
-
 </body>
 </html>
