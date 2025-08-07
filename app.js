@@ -339,13 +339,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                     <div class="md:col-span-2 info-box-success">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
                         <p><strong>Indicaciones:</strong> ${med.indications || 'No especificadas'}</p>
                     </div>
                     <div class="md:col-span-2 info-box-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
                         <p><strong>Contraindicaciones:</strong> ${med.contraindications || 'No especificadas'}</p>
                     </div>
                     <div class="md:col-span-2 info-box-warning">
-                        <p><strong>Nota:</strong> ${med.notes || 'Revisar indicaciones específicas del fabricante.'}</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                        <p><strong>Nota:</strong> ${med.notes || 'Revisar indicaciones específicas del fabricante. Administrar con alimentos si causa malestar gastrointestinal.'}</p>
                     </div>
                     
                     <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
@@ -604,21 +607,37 @@ document.addEventListener('DOMContentLoaded', () => {
                         med.pregnancy = "Riesgo. Evitar 3er trimestre.";
                         med.lactation = "Seguro (e-lactancia.org)";
                         med.minimumAge = "3 meses";
+                        med.notes = "No administrar con otros AINEs. Riesgo de sangrado gastrointestinal en uso prolongado.";
                     }
                     if (med.name.includes("Amoxicilina")) {
                         med.pregnancy = "Seguro";
                         med.lactation = "Seguro (e-lactancia.org)";
                         med.minimumAge = "Recién nacido";
+                        med.notes = "Tomar el tratamiento completo aunque los síntomas mejoren antes para evitar resistencias.";
                     }
                     if (med.name.includes("Paracetamol")) {
                         med.pregnancy = "Seguro";
                         med.lactation = "Seguro (e-lactancia.org)";
                         med.minimumAge = "Recién nacido";
+                        med.notes = "Dosis excesivas pueden causar daño hepático grave. No exceder 4g/día en adultos.";
+                    }
+                    if (med.name.includes("Loratadina")) {
+                         med.pregnancy = "Consultar Médico";
+                        med.lactation = "Seguro (e-lactancia.org)";
+                        med.minimumAge = "2 años";
+                        med.notes = "Aunque no suele causar somnolencia, puede ocurrir en algunos pacientes.";
+                    }
+                    if (med.name.includes("Ambroxol")) {
+                         med.pregnancy = "Evitar 1er Trimestre";
+                        med.lactation = "Seguro (e-lactancia.org)";
+                        med.minimumAge = "2 años";
+                        med.notes = "Asegurar una buena hidratación para ayudar a fluidificar las secreciones.";
                     }
                      if (med.name.includes("Ácido Fólico")) {
                         med.pregnancy = "Esencial";
                         med.lactation = "Seguro";
                         med.minimumAge = "N/A";
+                        med.notes = "Dosis profiláctica para embarazo es de 400 mcg/día.";
                     }
                     return med;
                 });
