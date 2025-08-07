@@ -102,14 +102,16 @@ body {
 }
 .filter-btn.active:hover, .theme-btn.active:hover { background-color: #1d4ed8; }
 
+
 .card-content-wrapper {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.card-content-wrapper:hover {
+article:hover .card-content-wrapper {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.08);
 }
+
 
 /* --- BOTÓN DE FAVORITO --- */
 .favorite-btn-card {
@@ -121,10 +123,6 @@ body {
 }
 
 /* --- ANIMACIÓN DE TARJETAS --- */
-.animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out forwards;
-}
-
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -135,6 +133,9 @@ body {
         transform: translateY(0);
     }
 }
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
 
 /* ESTILOS DE PROSE (TEMAS) */
 .prose h2 { font-size: 1.75rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; }
@@ -142,34 +143,30 @@ body {
 .prose p, .prose li { font-size: 1rem; line-height: 1.6; }
 .prose strong { font-weight: 600; }
 .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-top: 0.5em; margin-bottom: 1em; }
-.prose ul ul { margin-top: 0.25em; margin-bottom: 0.5em; }
-
-.bibliografia {
-    margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; font-size: 0.875rem; color: #64748b;
-}
-.bibliografia h4 {
-    font-size: 1rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;
-}
 
 /* MODO OSCURO (ALFREDO) */
 body.dark {
     background-color: #0f172a !important;
     color: #f1f5f9 !important;
 }
-.dark .text-slate-600, .dark .text-slate-800, .dark .text-slate-900 { color: #f1f5f9 !important; }
+.dark .text-slate-500, .dark .text-slate-600, .dark .text-slate-700, .dark .text-slate-800, .dark .text-slate-900 { color: #cbd5e1 !important; }
+.dark #families-btn-text { color: #cbd5e1 !important; }
 .dark .bg-slate-100 { background-color: #0f172a !important; }
 .dark .bg-white { background-color: #1e293b !important; }
-.dark .text-black { color: #f8fafc !important; }
 .dark .border-slate-200, .dark .border-slate-300 { border-color: #334155 !important; }
 .dark .prose { color: #cbd5e1; }
 .dark .prose h2, .dark .prose h3, .dark .prose h4 { color: white; }
+.dark .dropdown-btn { background-color: #334155; border-color: #475569; color: #f1f5f9;}
+.dark .dropdown-panel { background-color: #1e293b; border-color: #334155;}
+.dark .filter-btn:hover, .dark .theme-btn:hover { background-color: #334155; }
+.dark .filter-btn.active, .dark .theme-btn.active { background-color: #2563eb; color: white; }
+.dark .filter-btn.active:hover, .dark .theme-btn.active:hover { background-color: #1d4ed8; }
+.dark .bg-gray-100 { background-color: #334155 !important; }
+.dark .text-gray-800 { color: #e2e8f0 !important; }
+.dark .border-gray-400 { border-color: #64748b !important; }
 
 /* MEJORAS MÓVILES */
 @media (max-width: 640px) {
-    button, input, select, textarea {
-        font-size: 1rem !important;
-        padding: 0.75rem !important;
-    }
     .main-content, .container {
         padding: 1rem !important;
     }
