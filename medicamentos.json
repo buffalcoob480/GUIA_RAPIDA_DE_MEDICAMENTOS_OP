@@ -4917,5 +4917,93 @@
         "dose_adult": "80-120 mg tres veces al día.",
         "dose_pediatric": "No recomendado de rutina.",
         "contraindications": "Hipotensión severa, shock cardiogénico, bloqueo cardíaco."
+    },
+    {
+        "name": "Alopurinol",
+        "presentation": "Tabletas 100mg / 300mg",
+        "family": "Inhibidor de la Xantina Oxidasa",
+        "simpleFamily": "Antiinflamatorios",
+        "uses": "Reduce la producción de ácido úrico.",
+        "indications": "Gota crónica, hiperuricemia, prevención de cálculos renales de ácido úrico.",
+        "dose_adult": "Inicial 100 mg/día, ajustar hasta 300-600 mg/día.",
+        "dose_pediatric": "No es de uso común, requiere especialista.",
+        "contraindications": "Hipersensibilidad.",
+        "warnings": "No iniciar durante un ataque agudo de gota. Puede precipitar un ataque al inicio del tratamiento."
+    },
+    {
+        "name": "Alprazolam",
+        "presentation": "Tabletas 0.25mg / 0.50mg / 1mg",
+        "family": "Benzodiazepina",
+        "simpleFamily": "Psiquiatría",
+        "uses": "Ansiolítico.",
+        "indications": "Trastornos de ansiedad, trastorno de pánico.",
+        "dose_adult": "Ansiedad: 0.25-0.5 mg tres veces al día. Pánico: Dosis mayores bajo supervisión.",
+        "dose_pediatric": "No recomendado.",
+        "contraindications": "Miastenia gravis, insuficiencia respiratoria severa, glaucoma de ángulo estrecho, hipersensibilidad.",
+        "warnings": "Medicamento controlado. Causa somnolencia y dependencia. No suspender abruptamente."
+    },
+    {
+        "name": "Amikacina",
+        "presentation": "Solución Inyectable 100mg / 500mg",
+        "family": "Aminoglucósido (Antibiótico)",
+        "simpleFamily": "Antibióticos",
+        "uses": "Tratamiento de infecciones bacterianas graves.",
+        "indications": "Infecciones graves por bacilos Gram-negativos, incluyendo sepsis, infecciones respiratorias, de huesos, y urinarias complicadas.",
+        "dose_adult": "15 mg/kg/día, dividido cada 8-12 horas o en dosis única diaria (IV o IM).",
+        "dose_pediatric": "15-22.5 mg/kg/día, dividido cada 8 horas.",
+        "contraindications": "Hipersensibilidad a aminoglucósidos.",
+        "warnings": "Requiere monitoreo de función renal y auditiva (riesgo de nefrotoxicidad y ototoxicidad)."
+    },
+    {
+        "name": "Amiodarona",
+        "presentation": "Tabletas 200mg",
+        "family": "Antiarrítmico Clase III",
+        "simpleFamily": "Cardiovasculares",
+        "uses": "Tratamiento de arritmias cardíacas.",
+        "indications": "Arritmias ventriculares y supraventriculares graves y refractarias.",
+        "dose_adult": "Requiere dosis de carga y mantenimiento bajo estricta supervisión cardiológica.",
+        "dose_pediatric": "Uso exclusivo por especialista.",
+        "contraindications": "Bradicardia sinusal, bloqueo AV, enfermedad tiroidea, hipersensibilidad al yodo.",
+        "warnings": "Riesgo de toxicidad pulmonar, hepática y tiroidea. Requiere monitoreo periódico."
+    },
+    {
+        "name": "Amitriptilina",
+        "presentation": "Tabletas 25mg",
+        "family": "Antidepresivo Tricíclico",
+        "simpleFamily": "Psiquiatría",
+        "uses": "Depresión, dolor neuropático, migraña.",
+        "indications": "Trastorno depresivo mayor, neuralgia postherpética, profilaxis de migraña.",
+        "dose_adult": "Depresión: Iniciar 25-50 mg/noche, aumentar gradualmente. Dolor: 10-25 mg/noche.",
+        "dose_pediatric": "No recomendado para depresión en niños. Usado en dolor crónico bajo supervisión.",
+        "contraindications": "Infarto de miocardio reciente, uso con IMAO, arritmias."
+    },
+    {
+        "name": "Dicloxacilina",
+        "presentation": "Cápsulas 500mg / Suspensión 250mg/5ml",
+        "family": "Penicilina Resistente a Penicilinasa",
+        "simpleFamily": "Antibióticos",
+        "uses": "Infecciones por estafilococos productores de penicilinasa.",
+        "indications": "Infecciones de piel y tejidos blandos (celulitis, impétigo), mastitis, infecciones óseas.",
+        "dose_adult": "250-500 mg cada 6 horas.",
+        "dose_pediatric": "25-50 mg/kg/día, dividido cada 6 horas.",
+        "contraindications": "Hipersensibilidad a penicilinas.",
+        "duration": "por 7 a 10 días",
+        "isCalculable": true,
+        "concentration": 50,
+        "doseMin_mg_kg_dia": 25,
+        "doseMax_mg_kg_dia": 50,
+        "doseIntervals": "4"
+    },
+     {
+        "name": "Metformina",
+        "presentation": "Tabletas 500mg / 850mg / 1000mg",
+        "family": "Biguanida",
+        "simpleFamily": "Antidiabéticos",
+        "uses": "Control de la glucemia en diabetes mellitus tipo 2.",
+        "indications": "Diabetes tipo 2, especialmente en pacientes con sobrepeso.",
+        "dose_adult": "Inicial: 500-850 mg 1-2 veces/día con comidas. Mantenimiento: hasta 2550 mg/día.",
+        "dose_pediatric": "Niños >10 años: Inicial 500 mg/día, máx. 2000 mg/día.",
+        "contraindications": "Insuficiencia renal (TFG <30), acidosis metabólica, cetoacidosis diabética.",
+        "warnings": "Suspender temporalmente antes de procedimientos con contraste yodado. Riesgo de acidosis láctica."
     }
 ]
