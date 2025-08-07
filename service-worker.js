@@ -1,12 +1,10 @@
 // MEJORA: Versión del caché actualizada
-const CACHE_NAME = 'medapp-v4'; 
 const URLS_TO_CACHE = [
     './',
     './index.html',
     './style.css',
     './app.js',
-    './manifest.webmanifest',
-    './icon-512.png'
+    './manifest.webmanifest'
 ];
 
 self.addEventListener('install', event => {
