@@ -273,7 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
             favButton.classList.add('is-favorite');
         }
         
-        imgElement.src = `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(imgText)}`;
+        // --- MODIFICACIÓN AQUÍ ---
+        imgElement.src = med.imageUrl || `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(imgText)}`;
         imgElement.alt = imgText;
 
 
@@ -337,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
                     <div class="md:col-span-2">
-                        <img src="https://placehold.co/600x300/e0f2fe/083344?text=${encodeURIComponent(imgText)}" alt="${imgText}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <img src="${med.imageUrl || `https://placehold.co/600x300/e0f2fe/083344?text=${encodeURIComponent(imgText)}`}" alt="${imgText}" class="w-full h-48 object-cover rounded-lg mb-4">
                     </div>
 
                     <div class="md:col-span-2 info-box-success">
