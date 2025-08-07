@@ -1,117 +1,483 @@
-<!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
-<head>
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#0f172a">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía Farmacológica y Clínica - Centro de Salud Colonia Azteca</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="bg-slate-100 text-slate-800">
+document.addEventListener('DOMContentLoaded', () => {
+    // Definición de temas clínicos
+    const clinicalThemes = {
+        'dm2-inicio': {
+            name: 'Manejo Inicial de Diabetes Mellitus Tipo 2',
+            content: `<h2>Manejo Inicial de Diabetes Mellitus Tipo 2</h2><p>Esta guía resume el enfoque inicial para un paciente recién diagnosticado con Diabetes Mellitus tipo 2 (DM2), basado en guías clínicas comunes.</p><h3>Paso 1: Diagnóstico y Metas Iniciales</h3><p>El diagnóstico se confirma con HbA1c ≥ 6.5%, Glucosa en ayuno ≥ 126 mg/dL, o Glucosa a las 2h post-carga ≥ 200 mg/dL. La meta inicial de <strong>HbA1c</strong> es generalmente <strong>< 7%</strong>.</p><h3>Paso 2: Tratamiento No Farmacológico</h3><p>Es la piedra angular del manejo e incluye:</p><ul><li><strong>Educación sobre la enfermedad:</strong> Automonitoreo, reconocimiento de hipo/hiperglucemia.</li><li><strong>Plan de alimentación:</strong> Reducción de carbohidratos simples y grasas saturadas.</li><li><strong>Actividad física:</strong> Mínimo 150 minutos de ejercicio aeróbico moderado a la semana.</li><li><strong>Pérdida de peso:</strong> Objetivo inicial del 5-10% del peso corporal.</li></ul><h3>Paso 3: Tratamiento Farmacológico de Primera Línea</h3><p>A menos que existan contraindicaciones, el tratamiento de elección para iniciar es:</p><ul><li><strong><a href="#" class="med-link" data-med-name="Metformina">Metformina</a>:</strong> Iniciar con 500-850 mg una o dos veces al día con los alimentos para minimizar efectos gastrointestinales. Incrementar gradualmente cada 1-2 semanas hasta una dosis objetivo de 2000 mg/día.</li></ul><h3>Paso 4: Terapia Dual (Si no se alcanzan metas en 3 meses)</h3><p>Si la HbA1c sigue por encima de la meta después de 3 meses de monoterapia con Metformina, se debe añadir un segundo agente.</p><h4><strong>Si existe enfermedad cardiovascular (ASCVD), insuficiencia cardíaca (IC) o enfermedad renal (ERC):</strong></h4><ul><li>Añadir un <strong>agonista del receptor de GLP-1</strong> (ej. <a href="#" class="med-link" data-med-name="Liraglutida">Liraglutida</a>) o un <strong>inhibidor de SGLT2</strong> (ej. <a href="#" class="med-link" data-med-name="Dapagliflozina">Dapagliflozina</a>).</li></ul><h4><strong>Para minimizar hipoglucemia:</strong></h4><ul><li>Añadir un <strong>inhibidor de DPP-4</strong> (ej. <a href="#" class="med-link" data-med-name="Sitagliptina">Sitagliptina</a>), un agonista de GLP-1, un inhibidor de SGLT2, o una <strong>Tiazolidinediona (TZD)</strong> (ej. <a href="#" class="med-link" data-med-name="Pioglitazona">Pioglitazona</a>).</li></ul><h4><strong>Para promover pérdida de peso:</strong></h4><ul><li>Añadir un <strong>agonista de GLP-1</strong> o un <strong>inhibidor de SGLT2</strong>.</li></ul><h4><strong>Si el costo es una barrera:</strong></h4><ul><li>Añadir una <strong>sulfonilurea</strong> (ej. <a href="#" class="med-link" data-med-name="Glibenclamida">Glibenclamida</a>) o una TZD.</li></ul><div class="bibliografia"><h4>Referencias</h4><p>Adaptado de: ADA. Standards of Medical Care in Diabetes—2023. Diabetes Care 2023;46(Suppl. 1):S140–S157.</p></div>`
+        },
+        'crisis-hipertensivas': {
+            name: 'Manejo de Crisis Hipertensivas',
+            content: `<h2>Manejo de Crisis Hipertensivas</h2><p>Una crisis hipertensiva se define como una elevación severa de la presión arterial (PA), generalmente >180/120 mmHg. Se clasifica en urgencia o emergencia según la presencia de daño a órgano blanco.</p><h3>1. Urgencia Hipertensiva</h3><p><strong>Definición:</strong> Elevación severa de la PA <strong>sin</strong> evidencia de daño agudo a órgano blanco (cerebro, corazón, riñón, retina).</p><p><strong>Manejo:</strong> El objetivo es reducir la PA gradualmente en 24-48 horas utilizando medicamentos orales. Una reducción demasiado rápida puede causar isquemia.</p><ul><li><strong>Tratamiento de elección:</strong> Reiniciar o ajustar el tratamiento antihipertensivo del paciente.</li><li><strong>Fármacos orales comúnmente usados:</strong><ul><li><strong><a href="#" class="med-link" data-med-name="Captopril">Captopril</a>:</strong> 25 mg vía oral. Es un IECA de acción rápida.</li><li><strong><a href="#" class="med-link" data-med-name="Nifedipino">Nifedipino</a> de liberación prolongada:</strong> 30-60 mg. <strong>NUNCA usar nifedipino sublingual de acción corta</strong> por el riesgo de caídas bruscas de la PA.</li></ul></li></ul><h3>2. Emergencia Hipertensiva</h3><p><strong>Definición:</strong> Elevación severa de la PA <strong>con</strong> evidencia de daño agudo y progresivo a órgano blanco. Requiere hospitalización y tratamiento intravenoso inmediato.</p><p><strong>Manejo:</strong> El objetivo es reducir la Presión Arterial Media (PAM) en un 10-20% en la primera hora, y otro 5-15% en las siguientes 23 horas.</p><ul><li><strong>Encefalopatía Hipertensiva:</strong> Reducción inmediata de la PAM en 20-25%. Fármaco de elección: <strong><a href="#" class="med-link" data-med-name="Labetalol">Labetalol</a></strong> o <strong><a href="#" class="med-link" data-med-name="Nitroprusiato de Sodio">Nitroprusiato</a></strong>.</li><li><strong>Accidente Cerebrovascular (EVC) Isquémico:</strong> No se recomienda bajar la PA a menos que sea >220/120 mmHg (o >185/110 si es candidato a trombólisis).</li><li><strong>Disección Aórtica:</strong> Reducción rápida de la PA sistólica a <120 mmHg. Fármaco de elección: Betabloqueadores como <strong><a href="#" class="med-link" data-med-name="Labetalol">Labetalol</a></strong>.</li><li><strong>Edema Agudo de Pulmón Cardiogénico:</strong> Vasodilatadores y diuréticos de asa como <strong><a href="#" class="med-link" data-med-name="Furosemida">Furosemida</a></strong>.</li></ul><div class="bibliografia"><h4>Referencias</h4><p>Adaptado de: Whelton PK, et al. 2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults.</p></div>`
+        }
+    };
 
-<div class="fixed top-4 right-4 z-[60]">
-    <button id="modoAlfredoToggle" class="px-4 py-2 bg-slate-900 text-white rounded-full shadow-lg hover:bg-slate-700 transition-transform hover:scale-105">
-        Modo Alfredo
-    </button>
-</div>
+    // Estado de la aplicación
+    const state = {
+        medications: {
+            all: [],
+            favorites: new Set()
+        },
+        ui: {
+            view: 'medications',
+            activeFamily: 'Todos',
+            activeThemeId: null,
+            searchTerm: ''
+        },
+        searchHistory: [],
+    };
 
-    <head>
-    <link rel="manifest" href="./manifest.webmanifest">
-    <meta name="theme-color" content="#0f172a">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía Farmacológica y Clínica</title>
+    // Selectores del DOM
+    const selectors = {
+        medicationSection: document.getElementById('medication-section'),
+        themesSection: document.getElementById('themes-section'),
+        interactionSection: document.getElementById('interaction-section'),
+        medicationList: document.getElementById('medication-list'),
+        searchBar: document.getElementById('searchBar'),
+        noResults: document.getElementById('no-results'),
+        familyFilterContainer: document.getElementById('familyFilterContainer'),
+        themesFilterContainer: document.getElementById('themesFilterContainer'),
+        favoritesBtn: document.getElementById('favorites-btn'),
+        interactionCheckerBtn: document.getElementById('interaction-checker-btn'),
+        familiesDropdownBtn: document.getElementById('families-dropdown-btn'),
+        themesDropdownBtn: document.getElementById('themes-dropdown-btn'),
+        familiesDropdownPanel: document.getElementById('families-dropdown-panel'),
+        themesDropdownPanel: document.getElementById('themes-dropdown-panel'),
+        modal: document.getElementById('medicationModal'),
+        modalContent: document.getElementById('modal-content-wrapper'),
+        cardTemplate: document.getElementById('medication-card-template'),
+        medCount: document.getElementById('med-count'),
+        loadingIndicator: document.getElementById('loading-indicator'),
+        searchHistoryDatalist: document.getElementById('search-history'),
+    };
+
+    // --- FUNCIONES AUXILIARES ---
+    const normalizeText = (str = '') => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    function calculateRelevance(med, term) {
+        if (normalizeText(med.name).includes(term)) return 10;
+        if (normalizeText(med.family).includes(term)) return 5;
+        if (normalizeText(med.uses).includes(term)) return 3;
+        return 0;
+    }
+
+    // --- MANEJO DEL ESTADO (FAVORITOS, HISTORIAL) ---
+    function loadStateFromStorage() {
+        const favs = localStorage.getItem('medFavorites');
+        if (favs) state.medications.favorites = new Set(JSON.parse(favs));
+        
+        const history = localStorage.getItem('medSearchHistory');
+        if (history) state.searchHistory = JSON.parse(history);
+        updateSearchHistoryDatalist();
+    }
+
+    function saveFavorites() {
+        localStorage.setItem('medFavorites', JSON.stringify(Array.from(state.medications.favorites)));
+    }
+
+    function saveSearchHistory() {
+        localStorage.setItem('medSearchHistory', JSON.stringify(state.searchHistory));
+        updateSearchHistoryDatalist();
+    }
     
-    <link rel="icon" href="./icon-512.png" type="image/png">
+    function updateSearchHistoryDatalist() {
+        selectors.searchHistoryDatalist.innerHTML = state.searchHistory.map(term => `<option value="${term}"></option>`).join('');
+    }
+
+    function toggleFavorite(medId, button) {
+        if (state.medications.favorites.has(medId)) {
+            state.medications.favorites.delete(medId);
+            button.classList.remove('is-favorite');
+        } else {
+            state.medications.favorites.add(medId);
+            button.classList.add('is-favorite');
+        }
+        saveFavorites();
+        if (state.ui.view === 'favorites') {
+            updateDisplay();
+        }
+    }
+
+    // --- RENDERIZADO Y VISTAS ---
+    function setView(view, id = null) {
+        state.ui.view = view;
+        state.ui.activeFamily = 'Todos';
+        state.ui.searchTerm = '';
+        selectors.searchBar.value = '';
+
+        if (view === 'themes') {
+            state.ui.activeThemeId = id;
+        }
+
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        selectors.medicationSection.classList.toggle('hidden', state.ui.view !== 'medications' && state.ui.view !== 'favorites');
+        selectors.themesSection.classList.toggle('hidden', state.ui.view !== 'themes');
+        selectors.interactionSection.classList.toggle('hidden', state.ui.view !== 'interaction-checker');
+        
+        let results = [];
+        const searchTerm = normalizeText(state.ui.searchTerm);
+
+        if (state.ui.view === 'favorites') {
+            results = state.medications.all.filter(med => state.medications.favorites.has(med.originalIndex));
+        } else if (state.ui.view === 'medications') {
+            if (searchTerm) {
+                results = state.medications.all
+                    .map(med => ({ ...med, score: calculateRelevance(med, searchTerm) }))
+                    .filter(med => med.score > 0)
+                    .sort((a, b) => b.score - a.score);
+            } else {
+                results = state.ui.activeFamily === 'Todos' ?
+                    state.medications.all :
+                    state.medications.all.filter(med => med.simpleFamily === state.ui.activeFamily);
+            }
+        } else if (state.ui.view === 'interaction-checker') {
+            renderInteractionChecker();
+        }
+        
+        renderMedications(results);
+
+        if (state.ui.view === 'themes') {
+            renderTheme(state.ui.activeThemeId);
+        }
+    }
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<main class="main-content">
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-        <header class="text-center mb-10">
-            <h1 class="text-3xl sm:text-5xl font-bold text-slate-900">Guía Farmacológica y Clínica</h1>
-            <p class="text-lg text-slate-600 mt-2">Centro de Salud Colonia Azteca</p>
-            <p class="text-sm text-slate-500 mt-4">Actualmente con <span id="med-count" class="font-bold text-slate-600">0</span> medicamentos en la base de datos.</p>
-        </header>
-<head>
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#0f172a">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="icon" href="./icon-512.png" type="image/png">
-    
-    <title>Guía Farmacológica y Clínica</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-        <section class="controls-container">
-            <div class="search-wrapper">
-                <input id="searchBar" type="text" placeholder="Buscar por nombre, familia, uso..." aria-label="Buscar medicamento" class="w-full p-4 border border-slate-300 rounded-full shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" list="search-history">
-                <datalist id="search-history"></datalist>
+    function renderInteractionChecker() {
+        selectors.interactionSection.innerHTML = `
+            <div class="interaction-checker-container">
+                <div class="interaction-header">
+                    <h2>Verificador de Interacciones</h2>
+                    <p>Seleccione dos o más medicamentos para verificar posibles interacciones.</p>
+                </div>
+                <div class="interaction-body">
+                    <div class="med-selection-list">
+                        ${state.medications.all.map(med => `
+                            <button class="interaction-med-btn" data-med-name="${med.name}">${med.name}</button>
+                        `).join('')}
+                    </div>
+                    <div class="interaction-results">
+                        <h3>Resultados</h3>
+                        <div id="interaction-results-content">
+                            <p class="text-slate-500">Seleccione medicamentos de la lista.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <nav class="filter-controls" aria-label="Filtros principales">
-                <button id="favorites-btn" class="dropdown-btn"><span>★ Favoritos</span></button>
-                <button id="interaction-checker-btn" class="dropdown-btn"><span>⇆ Interacciones</span></button>
-                <div class="dropdown-wrapper">
-                    <button id="families-dropdown-btn" class="dropdown-btn">
-                        <span id="families-btn-text">Familias</span>
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                    </button>
-                    <div id="families-dropdown-panel" class="dropdown-panel"><nav id="familyFilterContainer" aria-label="Filtros por familia"></nav></div>
-                </div>
-                <div class="dropdown-wrapper">
-                    <button id="themes-dropdown-btn" class="dropdown-btn">
-                        <span>Temas</span>
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                    </button>
-                    <div id="themes-dropdown-panel" class="dropdown-panel"><nav id="themesFilterContainer" aria-label="Temas de interés"></nav></div>
-                </div>
-            </nav>
-        </section>
+        `;
+    
+        const medButtons = selectors.interactionSection.querySelectorAll('.interaction-med-btn');
+        const resultsContent = document.getElementById('interaction-results-content');
+        let selectedMeds = [];
+    
+        medButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('selected');
+                const medName = btn.dataset.medName;
+                if (selectedMeds.includes(medName)) {
+                    selectedMeds = selectedMeds.filter(name => name !== medName);
+                } else {
+                    selectedMeds.push(medName);
+                }
+                checkInteractions(selectedMeds, resultsContent);
+            });
+        });
+    }
 
-        <div id="view-container" class="mt-8">
-            <section id="medication-section">
-                <div id="loading-indicator" class="text-center py-16 text-slate-500">
-                    <div class="flex justify-center items-center"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
-                    <p class="mt-4">Cargando medicamentos...</p>
+    function checkInteractions(selectedMedNames, resultsContent) {
+        if (selectedMedNames.length < 2) {
+            resultsContent.innerHTML = '<p class="text-slate-500">Seleccione al menos dos medicamentos.</p>';
+            return;
+        }
+    
+        const interactions = [];
+        const selectedMeds = state.medications.all.filter(med => selectedMedNames.includes(med.name));
+    
+        for (let i = 0; i < selectedMeds.length; i++) {
+            for (let j = i + 1; j < selectedMeds.length; j++) {
+                const med1 = selectedMeds[i];
+                const med2 = selectedMeds[j];
+    
+                if (med1.interactions) {
+                    for (const level in med1.interactions) {
+                        med1.interactions[level].forEach(interaction => {
+                            if (interaction.toLowerCase().includes(med2.name.toLowerCase())) {
+                                interactions.push({
+                                    meds: [med1.name, med2.name],
+                                    level: level,
+                                    description: interaction
+                                });
+                            }
+                        });
+                    }
+                }
+    
+                if (med2.interactions) {
+                    for (const level in med2.interactions) {
+                        med2.interactions[level].forEach(interaction => {
+                            if (interaction.toLowerCase().includes(med1.name.toLowerCase())) {
+                                interactions.push({
+                                    meds: [med2.name, med1.name],
+                                    level: level,
+                                    description: interaction
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    
+        if (interactions.length === 0) {
+            resultsContent.innerHTML = '<p class="text-green-600">No se encontraron interacciones conocidas entre los medicamentos seleccionados.</p>';
+        } else {
+            resultsContent.innerHTML = interactions.map(int => `
+                <div class="interaction-item">
+                    <p><strong>${int.meds[0]} + ${int.meds[1]}</strong></p>
+                    <p class="level-${int.level}">${int.level.charAt(0).toUpperCase() + int.level.slice(1)}: ${int.description}</p>
                 </div>
-                <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-                <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden"><p>No se encontraron medicamentos.</p></div>
-            </section>
-            
-            <section id="themes-section" class="hidden prose max-w-none"></section>
-            <section id="interaction-section" class="hidden"></section>
-        </div>
-        <footer class="text-center p-4 mt-8 text-sm text-slate-500 border-t"><p>Información de referencia. Consulte siempre a un profesional de la salud.</p></footer>
-    </main>
+            `).join('');
+        }
+    }
+
+    function renderMedications(meds) {
+        selectors.loadingIndicator.classList.add('hidden');
+        selectors.medicationList.innerHTML = '';
+        selectors.noResults.classList.toggle('hidden', meds.length > 0 || state.ui.view === 'themes' || state.ui.view === 'interaction-checker');
+        meds.forEach(med => {
+            const card = createMedicationCard(med);
+            selectors.medicationList.appendChild(card);
+        });
+    }
+
+    function createMedicationCard(med) {
+        const cardClone = selectors.cardTemplate.content.cloneNode(true);
+        const cardElement = cardClone.querySelector('article');
+        const favButton = cardClone.querySelector('.favorite-btn-card');
+
+        cardClone.querySelector('.card-name').textContent = med.name;
+        cardClone.querySelector('.card-presentation').textContent = med.presentation;
+        cardClone.querySelector('.card-family').textContent = med.family;
+        cardClone.querySelector('.card-uses').textContent = med.uses;
+
+        if (state.medications.favorites.has(med.originalIndex)) {
+            favButton.classList.add('is-favorite');
+        }
+
+        favButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleFavorite(med.originalIndex, favButton);
+        });
+
+        cardElement.addEventListener('click', () => openModal(med));
+        return cardClone;
+    }
+
+    function renderTheme(themeId) {
+        const theme = clinicalThemes[themeId];
+        if (theme && theme.content) {
+            selectors.themesSection.innerHTML = theme.content;
+            selectors.themesSection.querySelectorAll('.med-link').forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    const medName = e.target.dataset.medName;
+                    const med = state.medications.all.find(m => normalizeText(m.name) === normalizeText(medName));
+                    if (med) openModal(med);
+                });
+            });
+        } else {
+            selectors.themesSection.innerHTML = `<p class="text-center p-8">Contenido del tema no encontrado.</p>`;
+        }
+    }
     
-    <div id="medicationModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div id="modal-content-wrapper" class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0"></div></div>
-    
-    <template id="medication-card-template">
-      <article class="bg-white rounded-xl shadow-md flex flex-col overflow-hidden relative animate-fade-in">
-        <button class="favorite-btn-card absolute top-2 right-2 text-2xl text-slate-300 hover:text-yellow-400 transition-colors z-10" aria-label="Añadir a favoritos">★</button>
-        <div class="card-content-wrapper cursor-pointer">
-            <img alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/e0f2fe/083344?text=Imagen+no+disponible';">
-            <div class="p-5 flex flex-col flex-grow">
+    function openModal(med) {
+        const isFavorite = state.medications.favorites.has(med.originalIndex);
+        
+        selectors.modalContent.innerHTML = `
+            <div class="p-6 border-b flex justify-between items-start">
                 <div>
-                    <h3 class="card-name font-bold text-lg text-slate-900"></h3><p class="card-presentation text-sm text-slate-600"></p>
+                    <h2 id="modalTitle" class="text-2xl font-bold text-slate-800">${med.name}</h2>
+                    <p class="text-slate-600">${med.presentation}</p>
                 </div>
-                <div class="mt-4 pt-4 border-t border-slate-200 text-xs flex-grow flex flex-col justify-end">
-                    <p class="card-family font-semibold text-blue-600"></p><p class="card-uses text-slate-500 mt-1"></p>
+                <button id="modalFavButton" class="text-3xl ${isFavorite ? 'is-favorite' : 'text-slate-300'}" aria-label="Añadir a favoritos">★</button>
+            </div>
+    
+            <div class="p-6 overflow-y-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
+                    <div><strong>Familia:</strong><p>${med.family}</p></div>
+                    <div><strong>Usos:</strong><p>${med.uses}</p></div>
+                    <div class="md:col-span-2"><strong>Indicaciones:</strong><p>${med.indications}</p></div>
+                    <div><strong>Dosis Adulto:</strong><p>${med.dose_adult}</p></div>
+                    <div><strong>Dosis Pediátrica:</strong><p>${med.dose_pediatric || 'No especificada'}</p></div>
+                    <div class="md:col-span-2"><strong>Contraindicaciones:</strong><p>${med.contraindications}</p></div>
+                    ${med.renalDoseAdjust && med.renalDoseAdjust.enabled ? `
+                        <div class="md:col-span-2 p-3 bg-yellow-50 border-l-4 border-yellow-400">
+                            <h4 class="font-bold text-yellow-800">Ajuste en Insuficiencia Renal</h4>
+                            <p class="text-sm text-yellow-700"><strong>Moderada (TFG 30-59):</strong> ${med.renalDoseAdjust.moderate}</p>
+                            <p class="text-sm text-yellow-700"><strong>Severa (TFG < 15):</strong> ${med.renalDoseAdjust.severe}</p>
+                        </div>
+                    ` : ''}
+                    ${med.interactions ? `
+                        <div class="md:col-span-2 p-3 bg-red-50 border-l-4 border-red-400">
+                            <h4 class="font-bold text-red-800">Interacciones Importantes</h4>
+                            ${Object.entries(med.interactions).map(([level, descriptions]) => `
+                                ${descriptions.map(desc => `<p class="text-sm text-red-700"><strong>${level.charAt(0).toUpperCase() + level.slice(1)}:</strong> ${desc}</p>`).join('')}
+                            `).join('')}
+                        </div>
+                    ` : ''}
                 </div>
             </div>
-        </div>
-      </article>
-    </template>
-    <script src="app.js"></script>
-</body>
-</html>
+    
+            <div class="p-4 bg-slate-50 border-t flex justify-end">
+                <button id="closeModalBtn" class="px-4 py-2 bg-slate-200 rounded-md hover:bg-slate-300 transition-colors">Cerrar</button>
+            </div>
+        `;
+        
+        selectors.modal.classList.remove('hidden');
+        
+        // Add focus to the modal and set up listeners
+        selectors.modalContent.focus();
+        document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+        const modalFavButton = document.getElementById('modalFavButton');
+        modalFavButton.addEventListener('click', () => {
+            toggleFavorite(med.originalIndex, modalFavButton);
+        });
+    }
+
+    function closeModal() {
+        selectors.modal.classList.add('hidden');
+    }
+
+    // --- CONFIGURACIÓN INICIAL ---
+    function populateFilters() {
+        const families = ['Todos', ...new Set(state.medications.all.map(med => med.simpleFamily).filter(Boolean))].sort();
+        selectors.familyFilterContainer.innerHTML = families.map(family =>
+            `<button class="filter-btn" data-family="${family}">${family}</button>`
+        ).join('');
+
+        selectors.themesFilterContainer.innerHTML = Object.entries(clinicalThemes).map(([id, theme]) =>
+            `<button class="theme-btn" data-theme-id="${id}">${theme.name}</button>`
+        ).join('');
+
+        addFilterEventListeners();
+    }
+
+    function addFilterEventListeners() {
+        selectors.familyFilterContainer.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.ui.activeFamily = btn.dataset.family;
+                setView('medications');
+                closeAllDropdowns();
+            });
+        });
+
+        selectors.themesFilterContainer.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                setView('themes', btn.dataset.themeId);
+                closeAllDropdowns();
+            });
+        });
+    }
+
+    function closeAllDropdowns() {
+        selectors.familiesDropdownPanel.classList.remove('is-open');
+        selectors.themesDropdownPanel.classList.remove('is-open');
+        selectors.familiesDropdownBtn.classList.remove('active');
+        selectors.themesDropdownBtn.classList.remove('active');
+    }
+
+    function setupEventListeners() {
+        selectors.searchBar.addEventListener('input', (e) => {
+            state.ui.searchTerm = e.target.value;
+            state.ui.view = 'medications';
+            updateDisplay();
+        });
+        
+        selectors.searchBar.addEventListener('change', (e) => {
+            const term = e.target.value.trim();
+            if (term && !state.searchHistory.includes(term)) {
+                state.searchHistory.unshift(term);
+                if (state.searchHistory.length > 10) state.searchHistory.pop();
+                saveSearchHistory();
+            }
+        });
+
+        selectors.favoritesBtn.addEventListener('click', () => setView('favorites'));
+        selectors.interactionCheckerBtn.addEventListener('click', () => setView('interaction-checker'));
+        
+        selectors.familiesDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectors.familiesDropdownPanel.classList.toggle('is-open');
+            selectors.familiesDropdownBtn.classList.toggle('active');
+            selectors.themesDropdownPanel.classList.remove('is-open');
+            selectors.themesDropdownBtn.classList.remove('active');
+        });
+
+        selectors.themesDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectors.themesDropdownPanel.classList.toggle('is-open');
+            selectors.themesDropdownBtn.classList.toggle('active');
+            selectors.familiesDropdownPanel.classList.remove('is-open');
+            selectors.familiesDropdownBtn.classList.remove('active');
+        });
+
+        document.addEventListener('click', () => {
+            closeAllDropdowns();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && !selectors.modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+        
+        selectors.modal.addEventListener('click', (e) => {
+            if (e.target.id === 'medicationModal') {
+                closeModal();
+            }
+        });
+
+        document.getElementById('modoAlfredoToggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+        });
+    }
+    
+    // --- FUNCIÓN DE INICIO ---
+    function initializeApp() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js').catch(err => {
+                console.error('Service worker registration failed:', err);
+            });
+        }
+        
+        loadStateFromStorage();
+        setupEventListeners();
+
+        fetch('./medicamentos.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const uniqueMeds = Array.from(new Map(data.map(med => [med.name + med.presentation, med])).values());
+                state.medications.all = uniqueMeds.map((med, index) => ({
+                    ...med,
+                    originalIndex: index,
+                    normalizedName: normalizeText(med.name),
+                    isFavorite: state.medications.favorites.has(index)
+                }));
+                selectors.medCount.textContent = state.medications.all.length;
+                populateFilters();
+                updateDisplay();
+            })
+            .catch(error => {
+                console.error('Error al cargar o procesar medicamentos.json:', error);
+                selectors.loadingIndicator.innerHTML = '<p class="text-red-500">No se pudieron cargar los medicamentos. Revisa la consola para más detalles.</p>';
+            });
+    }
+
+    // Iniciar la aplicación
+    initializeApp();
+});
