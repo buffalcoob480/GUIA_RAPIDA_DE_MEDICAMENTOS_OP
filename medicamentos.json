@@ -11,15 +11,17 @@
         "contraindications": "Hipersensibilidad, glaucoma de ángulo estrecho."
     },
     {
-        "name": "Gabapentina / Vitamina B1 / Vitamina B12",
-        "presentation": "Cápsulas",
-        "family": "Combinación (Anticonvulsivo + Vitaminas Neurotropas)",
-        "simpleFamily": "Neurológicos",
-        "uses": "Tratamiento del dolor de origen neuropático.",
-        "indications": "Dolor neuropático, neuralgia postherpética, neuropatía diabética.",
-        "dose_adult": "1 cápsula 2-3 veces al día.",
-        "dose_pediatric": "No recomendado.",
-        "contraindications": "Hipersensibilidad a los componentes, insuficiencia renal."
+        "name": "Gabapentina",
+        "presentation": "Cápsulas 300mg",
+        "family": "Análogo de GABA (Anticonvulsivo)",
+        "simpleFamily": "Anticonvulsivos",
+        "uses": "Dolor neuropático, epilepsia.",
+        "indications": "Neuralgia postherpética, terapia adyuvante en crisis parciales.",
+        "dose_adult": "Inicial: 300 mg/día. Titular hasta 900-3600 mg/día en 3 dosis.",
+        "dose_pediatric": "Niños 3-12 años: 10-15 mg/kg/día (inicial), titular hasta 25-35 mg/kg/día.",
+        "contraindications": "Hipersensibilidad.",
+        "renalDoseAdjust": { "enabled": true, "severe": "Dosis máx: 300 mg/día (TFG < 15)", "moderate": "Dosis máx: 600-900 mg/día (TFG 30-59)" },
+        "interactions": { "moderate": ["Opioides (aumentan sedación y depresión respiratoria)"] }
     },
     {
         "name": "Multivitamínico Materno (SimiBaby)",
@@ -4994,7 +4996,7 @@
         "doseMax_mg_kg_dia": 50,
         "doseIntervals": "4"
     },
-     {
+    {
         "name": "Metformina",
         "presentation": "Tabletas 500mg / 850mg / 1000mg",
         "family": "Biguanida",
@@ -5003,8 +5005,10 @@
         "indications": "Diabetes tipo 2, especialmente en pacientes con sobrepeso.",
         "dose_adult": "Inicial: 500-850 mg 1-2 veces/día con comidas. Mantenimiento: hasta 2550 mg/día.",
         "dose_pediatric": "Niños >10 años: Inicial 500 mg/día, máx. 2000 mg/día.",
-        "contraindications": "Insuficiencia renal (TFG <30), acidosis metabólica, cetoacidosis diabética.",
-        "warnings": "Suspender temporalmente antes de procedimientos con contraste yodado. Riesgo de acidosis láctica."
+        "contraindications": "Acidosis metabólica, cetoacidosis diabética, TFG < 30 ml/min.",
+        "warnings": "Suspender temporalmente antes de procedimientos con contraste yodado. Riesgo de acidosis láctica.",
+        "renalDoseAdjust": { "enabled": true, "severe": "Contraindicado (TFG < 30)", "moderate": "No iniciar si TFG < 45. Si ya lo usa, reevaluar. Dosis máx: 1000 mg/día." },
+        "interactions": { "moderate": ["Medios de contraste yodados (riesgo de acidosis láctica)", "Diuréticos (aumentan riesgo de deshidratación)"] }
     },
     {
         "name": "Sitagliptina",
