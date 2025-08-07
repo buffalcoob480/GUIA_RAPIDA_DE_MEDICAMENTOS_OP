@@ -5089,5 +5089,42 @@
         "dose_pediatric": "Misma dosis que adultos, con monitoreo estricto.",
         "contraindications": "Hipertensión compensatoria (ej. fístula AV), hipersensibilidad.",
         "warnings": "Requiere monitoreo invasivo de la presión arterial. Riesgo de toxicidad por cianuro con infusiones prolongadas o a dosis altas."
+    },
+    {
+        "name": "Colchicina",
+        "presentation": "Tabletas 1mg",
+        "family": "Alcaloide Antigotoso",
+        "simpleFamily": "Antiinflamatorios",
+        "uses": "Tratamiento del ataque agudo de gota, fiebre mediterránea familiar.",
+        "indications": "Gota aguda, profilaxis de gota.",
+        "dose_adult": "Ataque agudo: 1mg inicial, seguido de 0.5 mg 1 hora después. Profilaxis: 0.5 mg 1-2 veces/día.",
+        "dose_pediatric": "Uso por especialista.",
+        "contraindications": "Insuficiencia renal o hepática grave, discrasias sanguíneas.",
+        "renalDoseAdjust": { "enabled": true, "severe": "Contraindicado o reducir dosis al 50%.", "moderate": "Usar con precaución, considerar reducción de dosis." },
+        "interactions": { "critical": ["Estatinas (aumenta riesgo de miopatía)", "Claritromicina (aumenta toxicidad de colchicina)"] }
+    },
+    {
+        "name": "Labetalol",
+        "presentation": "Solución Inyectable 100mg/20ml",
+        "family": "Bloqueador Alfa y Beta Adrenérgico",
+        "simpleFamily": "Antihipertensivos",
+        "uses": "Manejo de emergencias hipertensivas.",
+        "indications": "Emergencias hipertensivas, incluyendo las asociadas a preeclampsia o feocromocitoma.",
+        "dose_adult": "IV: Bolo de 20 mg, seguido de bolos de 40-80 mg cada 10 min (máx 300mg) o infusión de 1-2 mg/min.",
+        "dose_pediatric": "Uso exclusivo por especialista.",
+        "contraindications": "Asma, bloqueo cardíaco > 1er grado, bradicardia severa, shock cardiogénico.",
+        "warnings": "Puede causar hipotensión ortostática significativa."
+    },
+    {
+        "name": "Nitroprusiato de Sodio",
+        "presentation": "Polvo para solución inyectable 50mg",
+        "family": "Vasodilatador Directo (Arterial y Venoso)",
+        "simpleFamily": "Antihipertensivos",
+        "uses": "Potente vasodilatador para emergencias hipertensivas.",
+        "indications": "Emergencias hipertensivas que requieren una reducción inmediata de la presión arterial (ej. disección aórtica), insuficiencia cardíaca aguda.",
+        "dose_adult": "Infusión IV: Iniciar 0.3-0.5 mcg/kg/min, titular hasta efecto deseado (máx 10 mcg/kg/min).",
+        "dose_pediatric": "Misma dosis que adultos, con monitoreo estricto.",
+        "contraindications": "Hipertensión compensatoria (ej. fístula AV), hipersensibilidad.",
+        "warnings": "Uso exclusivo en UCI. Requiere monitoreo invasivo de la PA. Riesgo de toxicidad por cianuro con infusiones prolongadas."
     }
 ]
