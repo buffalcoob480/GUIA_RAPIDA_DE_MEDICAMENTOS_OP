@@ -337,18 +337,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="md:col-span-2">
                         <img src="https://placehold.co/600x300/e0f2fe/083344?text=${encodeURIComponent(med.name)}" alt="${med.name}" class="w-full h-48 object-cover rounded-lg mb-4">
                     </div>
+
                     <div class="md:col-span-2 info-box-success">
-                        <p><strong>Indicaciones:</strong> ${med.indications}</p>
+                        <p><strong>Indicaciones:</strong> ${med.indications || 'No especificadas'}</p>
                     </div>
                     <div class="md:col-span-2 info-box-danger">
-                        <p><strong>Contraindicaciones:</strong> ${med.contraindications}</p>
+                        <p><strong>Contraindicaciones:</strong> ${med.contraindications || 'No especificadas'}</p>
                     </div>
-                    ${med.notes ? `<div class="md:col-span-2 info-box-warning"><p><strong>Nota:</strong> ${med.notes}</p></div>` : ''}
-                    ${med.pregnancyLactation ? `<div class="md:col-span-2 info-box-info"><p><strong>Embarazo y Lactancia:</strong> ${med.pregnancyLactation}</p></div>` : ''}
-                    <div><strong>Familia:</strong><p>${med.family}</p></div>
-                    <div><strong>Usos:</strong><p>${med.uses}</p></div>
-                    <div><strong>Dosis Adulto:</strong><p>${med.dose_adult}</p></div>
+                    <div class="md:col-span-2 info-box-warning">
+                        <p><strong>Nota:</strong> ${med.notes || 'Revisar indicaciones específicas del fabricante.'}</p>
+                    </div>
+                    
+                    <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
+                        <div class="info-box-age">
+                            <span class="font-bold">Edad Mínima</span>
+                            <span>${med.minimumAge || '?'}</span>
+                        </div>
+                        <div class="info-box-pregnancy">
+                             <span class="font-bold">Embarazo</span>
+                            <span>${med.pregnancy || 'Consultar'}</span>
+                        </div>
+                        <div class="info-box-lactation">
+                             <span class="font-bold">Lactancia</span>
+                            <span>${med.lactation || 'Consultar'}</span>
+                        </div>
+                    </div>
+
+                    <div><strong>Familia:</strong><p>${med.family || 'N/A'}</p></div>
+                    <div><strong>Usos:</strong><p>${med.uses || 'N/A'}</p></div>
+                    <div><strong>Dosis Adulto:</strong><p>${med.dose_adult || 'N/A'}</p></div>
                     <div><strong>Dosis Pediátrica:</strong><p>${med.dose_pediatric || 'No especificada'}</p></div>
+
                     ${calculatorHtml}
                 </div>
             </div>
@@ -416,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 durationText = med.duration || '';
-                copyText = `${doseRange} ${via} ${frequency} ${durationText}.`;
+                copyText = `${doseRange.replace(' - ', ' a ')} ${via} ${frequency} ${durationText}.`;
 
                 resultDiv.innerHTML = `
                     <div class="result-item">
@@ -582,13 +601,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Simulación de datos de embarazo/lactancia para demostración
                 const dataWithMockInfo = data.map(med => {
                     if (med.name.includes("Ibuprofeno")) {
-                        med.pregnancyLactation = "Evitar en el tercer trimestre del embarazo. Usar con precaución durante la lactancia.";
+                        med.pregnancy = "Riesgo. Evitar 3er trimestre.";
+                        med.lactation = "Seguro (e-lactancia.org)";
+                        med.minimumAge = "3 meses";
                     }
                     if (med.name.includes("Amoxicilina")) {
-                        med.pregnancyLactation = "Generalmente considerado seguro durante el embarazo y la lactancia, bajo supervisión médica.";
+                        med.pregnancy = "Seguro";
+                        med.lactation = "Seguro (e-lactancia.org)";
+                        med.minimumAge = "Recién nacido";
                     }
-                    if (med.name.includes("Ácido Fólico")) {
-                        med.pregnancyLactation = "Esencial. Se recomienda antes y durante el embarazo para prevenir defectos del tubo neural.";
+                    if (med.name.includes("Paracetamol")) {
+                        med.pregnancy = "Seguro";
+                        med.lactation = "Seguro (e-lactancia.org)";
+                        med.minimumAge = "Recién nacido";
+                    }
+                     if (med.name.includes("Ácido Fólico")) {
+                        med.pregnancy = "Esencial";
+                        med.lactation = "Seguro";
+                        med.minimumAge = "N/A";
                     }
                     return med;
                 });
