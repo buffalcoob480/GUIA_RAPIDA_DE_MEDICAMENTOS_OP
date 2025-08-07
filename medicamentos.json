@@ -5005,5 +5005,52 @@
         "dose_pediatric": "Niños >10 años: Inicial 500 mg/día, máx. 2000 mg/día.",
         "contraindications": "Insuficiencia renal (TFG <30), acidosis metabólica, cetoacidosis diabética.",
         "warnings": "Suspender temporalmente antes de procedimientos con contraste yodado. Riesgo de acidosis láctica."
+    },
+    {
+        "name": "Sitagliptina",
+        "presentation": "Tabletas 50mg / 100mg",
+        "family": "Inhibidor de la Dipeptidil Peptidasa-4 (DPP-4)",
+        "simpleFamily": "Antidiabéticos",
+        "uses": "Control glucémico en diabetes tipo 2.",
+        "indications": "Diabetes mellitus tipo 2, en monoterapia o en combinación.",
+        "dose_adult": "100 mg una vez al día.",
+        "dose_pediatric": "No recomendado.",
+        "contraindications": "Hipersensibilidad.",
+        "warnings": "Riesgo de pancreatitis aguda. Ajustar dosis en insuficiencia renal."
+    },
+    {
+        "name": "Liraglutida",
+        "presentation": "Solución inyectable prellenada",
+        "family": "Agonista del Receptor de GLP-1",
+        "simpleFamily": "Antidiabéticos",
+        "uses": "Control glucémico en diabetes tipo 2 y control de peso.",
+        "indications": "Diabetes mellitus tipo 2, reducción de riesgo cardiovascular, obesidad.",
+        "dose_adult": "Inicial: 0.6 mg/día SC. Titular hasta 1.8 mg/día para diabetes o 3.0 mg/día para obesidad.",
+        "dose_pediatric": "Niños >10 años (para diabetes): Misma titulación que adultos.",
+        "contraindications": "Antecedentes personales o familiares de carcinoma medular de tiroides, hipersensibilidad.",
+        "warnings": "Riesgo de tumores de células C de tiroides y pancreatitis."
+    },
+    {
+        "name": "Dapagliflozina",
+        "presentation": "Tabletas 10mg",
+        "family": "Inhibidor del Cotransportador Sodio-Glucosa 2 (SGLT2)",
+        "simpleFamily": "Antidiabéticos",
+        "uses": "Control glucémico en diabetes tipo 2 con beneficios cardiovasculares y renales.",
+        "indications": "Diabetes mellitus tipo 2, insuficiencia cardíaca, enfermedad renal crónica.",
+        "dose_adult": "10 mg una vez al día.",
+        "dose_pediatric": "No recomendado.",
+        "contraindications": "Insuficiencia renal grave (TFG < 30), hipersensibilidad.",
+        "warnings": "Riesgo de cetoacidosis euglucémica, infecciones genitourinarias."
+    },
+    {
+        "name": "Pioglitazona",
+        "presentation": "Tabletas 15mg / 30mg",
+        "family": "Tiazolidinediona",
+        "simpleFamily": "Antidiabéticos",
+        "uses": "Control de la glucemia en diabetes mellitus tipo 2.",
+        "indications": "Diabetes tipo 2, en monoterapia o combinado.",
+        "dose_adult": "15-30 mg una vez al día (máx. 45 mg/día).",
+        "dose_pediatric": "No recomendado.",
+        "contraindications": "Insuficiencia cardíaca, cetoacidosis diabética, cáncer de vejiga activo."
     }
 ]
