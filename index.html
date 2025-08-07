@@ -82,7 +82,7 @@
   <article class="bg-white rounded-xl shadow-md flex flex-col overflow-hidden relative animate-fade-in">
     <button class="favorite-btn-card absolute top-2 right-2 text-2xl text-slate-300 hover:text-yellow-400 transition-colors z-10" aria-label="Añadir a favoritos">★</button>
     <div class="card-content-wrapper cursor-pointer">
-        <img alt="" class="card-img w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x200/e0f2fe/083344?text=Imagen+no+disponible';">
+        <img alt="" class="card-img w-full h-32 object-cover" onerror="console.error('Error al cargar imagen:', this.src); this.onerror=null;this.src='https://placehold.co/400x200/e0f2fe/083344?text=Imagen+no+disponible';">
         <div class="p-5 flex flex-col flex-grow">
             <div>
                 <h3 class="card-name font-bold text-lg text-slate-900"></h3><p class="card-presentation text-sm text-slate-600"></p>
