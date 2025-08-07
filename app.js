@@ -1,4 +1,62 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- CONTENIDO DE TEMAS CLÍNICOS ---
+    const clinicalThemes = {
+        'dm2-inicio': {
+            name: 'Manejo Inicial de Diabetes Mellitus Tipo 2',
+            content: `
+                <h2>Manejo Inicial de Diabetes Mellitus Tipo 2</h2>
+                <p>Esta guía resume el enfoque inicial para un paciente recién diagnosticado con Diabetes Mellitus tipo 2 (DM2), basado en guías clínicas comunes.</p>
+                
+                <h3>Paso 1: Diagnóstico y Metas Iniciales</h3>
+                <p>El diagnóstico se confirma con HbA1c ≥ 6.5%, Glucosa en ayuno ≥ 126 mg/dL, o Glucosa a las 2h post-carga ≥ 200 mg/dL. La meta inicial de <strong>HbA1c</strong> es generalmente <strong>< 7%</strong>.</p>
+                
+                <h3>Paso 2: Tratamiento No Farmacológico</h3>
+                <p>Es la piedra angular del manejo e incluye:</p>
+                <ul>
+                    <li><strong>Educación sobre la enfermedad:</strong> Aut monitoreo, reconocimiento de hipo/hiperglucemia.</li>
+                    <li><strong>Plan de alimentación:</strong> Reducción de carbohidratos simples y grasas saturadas.</li>
+                    <li><strong>Actividad física:</strong> Mínimo 150 minutos de ejercicio aeróbico moderado a la semana.</li>
+                    <li><strong>Pérdida de peso:</strong> Objetivo inicial del 5-10% del peso corporal.</li>
+                </ul>
+
+                <h3>Paso 3: Tratamiento Farmacológico de Primera Línea</h3>
+                <p>A menos que existan contraindicaciones, el tratamiento de elección para iniciar es:</p>
+                <ul>
+                    <li><strong><a href="#" class="med-link" data-med-name="Metformina">Metformina</a>:</strong> Iniciar con 500-850 mg una o dos veces al día con los alimentos para minimizar efectos gastrointestinales. Incrementar gradualmente cada 1-2 semanas hasta una dosis objetivo de 2000 mg/día.</li>
+                </ul>
+                
+                <h3>Paso 4: Terapia Dual (Si no se alcanzan metas en 3 meses)</h3>
+                <p>Si la HbA1c sigue por encima de la meta después de 3 meses de monoterapia con Metformina, se debe añadir un segundo agente. La elección depende de las comorbilidades del paciente.</p>
+                
+                <h4><strong>Si existe enfermedad cardiovascular aterosclerótica (ASCVD), insuficiencia cardíaca (IC) o enfermedad renal crónica (ERC):</strong></h4>
+                <ul>
+                    <li>Añadir un <strong>agonista del receptor de GLP-1</strong> (ej. <a href="#" class="med-link" data-med-name="Liraglutida">Liraglutida</a>) o un <strong>inhibidor de SGLT2</strong> (ej. <a href="#" class="med-link" data-med-name="Dapagliflozina">Dapagliflozina</a>) por sus beneficios cardiovasculares y renales demostrados.</li>
+                </ul>
+
+                <h4><strong>Si el objetivo principal es minimizar el riesgo de hipoglucemia:</strong></h4>
+                <ul>
+                    <li>Añadir un <strong>inhibidor de DPP-4</strong> (ej. <a href="#" class="med-link" data-med-name="Sitagliptina">Sitagliptina</a>), un agonista de GLP-1, un inhibidor de SGLT2, o una <strong>Tiazolidinediona (TZD)</strong> (ej. <a href="#" class="med-link" data-med-name="Pioglitazona">Pioglitazona</a>).</li>
+                </ul>
+
+                <h4><strong>Si el objetivo principal es la pérdida de peso:</strong></h4>
+                <ul>
+                    <li>Añadir un <strong>agonista de GLP-1</strong> o un <strong>inhibidor de SGLT2</strong> por su efecto favorable en la reducción de peso.</li>
+                </ul>
+
+                <h4><strong>Si el costo es una barrera importante:</strong></h4>
+                <ul>
+                    <li>Añadir una <strong>sulfonilurea</strong> (ej. <a href="#" class="med-link" data-med-name="Glibenclamida">Glibenclamida</a>) o una TZD. Las sulfonilureas tienen un mayor riesgo de hipoglucemia.</li>
+                </ul>
+
+                <div class="bibliografia">
+                    <h4>Referencias</h4>
+                    <p>Adaptado de: American Diabetes Association. 9. Pharmacologic Approaches to Glycemic Treatment: Standards of Medical Care in Diabetes—2023. Diabetes Care 2023;46(Suppl. 1):S140–S157.</p>
+                </div>
+            `
+        }
+        // Aquí se pueden añadir más temas en el futuro
+    };
+
     // --- ESTADO DE LA APLICACIÓN ---
     const state = {
         medications: {
@@ -6,9 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
             favorites: new Set(),
         },
         ui: {
-            view: 'medications',
+            view: 'medications', // 'medications', 'favorites', 'themes'
             activeFamily: 'Todos',
-            activeTheme: null,
+            activeThemeId: null,
             searchTerm: '',
         },
         searchHistory: [],
@@ -35,19 +93,16 @@ document.addEventListener('DOMContentLoaded', () => {
         cardTemplate: document.getElementById('medication-card-template'),
         medCount: document.getElementById('med-count'),
         loadingIndicator: document.getElementById('loading-indicator'),
+        viewContainer: document.getElementById('view-container'),
     };
 
     // --- LÓGICA DE DATOS Y ESTADO ---
 
     function loadStateFromStorage() {
         const favs = localStorage.getItem('medFavorites');
-        if (favs) {
-            state.medications.favorites = new Set(JSON.parse(favs));
-        }
+        if (favs) state.medications.favorites = new Set(JSON.parse(favs));
         const history = localStorage.getItem('medSearchHistory');
-        if (history) {
-            state.searchHistory = JSON.parse(history);
-        }
+        if (history) state.searchHistory = JSON.parse(history);
     }
 
     function saveFavorites() {
@@ -55,12 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveSearchHistory() {
-        if (state.searchHistory.length > 10) {
-            state.searchHistory.shift();
-        }
+        if (state.searchHistory.length > 10) state.searchHistory.shift();
         localStorage.setItem('medSearchHistory', JSON.stringify(state.searchHistory));
     }
-
+    
     function addToSearchHistory(term) {
         if (!term || state.searchHistory.includes(term)) return;
         state.searchHistory.unshift(term);
@@ -81,43 +134,66 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LÓGICA DE RENDERIZADO Y UI ---
 
     function updateDisplay() {
-        let results = [];
         const searchTerm = normalizeText(state.ui.searchTerm);
+        
+        selectors.viewContainer.classList.toggle('view-themes', state.ui.view === 'themes');
 
-        if (state.ui.view === 'favorites') {
-            results = state.medications.all.filter(med => state.medications.favorites.has(med.originalIndex));
-        } else if (searchTerm) {
-            results = state.medications.all.map(med => ({
-                ...med,
-                score: calculateRelevance(med, searchTerm)
-            })).filter(med => med.score > 0).sort((a, b) => b.score - a.score);
-        } else if (state.ui.view === 'medications') {
-            results = state.ui.activeFamily === 'Todos' ?
-                state.medications.all :
-                state.medications.all.filter(med => med.simpleFamily === state.ui.activeFamily);
-        }
-
-        if (state.ui.view === 'medications' || state.ui.view === 'favorites') {
+        if (state.ui.view === 'themes') {
+            renderTheme(state.ui.activeThemeId);
+            selectors.medicationSection.classList.add('hidden');
+            selectors.themesSection.classList.remove('hidden');
+        } else {
+            let results = [];
+            if (state.ui.view === 'favorites') {
+                results = state.medications.all.filter(med => state.medications.favorites.has(med.originalIndex));
+            } else { // 'medications' view
+                if (searchTerm) {
+                    results = state.medications.all.map(med => ({
+                        ...med,
+                        score: calculateRelevance(med, searchTerm)
+                    })).filter(med => med.score > 0).sort((a, b) => b.score - a.score);
+                } else {
+                    results = state.ui.activeFamily === 'Todos' ?
+                        state.medications.all :
+                        state.medications.all.filter(med => med.simpleFamily === state.ui.activeFamily);
+                }
+            }
             renderMedications(results);
-        }
-
-        selectors.medicationSection.classList.toggle('hidden', state.ui.view === 'themes');
-        selectors.themesSection.classList.toggle('hidden', state.ui.view !== 'themes');
-
-        if (state.ui.view === 'themes' && state.ui.activeTheme) {
-            selectors.themesSection.innerHTML = `<div class="prose max-w-none"><h2>${state.ui.activeTheme.name}</h2><p>El contenido para este tema clínico estará disponible próximamente.</p></div>`;
+            selectors.medicationSection.classList.remove('hidden');
+            selectors.themesSection.classList.add('hidden');
         }
 
         updateActiveButtons();
     }
-
+    
     function renderMedications(meds) {
         selectors.loadingIndicator.classList.add('hidden');
         selectors.medicationList.innerHTML = '';
-        selectors.noResults.classList.toggle('hidden', meds.length > 0);
+        selectors.noResults.classList.toggle('hidden', meds.length === 0);
         meds.forEach(med => {
             const cardElement = createMedicationCard(med);
             selectors.medicationList.appendChild(cardElement);
+        });
+    }
+
+    function renderTheme(themeId) {
+        const theme = clinicalThemes[themeId];
+        if (!theme) {
+            selectors.themesSection.innerHTML = `<p>Tema no encontrado.</p>`;
+            return;
+        }
+        selectors.themesSection.innerHTML = theme.content;
+        
+        // Añadir listeners a los links de medicamentos dentro del tema
+        selectors.themesSection.querySelectorAll('.med-link').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const medName = e.target.dataset.medName;
+                const medication = state.medications.all.find(m => normalizeText(m.name) === normalizeText(medName));
+                if (medication) {
+                    openModal(medication);
+                }
+            });
         });
     }
 
@@ -134,9 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cardElement.querySelector('.card-family').textContent = med.family;
         cardElement.querySelector('.card-uses').textContent = med.uses;
 
-        if (state.medications.favorites.has(med.originalIndex)) {
-            favoriteBtn.classList.add('is-favorite');
-        }
+        favoriteBtn.classList.toggle('is-favorite', state.medications.favorites.has(med.originalIndex));
 
         favoriteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -149,11 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         return cardElement;
     }
-
-    function renderSearchHistory() {
-        selectors.searchHistory.innerHTML = state.searchHistory.map(term => `<option value="${term}"></option>`).join('');
-    }
-
+    
     function updateActiveButtons() {
         document.querySelectorAll('.filter-controls .active, .dropdown-panel .active').forEach(btn => btn.classList.remove('active'));
 
@@ -166,8 +236,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector(`.filter-btn[data-family="${state.ui.activeFamily}"]`)?.classList.add('active');
         } else if (state.ui.view === 'themes') {
             selectors.themesDropdownBtn.classList.add('active');
-            document.querySelector(`.theme-btn[data-theme="${state.ui.activeTheme.id}"]`)?.classList.add('active');
+            document.querySelector(`.theme-btn[data-theme-id="${state.ui.activeThemeId}"]`)?.classList.add('active');
         }
+    }
+    
+    function findThemeForMed(medName) {
+        const normMedName = normalizeText(medName);
+        for (const themeId in clinicalThemes) {
+            if (normalizeText(clinicalThemes[themeId].content).includes(normalizeText(`data-med-name="${normMedName}"`))) {
+                return { id: themeId, name: clinicalThemes[themeId].name };
+            }
+        }
+        return null;
     }
 
     function openModal(med) {
@@ -178,13 +258,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
         document.querySelector('.favorite-btn-modal').addEventListener('click', () => {
             toggleFavorite(med.originalIndex);
-            const favButtonInModal = document.querySelector('.favorite-btn-modal');
-            favButtonInModal.classList.toggle('is-favorite');
-            // Actualizar la tarjeta en la lista principal sin recargar todo
-            const cardInList = document.querySelector(`.card-content-wrapper[data-original-index='${med.originalIndex}']`);
-            cardInList?.closest('article').querySelector('.favorite-btn-card').classList.toggle('is-favorite');
+            document.querySelector('.favorite-btn-modal').classList.toggle('is-favorite');
         });
 
+        const clinicalLink = document.querySelector('.clinical-relevance-link');
+        if(clinicalLink) {
+            clinicalLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                state.ui.view = 'themes';
+                state.ui.activeThemeId = e.target.dataset.themeId;
+                closeModal();
+                updateDisplay();
+            });
+        }
+        
         if (med.isCalculable) {
             const calculateBtn = document.querySelector('.calculate-btn-modal');
             calculateBtn.addEventListener('click', () => {
@@ -201,6 +288,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createModalHtml(med) {
         const isFav = state.medications.favorites.has(med.originalIndex);
+        const relevantTheme = findThemeForMed(med.name);
+
+        let clinicalRelevanceHtml = '';
+        if(relevantTheme) {
+            clinicalRelevanceHtml = `
+            <div class="mt-4 p-3 bg-indigo-50 border-l-4 border-indigo-400 text-indigo-800">
+                <strong class="font-bold">Relevancia Clínica:</strong>
+                <p class="text-sm">Este medicamento es parte del tema <a href="#" class="font-semibold underline clinical-relevance-link" data-theme-id="${relevantTheme.id}">${relevantTheme.name}</a>.</p>
+            </div>`;
+        }
+        
+        // ... (resto del código para crear el HTML del modal, igual que en la respuesta anterior) ...
+        // Este es el código que ya tienes de la respuesta anterior, lo incluyo para que sea completo
         let calculatorHtml = '';
         if (med.isCalculable) {
             calculatorHtml = `
@@ -252,6 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     ${warningsHtml}
                     ${notesHtml}
+                    ${clinicalRelevanceHtml}
                 </div>
                 ${calculatorHtml}
             </div>`;
@@ -263,6 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function calculateDose(med) {
+        // ... (la función de cálculo de dosis es la misma que en la respuesta anterior) ...
         const weightInput = selectors.modalContent.querySelector('.weight-input-modal');
         const resultDiv = selectors.modalContent.querySelector('.result-div-modal');
         const warningDiv = selectors.modalContent.querySelector('.dose-warning-modal');
@@ -329,8 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
              warningDiv.innerHTML = '<div class="p-2 bg-amber-100 border border-amber-300 rounded-md text-xs text-amber-700">⚠️ <strong>¡Atención!</strong> La dosis diaria total podría exceder el máximo recomendado. Verifique la dosis.</div>';
         }
     }
-
-
+    
     const debounce = (func, delay = 300) => {
         let timeout;
         return (...args) => {
@@ -351,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
             state.medications.all = rawMedications.map((med, index) => ({
                 ...med,
                 originalIndex: index,
-                image: `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(`${med.name}\\n${med.presentation}`)}&font=inter`
+                image: `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(med.name)}&font=inter`
             }));
 
             selectors.medCount.textContent = state.medications.all.length;
@@ -369,41 +470,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const families = ['Todos', ...new Set(state.medications.all.map(med => med.simpleFamily).filter(f => f).sort())];
         selectors.familyFilterContainer.innerHTML = families.map(f => `<button class="filter-btn" data-family="${f}">${f}</button>`).join('');
 
-        const themes = [{
-            id: 'gpc-insulina',
-            name: 'Guía Clínica de Insulinoterapia'
-        }, {
-            id: 'dm2-inicio',
-            name: 'Manejo Inicial DM2'
-        }, {
-            id: 'crisis-hipertensivas',
-            name: 'Crisis Hipertensivas'
-        }];
-        selectors.themesFilterContainer.innerHTML = themes.map(t => `<button class="theme-btn" data-theme="${t.id}" data-name="${t.name}">${t.name}</button>`).join('');
+        const themesHtml = Object.keys(clinicalThemes).map(themeId => {
+            const theme = clinicalThemes[themeId];
+            return `<button class="theme-btn" data-theme-id="${themeId}">${theme.name}</button>`;
+        }).join('');
+        selectors.themesFilterContainer.innerHTML = themesHtml;
     }
 
     function initEventListeners() {
         selectors.searchBar.addEventListener('input', debounce((e) => {
             state.ui.searchTerm = e.target.value;
-            // Si el usuario empieza a buscar, reseteamos la vista a la búsqueda general
             if (state.ui.searchTerm) {
                 state.ui.view = 'medications';
-                state.ui.activeFamily = 'Todos'; 
+                state.ui.activeFamily = 'Todos';
             }
             updateDisplay();
         }));
+        
         selectors.searchBar.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') addToSearchHistory(e.target.value.trim());
         });
 
-        selectors.familiesDropdownBtn.addEventListener('click', e => {
-            e.stopPropagation();
-            toggleDropdown('families');
-        });
-        selectors.themesDropdownBtn.addEventListener('click', e => {
-            e.stopPropagation();
-            toggleDropdown('themes');
-        });
+        selectors.familiesDropdownBtn.addEventListener('click', e => { e.stopPropagation(); toggleDropdown('families'); });
+        selectors.themesDropdownBtn.addEventListener('click', e => { e.stopPropagation(); toggleDropdown('themes'); });
+
         selectors.favoritesBtn.addEventListener('click', () => {
             state.ui.view = 'favorites';
             state.ui.searchTerm = '';
@@ -423,30 +513,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeDropdowns();
             }
         });
+
         selectors.themesFilterContainer.addEventListener('click', e => {
             const btn = e.target.closest('.theme-btn');
             if (btn) {
                 state.ui.view = 'themes';
-                state.ui.activeTheme = {
-                    id: btn.dataset.theme,
-                    name: btn.dataset.name
-                };
+                state.ui.activeThemeId = btn.dataset.themeId;
                 updateDisplay();
                 closeDropdowns();
             }
         });
 
         document.addEventListener('click', () => closeDropdowns());
-        selectors.modal.addEventListener('click', e => {
-            if (e.target.id === 'medicationModal') closeModal();
-        });
-        window.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeModal();
-        });
+        selectors.modal.addEventListener('click', e => { if (e.target.id === 'medicationModal') closeModal(); });
+        window.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     }
 
     function toggleDropdown(type) {
         const panel = type === 'families' ? selectors.familiesDropdownPanel : selectors.themesDropdownPanel;
+        const otherPanel = type === 'families' ? selectors.themesDropdownPanel : selectors.familiesDropdownPanel;
         const isOpen = panel.classList.contains('is-open');
         closeDropdowns();
         if (!isOpen) panel.classList.add('is-open');
@@ -461,27 +546,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!str) return '';
         return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
-
+    
     function calculateRelevance(med, term) {
         let score = 0;
         if (!term) return 0;
         
         const normName = normalizeText(med.name);
-        const normFamily = normalizeText(med.family);
-        const normUses = normalizeText(med.uses);
-        const normIndications = normalizeText(med.indications);
+        if (normName.startsWith(term)) score += 50;
+        else if (normName.includes(term)) score += 20;
 
-        // Puntuación más alta si el término coincide con el inicio del nombre
-        if (normName.startsWith(term)) {
-            score += 50;
-        } else if (normName.includes(term)) {
-            score += 20; // Puntuación alta por coincidencia en el nombre
-        }
-
-        // Puntuaciones menores para otros campos
-        if (normFamily.includes(term)) score += 5;
-        if (normUses.includes(term)) score += 3;
-        if (normIndications.includes(term)) score += 1;
+        if (normalizeText(med.family).includes(term)) score += 5;
+        if (normalizeText(med.uses).includes(term)) score += 3;
+        if (normalizeText(med.indications).includes(term)) score += 1;
         
         return score;
     }
