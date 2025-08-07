@@ -40,11 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
         interactionCheckerBtn: document.getElementById('interaction-checker-btn'),
         familiesDropdownBtn: document.getElementById('families-dropdown-btn'),
         themesDropdownBtn: document.getElementById('themes-dropdown-btn'),
+        familiesDropdownPanel: document.getElementById('families-dropdown-panel'),
+        themesDropdownPanel: document.getElementById('themes-dropdown-panel'),
         modal: document.getElementById('medicationModal'),
         modalContent: document.getElementById('modal-content-wrapper'),
         cardTemplate: document.getElementById('medication-card-template'),
         medCount: document.getElementById('med-count'),
-        loadingIndicator: document.getElementById('loading-indicator')
+        loadingIndicator: document.getElementById('loading-indicator'),
+        searchHistoryDatalist: document.getElementById('search-history'),
     };
 
     // --- FUNCIONES AUXILIARES ---
@@ -61,10 +64,23 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadStateFromStorage() {
         const favs = localStorage.getItem('medFavorites');
         if (favs) state.medications.favorites = new Set(JSON.parse(favs));
+        
+        const history = localStorage.getItem('medSearchHistory');
+        if (history) state.searchHistory = JSON.parse(history);
+        updateSearchHistoryDatalist();
     }
 
     function saveFavorites() {
         localStorage.setItem('medFavorites', JSON.stringify(Array.from(state.medications.favorites)));
+    }
+
+    function saveSearchHistory() {
+        localStorage.setItem('medSearchHistory', JSON.stringify(state.searchHistory));
+        updateSearchHistoryDatalist();
+    }
+    
+    function updateSearchHistoryDatalist() {
+        selectors.searchHistoryDatalist.innerHTML = state.searchHistory.map(term => `<option value="${term}"></option>`).join('');
     }
 
     function toggleFavorite(medId, button) {
@@ -116,6 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     state.medications.all :
                     state.medications.all.filter(med => med.simpleFamily === state.ui.activeFamily);
             }
+        } else if (state.ui.view === 'interaction-checker') {
+            renderInteractionChecker();
         }
         
         renderMedications(results);
@@ -124,11 +142,108 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTheme(state.ui.activeThemeId);
         }
     }
+    
+    function renderInteractionChecker() {
+        selectors.interactionSection.innerHTML = `
+            <div class="interaction-checker-container">
+                <div class="interaction-header">
+                    <h2>Verificador de Interacciones</h2>
+                    <p>Seleccione dos o más medicamentos para verificar posibles interacciones.</p>
+                </div>
+                <div class="interaction-body">
+                    <div class="med-selection-list">
+                        ${state.medications.all.map(med => `
+                            <button class="interaction-med-btn" data-med-name="${med.name}">${med.name}</button>
+                        `).join('')}
+                    </div>
+                    <div class="interaction-results">
+                        <h3>Resultados</h3>
+                        <div id="interaction-results-content">
+                            <p class="text-slate-500">Seleccione medicamentos de la lista.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    
+        const medButtons = selectors.interactionSection.querySelectorAll('.interaction-med-btn');
+        const resultsContent = document.getElementById('interaction-results-content');
+        let selectedMeds = [];
+    
+        medButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('selected');
+                const medName = btn.dataset.medName;
+                if (selectedMeds.includes(medName)) {
+                    selectedMeds = selectedMeds.filter(name => name !== medName);
+                } else {
+                    selectedMeds.push(medName);
+                }
+                checkInteractions(selectedMeds, resultsContent);
+            });
+        });
+    }
+
+    function checkInteractions(selectedMedNames, resultsContent) {
+        if (selectedMedNames.length < 2) {
+            resultsContent.innerHTML = '<p class="text-slate-500">Seleccione al menos dos medicamentos.</p>';
+            return;
+        }
+    
+        const interactions = [];
+        const selectedMeds = state.medications.all.filter(med => selectedMedNames.includes(med.name));
+    
+        for (let i = 0; i < selectedMeds.length; i++) {
+            for (let j = i + 1; j < selectedMeds.length; j++) {
+                const med1 = selectedMeds[i];
+                const med2 = selectedMeds[j];
+    
+                if (med1.interactions) {
+                    for (const level in med1.interactions) {
+                        med1.interactions[level].forEach(interaction => {
+                            if (interaction.toLowerCase().includes(med2.name.toLowerCase())) {
+                                interactions.push({
+                                    meds: [med1.name, med2.name],
+                                    level: level,
+                                    description: interaction
+                                });
+                            }
+                        });
+                    }
+                }
+    
+                if (med2.interactions) {
+                    for (const level in med2.interactions) {
+                        med2.interactions[level].forEach(interaction => {
+                            if (interaction.toLowerCase().includes(med1.name.toLowerCase())) {
+                                interactions.push({
+                                    meds: [med2.name, med1.name],
+                                    level: level,
+                                    description: interaction
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    
+        if (interactions.length === 0) {
+            resultsContent.innerHTML = '<p class="text-green-600">No se encontraron interacciones conocidas entre los medicamentos seleccionados.</p>';
+        } else {
+            resultsContent.innerHTML = interactions.map(int => `
+                <div class="interaction-item">
+                    <p><strong>${int.meds[0]} + ${int.meds[1]}</strong></p>
+                    <p class="level-${int.level}">${int.level.charAt(0).toUpperCase() + int.level.slice(1)}: ${int.description}</p>
+                </div>
+            `).join('');
+        }
+    }
 
     function renderMedications(meds) {
         selectors.loadingIndicator.classList.add('hidden');
         selectors.medicationList.innerHTML = '';
-        selectors.noResults.classList.toggle('hidden', meds.length > 0 || state.ui.view === 'themes');
+        selectors.noResults.classList.toggle('hidden', meds.length > 0 || state.ui.view === 'themes' || state.ui.view === 'interaction-checker');
         meds.forEach(med => {
             const card = createMedicationCard(med);
             selectors.medicationList.appendChild(card);
@@ -176,26 +291,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function openModal(med) {
-        // Implementación de la función para abrir el modal (diálogo con detalles)
+        const isFavorite = state.medications.favorites.has(med.originalIndex);
+        
         selectors.modalContent.innerHTML = `
-            <div class="p-6">
-                <h2 class="text-2xl font-bold">${med.name}</h2>
-                <p class="text-slate-600">${med.presentation}</p>
+            <div class="p-6 border-b flex justify-between items-start">
+                <div>
+                    <h2 id="modalTitle" class="text-2xl font-bold text-slate-800">${med.name}</h2>
+                    <p class="text-slate-600">${med.presentation}</p>
+                </div>
+                <button id="modalFavButton" class="text-3xl ${isFavorite ? 'is-favorite' : 'text-slate-300'}" aria-label="Añadir a favoritos">★</button>
             </div>
-            <div class="p-6 border-t">
-                <p><strong>Familia:</strong> ${med.family}</p>
-                <p><strong>Usos:</strong> ${med.uses}</p>
-                <p><strong>Indicaciones:</strong> ${med.indications}</p>
-                <p><strong>Dosis Adulto:</strong> ${med.dose_adult}</p>
-                <p><strong>Dosis Pediátrica:</strong> ${med.dose_pediatric}</p>
-                <p><strong>Contraindicaciones:</strong> ${med.contraindications}</p>
+    
+            <div class="p-6 overflow-y-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
+                    <div><strong>Familia:</strong><p>${med.family}</p></div>
+                    <div><strong>Usos:</strong><p>${med.uses}</p></div>
+                    <div class="md:col-span-2"><strong>Indicaciones:</strong><p>${med.indications}</p></div>
+                    <div><strong>Dosis Adulto:</strong><p>${med.dose_adult}</p></div>
+                    <div><strong>Dosis Pediátrica:</strong><p>${med.dose_pediatric || 'No especificada'}</p></div>
+                    <div class="md:col-span-2"><strong>Contraindicaciones:</strong><p>${med.contraindications}</p></div>
+                    ${med.renalDoseAdjust && med.renalDoseAdjust.enabled ? `
+                        <div class="md:col-span-2 p-3 bg-yellow-50 border-l-4 border-yellow-400">
+                            <h4 class="font-bold text-yellow-800">Ajuste en Insuficiencia Renal</h4>
+                            <p class="text-sm text-yellow-700"><strong>Moderada (TFG 30-59):</strong> ${med.renalDoseAdjust.moderate}</p>
+                            <p class="text-sm text-yellow-700"><strong>Severa (TFG < 15):</strong> ${med.renalDoseAdjust.severe}</p>
+                        </div>
+                    ` : ''}
+                    ${med.interactions ? `
+                        <div class="md:col-span-2 p-3 bg-red-50 border-l-4 border-red-400">
+                            <h4 class="font-bold text-red-800">Interacciones Importantes</h4>
+                            ${Object.entries(med.interactions).map(([level, descriptions]) => `
+                                ${descriptions.map(desc => `<p class="text-sm text-red-700"><strong>${level.charAt(0).toUpperCase() + level.slice(1)}:</strong> ${desc}</p>`).join('')}
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
             </div>
+    
             <div class="p-4 bg-slate-50 border-t flex justify-end">
-                <button id="closeModalBtn" class="px-4 py-2 bg-slate-200 rounded">Cerrar</button>
+                <button id="closeModalBtn" class="px-4 py-2 bg-slate-200 rounded-md hover:bg-slate-300 transition-colors">Cerrar</button>
             </div>
         `;
+        
         selectors.modal.classList.remove('hidden');
+        
+        // Add focus to the modal and set up listeners
+        selectors.modalContent.focus();
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+        const modalFavButton = document.getElementById('modalFavButton');
+        modalFavButton.addEventListener('click', () => {
+            toggleFavorite(med.originalIndex, modalFavButton);
+        });
     }
 
     function closeModal() {
@@ -221,14 +367,23 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', () => {
                 state.ui.activeFamily = btn.dataset.family;
                 setView('medications');
+                closeAllDropdowns();
             });
         });
 
         selectors.themesFilterContainer.querySelectorAll('.theme-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 setView('themes', btn.dataset.themeId);
+                closeAllDropdowns();
             });
         });
+    }
+
+    function closeAllDropdowns() {
+        selectors.familiesDropdownPanel.classList.remove('is-open');
+        selectors.themesDropdownPanel.classList.remove('is-open');
+        selectors.familiesDropdownBtn.classList.remove('active');
+        selectors.themesDropdownBtn.classList.remove('active');
     }
 
     function setupEventListeners() {
@@ -237,8 +392,44 @@ document.addEventListener('DOMContentLoaded', () => {
             state.ui.view = 'medications';
             updateDisplay();
         });
+        
+        selectors.searchBar.addEventListener('change', (e) => {
+            const term = e.target.value.trim();
+            if (term && !state.searchHistory.includes(term)) {
+                state.searchHistory.unshift(term);
+                if (state.searchHistory.length > 10) state.searchHistory.pop();
+                saveSearchHistory();
+            }
+        });
 
         selectors.favoritesBtn.addEventListener('click', () => setView('favorites'));
+        selectors.interactionCheckerBtn.addEventListener('click', () => setView('interaction-checker'));
+        
+        selectors.familiesDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectors.familiesDropdownPanel.classList.toggle('is-open');
+            selectors.familiesDropdownBtn.classList.toggle('active');
+            selectors.themesDropdownPanel.classList.remove('is-open');
+            selectors.themesDropdownBtn.classList.remove('active');
+        });
+
+        selectors.themesDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectors.themesDropdownPanel.classList.toggle('is-open');
+            selectors.themesDropdownBtn.classList.toggle('active');
+            selectors.familiesDropdownPanel.classList.remove('is-open');
+            selectors.familiesDropdownBtn.classList.remove('active');
+        });
+
+        document.addEventListener('click', () => {
+            closeAllDropdowns();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && !selectors.modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
         
         selectors.modal.addEventListener('click', (e) => {
             if (e.target.id === 'medicationModal') {
@@ -274,7 +465,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 state.medications.all = uniqueMeds.map((med, index) => ({
                     ...med,
                     originalIndex: index,
-                    normalizedName: normalizeText(med.name)
+                    normalizedName: normalizeText(med.name),
+                    isFavorite: state.medications.favorites.has(index)
                 }));
                 selectors.medCount.textContent = state.medications.all.length;
                 populateFilters();
