@@ -144,3 +144,4 @@ body.dark { background-color: #0f172a !important; color: #f1f5f9 !important; }
 .dark .interaction-results, .dark .med-selection-list { border-color: #334155; }
 .dark .interaction-med-btn:hover { background-color: #334155; }
 .dark .interaction-med-btn.selected { background-color: #2563eb; color: white; }
+.dark #patientWeight { background-color: #334155; border-color: #475569; color: #f1f5f9; }
