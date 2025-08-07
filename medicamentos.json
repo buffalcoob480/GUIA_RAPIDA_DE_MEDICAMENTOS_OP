@@ -21,9 +21,9 @@
         "dose_adult": "Inicial: 300 mg/día. Titular hasta 900-3600 mg/día en 3 dosis.",
         "dose_pediatric": "Niños 3-12 años: 10-15 mg/kg/día (inicial), titular hasta 25-35 mg/kg/día.",
         "contraindications": "Hipersensibilidad.",
-        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Gabapentin_300mg_capsules.jpg/640px-Gabapentin_300mg_capsules.jpg"
         "renalDoseAdjust": { "enabled": true, "severe": "Dosis máx: 300 mg/día (TFG < 15)", "moderate": "Dosis máx: 600-900 mg/día (TFG 30-59)" },
         "interactions": { "moderate": ["Opioides (aumentan sedación y depresión respiratoria)"] }
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Gabapentin_300mg_capsules.jpg/640px-Gabapentin_300mg_capsules.jpg"
     },
     {
         "name": "Multivitamínico Materno (SimiBaby)",
