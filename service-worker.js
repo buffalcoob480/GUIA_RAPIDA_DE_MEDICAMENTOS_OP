@@ -1,4 +1,5 @@
 // MEJORA: Versión del caché actualizada
+const CACHE_NAME = 'medapp-v4'; 
 const URLS_TO_CACHE = [
     './',
     './index.html',
@@ -37,18 +38,14 @@ self.addEventListener('fetch', event => {
     const { request } = event;
 
     // Estrategia Stale-While-Revalidate para medicamentos.json
-    // Muestra el contenido cacheado inmediatamente (stale)
-    // mientras busca una nueva versión en la red (revalidate).
     if (request.url.includes('medicamentos.json')) {
         event.respondWith(
             caches.open(CACHE_NAME).then(cache => {
                 return cache.match(request).then(cachedResponse => {
                     const fetchPromise = fetch(request).then(networkResponse => {
-                        // Si la petición a la red es exitosa, la guardamos en caché
                         cache.put(request, networkResponse.clone());
                         return networkResponse;
                     });
-                    // Devolvemos la respuesta cacheada si existe, si no, esperamos la de la red
                     return cachedResponse || fetchPromise;
                 });
             })
