@@ -1,12 +1,11 @@
 {
-    "name": "Gu\u00eda R\u00e1pida de Medicamentos",
-    "short_name": "Gu\u00eda M\u00e9dica",
+    "name": "Guía Rápida de Medicamentos",
+    "short_name": "Guía Médica",
     "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#0f172a",
-    "theme_color": "#0f172a",
-    "icons": [
-        {
+    "theme_color": "#0f172a"
+}
             "src": "./icon-512.png",
             "sizes": "512x512",
             "type": "image/png"
