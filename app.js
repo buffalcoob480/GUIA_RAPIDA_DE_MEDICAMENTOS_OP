@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function openModal(med) {
         const isFavorite = state.medications.favorites.has(med.originalIndex);
-        
+    
         let calculatorHtml = '';
         if (med.isCalculable) {
             calculatorHtml = `
@@ -320,30 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div id="doseResult" class="calculator-result"></div>
                 </div>
-            </div>
-            `;
+            </div>`;
         }
     
-        let notesHtml = '';
-        if (med.notes) {
-            notesHtml = `
-            <div class="md:col-span-2 info-box-warning">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
-                <div><p><strong>Nota:</strong> ${med.notes}</p></div>
-            </div>
-            `;
-        }
-    
-        let pregnancyHtml = '';
-        if (med.pregnancyLactation) {
-            pregnancyHtml = `
-            <div class="md:col-span-2 info-box-info">
-                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
-                <div><p><strong>Embarazo y Lactancia:</strong> ${med.pregnancyLactation}</p></div>
-            </div>
-            `;
-        }
-
         selectors.modalContent.innerHTML = `
             <div class="p-6 border-b flex justify-between items-start">
                 <div>
@@ -356,19 +335,21 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
                     <div class="md:col-span-2">
-                         <img src="https://placehold.co/600x300/e0f2fe/083344?text=${encodeURIComponent(med.name)}" alt="${med.name}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <img src="https://placehold.co/600x300/e0f2fe/083344?text=${encodeURIComponent(med.name)}" alt="${med.name}" class="w-full h-48 object-cover rounded-lg mb-4">
                     </div>
+                    <div class="md:col-span-2 info-box-success">
+                        <p><strong>Indicaciones:</strong> ${med.indications}</p>
+                    </div>
+                    <div class="md:col-span-2 info-box-danger">
+                        <p><strong>Contraindicaciones:</strong> ${med.contraindications}</p>
+                    </div>
+                    ${med.notes ? `<div class="md:col-span-2 info-box-warning"><p><strong>Nota:</strong> ${med.notes}</p></div>` : ''}
+                    ${med.pregnancyLactation ? `<div class="md:col-span-2 info-box-info"><p><strong>Embarazo y Lactancia:</strong> ${med.pregnancyLactation}</p></div>` : ''}
                     <div><strong>Familia:</strong><p>${med.family}</p></div>
                     <div><strong>Usos:</strong><p>${med.uses}</p></div>
-                    <div class="md:col-span-2"><strong>Indicaciones:</strong><p>${med.indications}</p></div>
                     <div><strong>Dosis Adulto:</strong><p>${med.dose_adult}</p></div>
                     <div><strong>Dosis Pediátrica:</strong><p>${med.dose_pediatric || 'No especificada'}</p></div>
-                    <div class="md:col-span-2"><strong>Contraindicaciones:</strong><p>${med.contraindications}</p></div>
-                    
-                    ${notesHtml}
-                    ${pregnancyHtml}
                     ${calculatorHtml}
-
                 </div>
             </div>
     
@@ -380,28 +361,31 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.modal.classList.remove('hidden');
         selectors.modal.scrollTop = 0;
         
-        // Add focus to the modal and set up listeners
         selectors.modalContent.focus();
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-        const modalFavButton = document.getElementById('modalFavButton');
-        modalFavButton.addEventListener('click', () => {
-            toggleFavorite(med.originalIndex, modalFavButton);
-        });
+        document.getElementById('modalFavButton').addEventListener('click', (e) => toggleFavorite(med.originalIndex, e.currentTarget));
 
         if (med.isCalculable) {
-            document.getElementById('calculateDoseBtn').addEventListener('click', () => {
-                const weight = parseFloat(document.getElementById('patientWeight').value);
-                const resultDiv = document.getElementById('doseResult');
+            const calculateBtn = document.getElementById('calculateDoseBtn');
+            const weightInput = document.getElementById('patientWeight');
+            const resultDiv = document.getElementById('doseResult');
+
+            calculateBtn.addEventListener('click', () => {
+                const weight = parseFloat(weightInput.value);
                 if (isNaN(weight) || weight <= 0) {
                     resultDiv.innerHTML = '<p class="text-red-600">Por favor, ingrese un peso válido.</p>';
                     return;
                 }
                 
                 let doseText = '';
+                let copyText = '';
                 const unit = med.isDrops ? 'gotas' : 'ml';
-                const dropsPerMl = 20; // Standard assumption
+                const via = 'vía oral';
+                const dropsPerMl = 20;
 
-                if (med.doseMin_mg_kg_dosis) { // Dosis por toma
+                let doseRange, frequency, durationText;
+
+                if (med.doseMin_mg_kg_dosis) {
                     const minDoseMg = weight * med.doseMin_mg_kg_dosis;
                     const maxDoseMg = weight * med.doseMax_mg_kg_dosis;
                     let minDoseUnit = minDoseMg / med.concentration;
@@ -412,23 +396,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         maxDoseUnit *= dropsPerMl;
                     }
                     
-                    const frequency = med.doseFreq ? `cada ${Math.round(24 / med.doseFreq)} horas` : '';
-                    doseText = `
-                        <div class="result-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V4z" /><path d="M5 12a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2v-2z" /></svg>
-                            <span><strong>Dosis:</strong> ${minDoseUnit.toFixed(1)} - ${maxDoseUnit.toFixed(1)} ${unit}</span>
-                        </div>
-                        <div class="result-item">
-                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
-                            <span><strong>Frecuencia:</strong> ${frequency}</span>
-                        </div>`;
-
-                } else { // Dosis por día
+                    doseRange = `${minDoseUnit.toFixed(1)} - ${maxDoseUnit.toFixed(1)} ${unit}`;
+                    frequency = med.doseFreq ? `cada ${Math.round(24 / med.doseFreq)} horas` : '';
+                } else {
                     const minDoseMgDay = weight * med.doseMin_mg_kg_dia;
                     const maxDoseMgDay = weight * med.doseMax_mg_kg_dia;
                     const intervals = med.doseIntervals.split('-').map(Number);
                     const avgIntervals = (intervals[0] + (intervals[1] || intervals[0])) / 2;
-
                     let minDoseUnitPerTime = (minDoseMgDay / avgIntervals) / med.concentration;
                     let maxDoseUnitPerTime = (maxDoseMgDay / avgIntervals) / med.concentration;
 
@@ -437,27 +411,44 @@ document.addEventListener('DOMContentLoaded', () => {
                         maxDoseUnitPerTime *= dropsPerMl;
                     }
                     
-                    const frequency = `cada ${Math.round(24 / avgIntervals)} horas`;
-                    doseText = `
-                        <div class="result-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V4z" /><path d="M5 12a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2v-2z" /></svg>
-                            <span><strong>Dosis:</strong> ${minDoseUnitPerTime.toFixed(1)} - ${maxDoseUnitPerTime.toFixed(1)} ${unit}</span>
-                        </div>
-                        <div class="result-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
-                            <span><strong>Frecuencia:</strong> ${frequency}</span>
-                        </div>`;
+                    doseRange = `${minDoseUnitPerTime.toFixed(1)} - ${maxDoseUnitPerTime.toFixed(1)} ${unit}`;
+                    frequency = `cada ${Math.round(24 / avgIntervals)} horas`;
                 }
 
-                if(med.duration){
-                    doseText += `
-                        <div class="result-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
-                            <span><strong>Duración:</strong> ${med.duration}</span>
-                        </div>`;
-                }
+                durationText = med.duration || '';
+                copyText = `${doseRange} ${via} ${frequency} ${durationText}.`;
 
-                resultDiv.innerHTML = doseText;
+                resultDiv.innerHTML = `
+                    <div class="result-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V4z" /><path d="M5 12a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2v-2z" /></svg>
+                        <span><strong>Dosis:</strong> ${doseRange}</span>
+                    </div>
+                    <div class="result-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
+                        <span><strong>Frecuencia:</strong> ${frequency}</span>
+                    </div>
+                    ${durationText ? `
+                    <div class="result-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                        <span><strong>Duración:</strong> ${durationText}</span>
+                    </div>` : ''}
+                    <button id="copyDoseBtn" class="copy-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" /><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" /></svg>
+                        Copiar Indicación
+                    </button>`;
+
+                document.getElementById('copyDoseBtn').addEventListener('click', (e) => {
+                    navigator.clipboard.writeText(copyText).then(() => {
+                        e.currentTarget.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                            ¡Copiado!`;
+                        setTimeout(() => {
+                           e.currentTarget.innerHTML = `
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" /><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" /></svg>
+                                Copiar Indicación`;
+                        }, 2000);
+                    });
+                });
             });
         }
     }
