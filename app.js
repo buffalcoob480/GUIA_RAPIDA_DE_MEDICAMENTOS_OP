@@ -262,6 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardElement = cardClone.querySelector('article');
         const favButton = cardClone.querySelector('.favorite-btn-card');
         const imgElement = cardClone.querySelector('.card-img');
+        const imgText = `${med.name} / ${med.presentation}`;
 
         cardClone.querySelector('.card-name').textContent = med.name;
         cardClone.querySelector('.card-presentation').textContent = med.presentation;
@@ -272,8 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
             favButton.classList.add('is-favorite');
         }
         
-        imgElement.src = `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(med.name)}`;
-        imgElement.alt = med.name;
+        imgElement.src = `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(imgText)}`;
+        imgElement.alt = imgText;
 
 
         favButton.addEventListener('click', (e) => {
@@ -304,6 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function openModal(med) {
         const isFavorite = state.medications.favorites.has(med.originalIndex);
+        const imgText = `${med.name} / ${med.presentation}`;
     
         let calculatorHtml = '';
         if (med.isCalculable) {
@@ -335,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
                     <div class="md:col-span-2">
-                        <img src="https://placehold.co/600x300/e0f2fe/083344?text=${encodeURIComponent(med.name)}" alt="${med.name}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <img src="https://placehold.co/600x300/e0f2fe/083344?text=${encodeURIComponent(imgText)}" alt="${imgText}" class="w-full h-48 object-cover rounded-lg mb-4">
                     </div>
 
                     <div class="md:col-span-2 info-box-success">
@@ -353,14 +355,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
                         <div class="info-box-age">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             <span class="font-bold">Edad Mínima</span>
                             <span>${med.minimumAge || '?'}</span>
                         </div>
                         <div class="info-box-pregnancy">
-                             <span class="font-bold">Embarazo</span>
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                            <span class="font-bold">Embarazo</span>
                             <span>${med.pregnancy || 'Consultar'}</span>
                         </div>
                         <div class="info-box-lactation">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                              <span class="font-bold">Lactancia</span>
                             <span>${med.lactation || 'Consultar'}</span>
                         </div>
