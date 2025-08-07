@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         medCount: document.getElementById('med-count'),
         loadingIndicator: document.getElementById('loading-indicator'),
         searchHistoryDatalist: document.getElementById('search-history'),
+        familiesBtnText: document.getElementById('families-btn-text'),
     };
 
     // --- FUNCIONES AUXILIARES ---
@@ -100,10 +101,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- RENDERIZADO Y VISTAS ---
     function setView(view, id = null) {
         state.ui.view = view;
-        state.ui.activeFamily = 'Todos';
         state.ui.searchTerm = '';
         selectors.searchBar.value = '';
 
+        if (view !== 'medications') {
+            state.ui.activeFamily = 'Todos';
+            selectors.familiesBtnText.textContent = 'Familias';
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.filter-btn[data-family="Todos"]').classList.add('active');
+        }
+        
         if (view === 'themes') {
             state.ui.activeThemeId = id;
         }
@@ -254,6 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardClone = selectors.cardTemplate.content.cloneNode(true);
         const cardElement = cardClone.querySelector('article');
         const favButton = cardClone.querySelector('.favorite-btn-card');
+        const imgElement = cardClone.querySelector('.card-img');
 
         cardClone.querySelector('.card-name').textContent = med.name;
         cardClone.querySelector('.card-presentation').textContent = med.presentation;
@@ -263,6 +271,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (state.medications.favorites.has(med.originalIndex)) {
             favButton.classList.add('is-favorite');
         }
+        
+        imgElement.src = `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(med.name)}`;
+        imgElement.alt = med.name;
+
 
         favButton.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -293,6 +305,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function openModal(med) {
         const isFavorite = state.medications.favorites.has(med.originalIndex);
         
+        let calculatorHtml = '';
+        if (med.isCalculable) {
+            calculatorHtml = `
+                <div class="md:col-span-2 p-3 mt-4 bg-blue-50 border-l-4 border-blue-400">
+                    <h4 class="font-bold text-blue-800">Calculadora de Dosis Pediátrica</h4>
+                    <div class="flex items-center gap-2 mt-2">
+                        <input type="number" id="patientWeight" placeholder="Peso en kg" class="w-full p-2 border border-slate-300 rounded-md">
+                        <button id="calculateDoseBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Calcular</button>
+                    </div>
+                    <div id="doseResult" class="mt-2 text-blue-900 font-semibold"></div>
+                </div>
+            `;
+        }
+
         selectors.modalContent.innerHTML = `
             <div class="p-6 border-b flex justify-between items-start">
                 <div>
@@ -304,12 +330,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
             <div class="p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
+                    <div class="md:col-span-2">
+                         <img src="https://placehold.co/600x300/e0f2fe/083344?text=${encodeURIComponent(med.name)}" alt="${med.name}" class="w-full h-48 object-cover rounded-lg mb-4">
+                    </div>
                     <div><strong>Familia:</strong><p>${med.family}</p></div>
                     <div><strong>Usos:</strong><p>${med.uses}</p></div>
                     <div class="md:col-span-2"><strong>Indicaciones:</strong><p>${med.indications}</p></div>
                     <div><strong>Dosis Adulto:</strong><p>${med.dose_adult}</p></div>
                     <div><strong>Dosis Pediátrica:</strong><p>${med.dose_pediatric || 'No especificada'}</p></div>
                     <div class="md:col-span-2"><strong>Contraindicaciones:</strong><p>${med.contraindications}</p></div>
+                    
+                    ${calculatorHtml}
+
                     ${med.renalDoseAdjust && med.renalDoseAdjust.enabled ? `
                         <div class="md:col-span-2 p-3 bg-yellow-50 border-l-4 border-yellow-400">
                             <h4 class="font-bold text-yellow-800">Ajuste en Insuficiencia Renal</h4>
@@ -334,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         
         selectors.modal.classList.remove('hidden');
+        selectors.modal.scrollTop = 0;
         
         // Add focus to the modal and set up listeners
         selectors.modalContent.focus();
@@ -342,6 +375,59 @@ document.addEventListener('DOMContentLoaded', () => {
         modalFavButton.addEventListener('click', () => {
             toggleFavorite(med.originalIndex, modalFavButton);
         });
+
+        if (med.isCalculable) {
+            document.getElementById('calculateDoseBtn').addEventListener('click', () => {
+                const weight = parseFloat(document.getElementById('patientWeight').value);
+                const resultDiv = document.getElementById('doseResult');
+                if (isNaN(weight) || weight <= 0) {
+                    resultDiv.textContent = 'Por favor, ingrese un peso válido.';
+                    return;
+                }
+                
+                let doseText = '';
+                const unit = med.isDrops ? 'gotas' : 'ml';
+                const dropsPerMl = 20; // Standard assumption
+
+                if (med.doseMin_mg_kg_dosis) { // Dosis por toma
+                    const minDoseMg = weight * med.doseMin_mg_kg_dosis;
+                    const maxDoseMg = weight * med.doseMax_mg_kg_dosis;
+                    let minDoseUnit = minDoseMg / med.concentration;
+                    let maxDoseUnit = maxDoseMg / med.concentration;
+                    
+                    if (med.isDrops) {
+                        minDoseUnit *= dropsPerMl;
+                        maxDoseUnit *= dropsPerMl;
+                    }
+                    
+                    const frequency = med.doseFreq ? `cada ${Math.round(24 / med.doseFreq)} horas` : '';
+                    doseText = `Dosis: ${minDoseUnit.toFixed(1)} a ${maxDoseUnit.toFixed(1)} ${unit} ${frequency}`;
+
+                } else { // Dosis por día
+                    const minDoseMgDay = weight * med.doseMin_mg_kg_dia;
+                    const maxDoseMgDay = weight * med.doseMax_mg_kg_dia;
+                    const intervals = med.doseIntervals.split('-').map(Number);
+                    const avgIntervals = (intervals[0] + (intervals[1] || intervals[0])) / 2;
+
+                    let minDoseUnitPerTime = (minDoseMgDay / avgIntervals) / med.concentration;
+                    let maxDoseUnitPerTime = (maxDoseMgDay / avgIntervals) / med.concentration;
+
+                    if (med.isDrops) {
+                        minDoseUnitPerTime *= dropsPerMl;
+                        maxDoseUnitPerTime *= dropsPerMl;
+                    }
+                    
+                    const frequency = `cada ${Math.round(24 / avgIntervals)} horas`;
+                    doseText = `Dosis: ${minDoseUnitPerTime.toFixed(1)} a ${maxDoseUnitPerTime.toFixed(1)} ${unit} ${frequency}`;
+                }
+
+                if(med.duration){
+                    doseText += ` ${med.duration}.`;
+                }
+
+                resultDiv.textContent = doseText;
+            });
+        }
     }
 
     function closeModal() {
@@ -352,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function populateFilters() {
         const families = ['Todos', ...new Set(state.medications.all.map(med => med.simpleFamily).filter(Boolean))].sort();
         selectors.familyFilterContainer.innerHTML = families.map(family =>
-            `<button class="filter-btn" data-family="${family}">${family}</button>`
+            `<button class="filter-btn ${family === 'Todos' ? 'active' : ''}" data-family="${family}">${family}</button>`
         ).join('');
 
         selectors.themesFilterContainer.innerHTML = Object.entries(clinicalThemes).map(([id, theme]) =>
@@ -365,7 +451,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function addFilterEventListeners() {
         selectors.familyFilterContainer.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
+                selectors.familyFilterContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
                 state.ui.activeFamily = btn.dataset.family;
+                selectors.familiesBtnText.textContent = btn.dataset.family;
                 setView('medications');
                 closeAllDropdowns();
             });
@@ -389,6 +478,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupEventListeners() {
         selectors.searchBar.addEventListener('input', (e) => {
             state.ui.searchTerm = e.target.value;
+            // Reset filters for a better search experience
+            state.ui.activeFamily = 'Todos';
+            selectors.familiesBtnText.textContent = 'Familias';
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.filter-btn[data-family="Todos"]').classList.add('active');
+            
             state.ui.view = 'medications';
             updateDisplay();
         });
