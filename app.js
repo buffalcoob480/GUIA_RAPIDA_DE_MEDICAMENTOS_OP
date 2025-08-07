@@ -308,14 +308,39 @@ document.addEventListener('DOMContentLoaded', () => {
         let calculatorHtml = '';
         if (med.isCalculable) {
             calculatorHtml = `
-                <div class="md:col-span-2 p-3 mt-4 bg-blue-50 border-l-4 border-blue-400">
-                    <h4 class="font-bold text-blue-800">Calculadora de Dosis Pediátrica</h4>
-                    <div class="flex items-center gap-2 mt-2">
-                        <input type="number" id="patientWeight" placeholder="Peso en kg" class="w-full p-2 border border-slate-300 rounded-md">
-                        <button id="calculateDoseBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Calcular</button>
+            <div class="md:col-span-2 mt-4">
+                <div class="calculator-card">
+                    <div class="calculator-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M12 21a9 9 0 110-18 9 9 0 010 18z" /></svg>
+                        <h4 class="font-bold">Calculadora de Dosis Pediátrica</h4>
                     </div>
-                    <div id="doseResult" class="mt-2 text-blue-900 font-semibold"></div>
+                    <div class="calculator-body">
+                        <input type="number" id="patientWeight" placeholder="Peso del paciente en kg" class="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                        <button id="calculateDoseBtn" class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">Calcular Dosis</button>
+                    </div>
+                    <div id="doseResult" class="calculator-result"></div>
                 </div>
+            </div>
+            `;
+        }
+    
+        let notesHtml = '';
+        if (med.notes) {
+            notesHtml = `
+            <div class="md:col-span-2 info-box-warning">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                <div><p><strong>Nota:</strong> ${med.notes}</p></div>
+            </div>
+            `;
+        }
+    
+        let pregnancyHtml = '';
+        if (med.pregnancyLactation) {
+            pregnancyHtml = `
+            <div class="md:col-span-2 info-box-info">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+                <div><p><strong>Embarazo y Lactancia:</strong> ${med.pregnancyLactation}</p></div>
+            </div>
             `;
         }
 
@@ -340,23 +365,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div><strong>Dosis Pediátrica:</strong><p>${med.dose_pediatric || 'No especificada'}</p></div>
                     <div class="md:col-span-2"><strong>Contraindicaciones:</strong><p>${med.contraindications}</p></div>
                     
+                    ${notesHtml}
+                    ${pregnancyHtml}
                     ${calculatorHtml}
 
-                    ${med.renalDoseAdjust && med.renalDoseAdjust.enabled ? `
-                        <div class="md:col-span-2 p-3 bg-yellow-50 border-l-4 border-yellow-400">
-                            <h4 class="font-bold text-yellow-800">Ajuste en Insuficiencia Renal</h4>
-                            <p class="text-sm text-yellow-700"><strong>Moderada (TFG 30-59):</strong> ${med.renalDoseAdjust.moderate}</p>
-                            <p class="text-sm text-yellow-700"><strong>Severa (TFG < 15):</strong> ${med.renalDoseAdjust.severe}</p>
-                        </div>
-                    ` : ''}
-                    ${med.interactions ? `
-                        <div class="md:col-span-2 p-3 bg-red-50 border-l-4 border-red-400">
-                            <h4 class="font-bold text-red-800">Interacciones Importantes</h4>
-                            ${Object.entries(med.interactions).map(([level, descriptions]) => `
-                                ${descriptions.map(desc => `<p class="text-sm text-red-700"><strong>${level.charAt(0).toUpperCase() + level.slice(1)}:</strong> ${desc}</p>`).join('')}
-                            `).join('')}
-                        </div>
-                    ` : ''}
                 </div>
             </div>
     
@@ -381,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const weight = parseFloat(document.getElementById('patientWeight').value);
                 const resultDiv = document.getElementById('doseResult');
                 if (isNaN(weight) || weight <= 0) {
-                    resultDiv.textContent = 'Por favor, ingrese un peso válido.';
+                    resultDiv.innerHTML = '<p class="text-red-600">Por favor, ingrese un peso válido.</p>';
                     return;
                 }
                 
@@ -401,7 +413,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     
                     const frequency = med.doseFreq ? `cada ${Math.round(24 / med.doseFreq)} horas` : '';
-                    doseText = `Dosis: ${minDoseUnit.toFixed(1)} a ${maxDoseUnit.toFixed(1)} ${unit} ${frequency}`;
+                    doseText = `
+                        <div class="result-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V4z" /><path d="M5 12a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2v-2z" /></svg>
+                            <span><strong>Dosis:</strong> ${minDoseUnit.toFixed(1)} - ${maxDoseUnit.toFixed(1)} ${unit}</span>
+                        </div>
+                        <div class="result-item">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
+                            <span><strong>Frecuencia:</strong> ${frequency}</span>
+                        </div>`;
 
                 } else { // Dosis por día
                     const minDoseMgDay = weight * med.doseMin_mg_kg_dia;
@@ -418,14 +438,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     
                     const frequency = `cada ${Math.round(24 / avgIntervals)} horas`;
-                    doseText = `Dosis: ${minDoseUnitPerTime.toFixed(1)} a ${maxDoseUnitPerTime.toFixed(1)} ${unit} ${frequency}`;
+                    doseText = `
+                        <div class="result-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V4z" /><path d="M5 12a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2v-2z" /></svg>
+                            <span><strong>Dosis:</strong> ${minDoseUnitPerTime.toFixed(1)} - ${maxDoseUnitPerTime.toFixed(1)} ${unit}</span>
+                        </div>
+                        <div class="result-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
+                            <span><strong>Frecuencia:</strong> ${frequency}</span>
+                        </div>`;
                 }
 
                 if(med.duration){
-                    doseText += ` ${med.duration}.`;
+                    doseText += `
+                        <div class="result-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                            <span><strong>Duración:</strong> ${med.duration}</span>
+                        </div>`;
                 }
 
-                resultDiv.textContent = doseText;
+                resultDiv.innerHTML = doseText;
             });
         }
     }
@@ -556,7 +588,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 return response.json();
             })
             .then(data => {
-                const uniqueMeds = Array.from(new Map(data.map(med => [med.name + med.presentation, med])).values());
+                // Simulación de datos de embarazo/lactancia para demostración
+                const dataWithMockInfo = data.map(med => {
+                    if (med.name.includes("Ibuprofeno")) {
+                        med.pregnancyLactation = "Evitar en el tercer trimestre del embarazo. Usar con precaución durante la lactancia.";
+                    }
+                    if (med.name.includes("Amoxicilina")) {
+                        med.pregnancyLactation = "Generalmente considerado seguro durante el embarazo y la lactancia, bajo supervisión médica.";
+                    }
+                    if (med.name.includes("Ácido Fólico")) {
+                        med.pregnancyLactation = "Esencial. Se recomienda antes y durante el embarazo para prevenir defectos del tubo neural.";
+                    }
+                    return med;
+                });
+
+                const uniqueMeds = Array.from(new Map(dataWithMockInfo.map(med => [med.name + med.presentation, med])).values());
                 state.medications.all = uniqueMeds.map((med, index) => ({
                     ...med,
                     originalIndex: index,
