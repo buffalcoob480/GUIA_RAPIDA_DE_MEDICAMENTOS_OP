@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Definición de temas clínicos
+
+    // --- TEMAS CLÍNICOS ---
     const clinicalThemes = {
         'dm2-inicio': {
             name: 'Manejo Inicial de Diabetes Mellitus Tipo 2',
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Estado de la aplicación
+    // --- ESTADO DE LA APLICACIÓN ---
     const state = {
         medications: {
             all: [],
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         searchHistory: [],
     };
 
-    // Selectores del DOM
+    // --- SELECTORES DEL DOM ---
     const selectors = {
         medicationSection: document.getElementById('medication-section'),
         themesSection: document.getElementById('themes-section'),
@@ -46,29 +47,51 @@ document.addEventListener('DOMContentLoaded', () => {
         modalContent: document.getElementById('modal-content-wrapper'),
         cardTemplate: document.getElementById('medication-card-template'),
         medCount: document.getElementById('med-count'),
-        loadingIndicator: document.getElementById('loading-indicator'),
+        skeletonLoader: document.getElementById('skeleton-loader'),
         searchHistoryDatalist: document.getElementById('search-history'),
         familiesBtnText: document.getElementById('families-btn-text'),
+        toast: document.getElementById('toast-notification'),
+        toastMessage: document.getElementById('toast-message'),
     };
 
     // --- FUNCIONES AUXILIARES ---
     const normalizeText = (str = '') => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
     function calculateRelevance(med, term) {
-        if (normalizeText(med.name).includes(term)) return 10;
-        if (normalizeText(med.family).includes(term)) return 5;
-        if (normalizeText(med.uses).includes(term)) return 3;
+        const normalizedName = normalizeText(med.name);
+        const normalizedFamily = normalizeText(med.family);
+        const normalizedUses = normalizeText(med.uses);
+
+        if (normalizedName.startsWith(term)) return 20; // Prioridad alta a coincidencias al inicio
+        if (normalizedName.includes(term)) return 10;
+        if (normalizedFamily.includes(term)) return 5;
+        if (normalizedUses.includes(term)) return 3;
         return 0;
     }
+    
+    function showToast(message) {
+        selectors.toastMessage.textContent = message;
+        selectors.toast.classList.add('opacity-100', 'translate-y-0');
+        selectors.toast.classList.remove('opacity-0', 'translate-y-3');
+        setTimeout(() => {
+            selectors.toast.classList.remove('opacity-100', 'translate-y-0');
+            selectors.toast.classList.add('opacity-0', 'translate-y-3');
+        }, 2500);
+    }
 
-    // --- MANEJO DEL ESTADO (FAVORITOS, HISTORIAL) ---
+    // --- MANEJO DEL ESTADO (STORAGE) ---
     function loadStateFromStorage() {
-        const favs = localStorage.getItem('medFavorites');
-        if (favs) state.medications.favorites = new Set(JSON.parse(favs));
-        
-        const history = localStorage.getItem('medSearchHistory');
-        if (history) state.searchHistory = JSON.parse(history);
-        updateSearchHistoryDatalist();
+        try {
+            const favs = localStorage.getItem('medFavorites');
+            if (favs) state.medications.favorites = new Set(JSON.parse(favs));
+            
+            const history = localStorage.getItem('medSearchHistory');
+            if (history) state.searchHistory = JSON.parse(history);
+            updateSearchHistoryDatalist();
+        } catch (error) {
+            console.error("Error cargando estado desde localStorage:", error);
+            localStorage.clear(); // Limpiar en caso de datos corruptos
+        }
     }
 
     function saveFavorites() {
@@ -88,11 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (state.medications.favorites.has(medId)) {
             state.medications.favorites.delete(medId);
             button.classList.remove('is-favorite');
+            showToast('Eliminado de favoritos');
         } else {
             state.medications.favorites.add(medId);
             button.classList.add('is-favorite');
+            showToast('Añadido a favoritos');
         }
         saveFavorites();
+        // Si estamos en la vista de favoritos, la actualizamos para reflejar el cambio
         if (state.ui.view === 'favorites') {
             updateDisplay();
         }
@@ -108,7 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
             state.ui.activeFamily = 'Todos';
             selectors.familiesBtnText.textContent = 'Familias';
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector('.filter-btn[data-family="Todos"]').classList.add('active');
+            const allButton = document.querySelector('.filter-btn[data-family="Todos"]');
+            if(allButton) allButton.classList.add('active');
         }
         
         if (view === 'themes') {
@@ -119,7 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateDisplay() {
-        selectors.medicationSection.classList.toggle('hidden', state.ui.view !== 'medications' && state.ui.view !== 'favorites');
+        const isMedView = state.ui.view === 'medications' || state.ui.view === 'favorites';
+        selectors.medicationSection.classList.toggle('hidden', !isMedView);
         selectors.themesSection.classList.toggle('hidden', state.ui.view !== 'themes');
         selectors.interactionSection.classList.toggle('hidden', state.ui.view !== 'interaction-checker');
         
@@ -143,7 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
             renderInteractionChecker();
         }
         
-        renderMedications(results);
+        if(isMedView) {
+            renderMedications(results);
+        }
 
         if (state.ui.view === 'themes') {
             renderTheme(state.ui.activeThemeId);
@@ -170,8 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        `;
+            </div>`;
     
         const medButtons = selectors.interactionSection.querySelectorAll('.interaction-med-btn');
         const resultsContent = document.getElementById('interaction-results-content');
@@ -181,8 +210,10 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', () => {
                 btn.classList.toggle('selected');
                 const medName = btn.dataset.medName;
-                if (selectedMeds.includes(medName)) {
-                    selectedMeds = selectedMeds.filter(name => name !== medName);
+                const index = selectedMeds.indexOf(medName);
+
+                if (index > -1) {
+                    selectedMeds.splice(index, 1);
                 } else {
                     selectedMeds.push(medName);
                 }
@@ -197,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
     
-        const interactions = [];
+        const interactions = new Set(); // Usar un Set para evitar duplicados
         const selectedMeds = state.medications.all.filter(med => selectedMedNames.includes(med.name));
     
         for (let i = 0; i < selectedMeds.length; i++) {
@@ -208,12 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (med1.interactions) {
                     for (const level in med1.interactions) {
                         med1.interactions[level].forEach(interaction => {
-                            if (interaction.toLowerCase().includes(med2.name.toLowerCase())) {
-                                interactions.push({
-                                    meds: [med1.name, med2.name],
+                            if (normalizeText(interaction).includes(normalizeText(med2.name))) {
+                                interactions.add(JSON.stringify({
+                                    meds: [med1.name, med2.name].sort(),
                                     level: level,
                                     description: interaction
-                                });
+                                }));
                             }
                         });
                     }
@@ -222,23 +253,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (med2.interactions) {
                     for (const level in med2.interactions) {
                         med2.interactions[level].forEach(interaction => {
-                            if (interaction.toLowerCase().includes(med1.name.toLowerCase())) {
-                                interactions.push({
-                                    meds: [med2.name, med1.name],
+                            if (normalizeText(interaction).includes(normalizeText(med1.name))) {
+                                interactions.add(JSON.stringify({
+                                    meds: [med2.name, med1.name].sort(),
                                     level: level,
                                     description: interaction
-                                });
+                                }));
                             }
                         });
                     }
                 }
             }
         }
+        
+        const uniqueInteractions = Array.from(interactions).map(item => JSON.parse(item));
     
-        if (interactions.length === 0) {
+        if (uniqueInteractions.length === 0) {
             resultsContent.innerHTML = '<p class="text-green-600">No se encontraron interacciones conocidas entre los medicamentos seleccionados.</p>';
         } else {
-            resultsContent.innerHTML = interactions.map(int => `
+            resultsContent.innerHTML = uniqueInteractions.map(int => `
                 <div class="interaction-item">
                     <p><strong>${int.meds[0]} + ${int.meds[1]}</strong></p>
                     <p class="level-${int.level}">${int.level.charAt(0).toUpperCase() + int.level.slice(1)}: ${int.description}</p>
@@ -248,18 +281,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderMedications(meds) {
-        selectors.loadingIndicator.classList.add('hidden');
+        selectors.skeletonLoader.classList.add('hidden');
+        selectors.medicationList.classList.remove('hidden');
+        
         selectors.medicationList.innerHTML = '';
-        selectors.noResults.classList.toggle('hidden', meds.length > 0 || state.ui.view === 'themes' || state.ui.view === 'interaction-checker');
+        const isMedView = state.ui.view === 'medications' || state.ui.view === 'favorites';
+        selectors.noResults.classList.toggle('hidden', meds.length > 0 || !isMedView);
+
+        const fragment = document.createDocumentFragment();
         meds.forEach(med => {
             const card = createMedicationCard(med);
-            selectors.medicationList.appendChild(card);
+            fragment.appendChild(card);
         });
+        selectors.medicationList.appendChild(fragment);
     }
 
     function createMedicationCard(med) {
         const cardClone = selectors.cardTemplate.content.cloneNode(true);
-        const cardElement = cardClone.querySelector('article');
+        const cardElement = cardClone.querySelector('.medication-card');
         const favButton = cardClone.querySelector('.favorite-btn-card');
         const imgElement = cardClone.querySelector('.card-img');
         const imgText = `${med.name} / ${med.presentation}`;
@@ -273,9 +312,10 @@ document.addEventListener('DOMContentLoaded', () => {
             favButton.classList.add('is-favorite');
         }
         
-        // --- MODIFICACIÓN AQUÍ ---
-        imgElement.src = med.imageUrl || `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(imgText)}`;
-        imgElement.alt = imgText;
+        const placeholderUrl = `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(imgText)}`;
+        imgElement.src = med.imageUrl || placeholderUrl;
+        imgElement.alt = `Imagen de ${med.name}`;
+        imgElement.onerror = () => { imgElement.src = placeholderUrl; };
 
 
         favButton.addEventListener('click', (e) => {
@@ -289,8 +329,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderTheme(themeId) {
         const theme = clinicalThemes[themeId];
-        if (theme && theme.content) {
-            selectors.themesSection.innerHTML = theme.content;
+        selectors.themesSection.innerHTML = (theme && theme.content) 
+            ? theme.content 
+            : `<p class="text-center p-8">Contenido del tema no encontrado.</p>`;
+        
+        if (theme) {
             selectors.themesSection.querySelectorAll('.med-link').forEach(link => {
                 link.addEventListener('click', e => {
                     e.preventDefault();
@@ -299,14 +342,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (med) openModal(med);
                 });
             });
-        } else {
-            selectors.themesSection.innerHTML = `<p class="text-center p-8">Contenido del tema no encontrado.</p>`;
         }
     }
     
     function openModal(med) {
         const isFavorite = state.medications.favorites.has(med.originalIndex);
         const imgText = `${med.name} / ${med.presentation}`;
+        const placeholderUrl = `https://placehold.co/600x300/e0f2fe/083344?text=${encodeURIComponent(imgText)}`;
     
         let calculatorHtml = '';
         if (med.isCalculable) {
@@ -338,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
                     <div class="md:col-span-2">
-                        <img src="${med.imageUrl || `https://placehold.co/600x300/e0f2fe/083344?text=${encodeURIComponent(imgText)}`}" alt="${imgText}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <img src="${med.imageUrl || placeholderUrl}" alt="Imagen de ${med.name}" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.src='${placeholderUrl}'">
                     </div>
 
                     <div class="md:col-span-2 info-box-success">
@@ -349,12 +391,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
                         <p><strong>Contraindicaciones:</strong> ${med.contraindications || 'No especificadas'}</p>
                     </div>
-                    <div class="md:col-span-2 info-box-warning">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
-                        <p><strong>Nota:</strong> ${med.notes || 'Revisar indicaciones específicas del fabricante. Administrar con alimentos si causa malestar gastrointestinal.'}</p>
-                    </div>
                     
-                    <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
+                    ${med.warnings ? `<div class="md:col-span-2 info-box-warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                        <p><strong>Advertencias:</strong> ${med.warnings}</p>
+                    </div>` : ''}
+
+                    ${med.notes ? `<div class="md:col-span-2 info-box-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+                        <p><strong>Notas:</strong> ${med.notes}</p>
+                    </div>` : ''}
+
+                    <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-2 text-center mt-4">
                         <div class="info-box-age">
                              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             <span class="font-bold">Edad Mínima</span>
@@ -387,102 +435,101 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         
         selectors.modal.classList.remove('hidden');
-        selectors.modal.scrollTop = 0;
+        document.body.style.overflow = 'hidden'; // Evitar scroll del fondo
         
+        // El foco se mueve al contenedor del modal para accesibilidad
         selectors.modalContent.focus();
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
         document.getElementById('modalFavButton').addEventListener('click', (e) => toggleFavorite(med.originalIndex, e.currentTarget));
 
         if (med.isCalculable) {
-            const calculateBtn = document.getElementById('calculateDoseBtn');
-            const weightInput = document.getElementById('patientWeight');
-            const resultDiv = document.getElementById('doseResult');
+            setupDoseCalculator(med);
+        }
+    }
+    
+    function setupDoseCalculator(med) {
+        const calculateBtn = document.getElementById('calculateDoseBtn');
+        const weightInput = document.getElementById('patientWeight');
+        const resultDiv = document.getElementById('doseResult');
 
-            calculateBtn.addEventListener('click', () => {
-                const weight = parseFloat(weightInput.value);
-                if (isNaN(weight) || weight <= 0) {
-                    resultDiv.innerHTML = '<p class="text-red-600">Por favor, ingrese un peso válido.</p>';
-                    return;
+        calculateBtn.addEventListener('click', () => {
+            const weight = parseFloat(weightInput.value);
+            if (isNaN(weight) || weight <= 0) {
+                resultDiv.innerHTML = '<p class="text-red-600">Por favor, ingrese un peso válido.</p>';
+                return;
+            }
+            
+            let doseText = '';
+            let copyText = '';
+            const unit = med.isDrops ? 'gotas' : 'ml';
+            const via = 'vía oral';
+            const dropsPerMl = med.name.includes("Paracetamol") ? 30 : 20; // Ajuste específico
+
+            let doseRange, frequency, durationText;
+
+            if (med.doseMin_mg_kg_dosis) { // Cálculo por dosis
+                const minDoseMg = weight * med.doseMin_mg_kg_dosis;
+                const maxDoseMg = weight * med.doseMax_mg_kg_dosis;
+                let minDoseUnit = minDoseMg / med.concentration;
+                let maxDoseUnit = maxDoseMg / med.concentration;
+                
+                if (med.isDrops) {
+                    minDoseUnit *= dropsPerMl;
+                    maxDoseUnit *= dropsPerMl;
                 }
                 
-                let doseText = '';
-                let copyText = '';
-                const unit = med.isDrops ? 'gotas' : 'ml';
-                const via = 'vía oral';
-                const dropsPerMl = 20;
+                doseRange = `${minDoseUnit.toFixed(1)} - ${maxDoseUnit.toFixed(1)} ${unit}`;
+                frequency = med.doseFreq ? `cada ${Math.round(24 / med.doseFreq)} horas` : '';
+            } else { // Cálculo por día
+                const minDoseMgDay = weight * med.doseMin_mg_kg_dia;
+                const maxDoseMgDay = weight * med.doseMax_mg_kg_dia;
+                const intervals = med.doseIntervals.split('-').map(Number);
+                const avgIntervals = (intervals[0] + (intervals[1] || intervals[0])) / 2;
+                let minDoseUnitPerTime = (minDoseMgDay / avgIntervals) / med.concentration;
+                let maxDoseUnitPerTime = (maxDoseMgDay / avgIntervals) / med.concentration;
 
-                let doseRange, frequency, durationText;
-
-                if (med.doseMin_mg_kg_dosis) {
-                    const minDoseMg = weight * med.doseMin_mg_kg_dosis;
-                    const maxDoseMg = weight * med.doseMax_mg_kg_dosis;
-                    let minDoseUnit = minDoseMg / med.concentration;
-                    let maxDoseUnit = maxDoseMg / med.concentration;
-                    
-                    if (med.isDrops) {
-                        minDoseUnit *= dropsPerMl;
-                        maxDoseUnit *= dropsPerMl;
-                    }
-                    
-                    doseRange = `${minDoseUnit.toFixed(1)} - ${maxDoseUnit.toFixed(1)} ${unit}`;
-                    frequency = med.doseFreq ? `cada ${Math.round(24 / med.doseFreq)} horas` : '';
-                } else {
-                    const minDoseMgDay = weight * med.doseMin_mg_kg_dia;
-                    const maxDoseMgDay = weight * med.doseMax_mg_kg_dia;
-                    const intervals = med.doseIntervals.split('-').map(Number);
-                    const avgIntervals = (intervals[0] + (intervals[1] || intervals[0])) / 2;
-                    let minDoseUnitPerTime = (minDoseMgDay / avgIntervals) / med.concentration;
-                    let maxDoseUnitPerTime = (maxDoseMgDay / avgIntervals) / med.concentration;
-
-                    if (med.isDrops) {
-                        minDoseUnitPerTime *= dropsPerMl;
-                        maxDoseUnitPerTime *= dropsPerMl;
-                    }
-                    
-                    doseRange = `${minDoseUnitPerTime.toFixed(1)} - ${maxDoseUnitPerTime.toFixed(1)} ${unit}`;
-                    frequency = `cada ${Math.round(24 / avgIntervals)} horas`;
+                if (med.isDrops) {
+                    minDoseUnitPerTime *= dropsPerMl;
+                    maxDoseUnitPerTime *= dropsPerMl;
                 }
+                
+                doseRange = `${minDoseUnitPerTime.toFixed(1)} - ${maxDoseUnitPerTime.toFixed(1)} ${unit}`;
+                frequency = `cada ${Math.round(24 / avgIntervals)} horas`;
+            }
 
-                durationText = med.duration || '';
-                copyText = `${doseRange.replace(' - ', ' a ')} ${via} ${frequency} ${durationText}.`;
+            durationText = med.duration || '';
+            copyText = `Dar ${doseRange.replace(' - ', ' a ')} ${via} ${frequency} ${durationText}.`;
 
-                resultDiv.innerHTML = `
-                    <div class="result-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V4z" /><path d="M5 12a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2v-2z" /></svg>
-                        <span><strong>Dosis:</strong> ${doseRange}</span>
-                    </div>
-                    <div class="result-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
-                        <span><strong>Frecuencia:</strong> ${frequency}</span>
-                    </div>
-                    ${durationText ? `
-                    <div class="result-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
-                        <span><strong>Duración:</strong> ${durationText}</span>
-                    </div>` : ''}
-                    <button id="copyDoseBtn" class="copy-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" /><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" /></svg>
-                        Copiar Indicación
-                    </button>`;
+            resultDiv.innerHTML = `
+                <div class="result-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V4z" /><path d="M5 12a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2v-2z" /></svg>
+                    <span><strong>Dosis:</strong> ${doseRange}</span>
+                </div>
+                <div class="result-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
+                    <span><strong>Frecuencia:</strong> ${frequency}</span>
+                </div>
+                ${durationText ? `
+                <div class="result-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                    <span><strong>Duración:</strong> ${durationText}</span>
+                </div>` : ''}
+                <button id="copyDoseBtn" class="copy-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" /><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" /></svg>
+                    Copiar Indicación
+                </button>`;
 
-                document.getElementById('copyDoseBtn').addEventListener('click', (e) => {
-                    navigator.clipboard.writeText(copyText).then(() => {
-                        e.currentTarget.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                            ¡Copiado!`;
-                        setTimeout(() => {
-                           e.currentTarget.innerHTML = `
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" /><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" /></svg>
-                                Copiar Indicación`;
-                        }, 2000);
-                    });
+            document.getElementById('copyDoseBtn').addEventListener('click', (e) => {
+                navigator.clipboard.writeText(copyText).then(() => {
+                    showToast('¡Indicación copiada!');
                 });
             });
-        }
+        });
     }
 
     function closeModal() {
         selectors.modal.classList.add('hidden');
+        document.body.style.overflow = 'auto'; // Restaurar scroll del fondo
     }
 
     // --- CONFIGURACIÓN INICIAL ---
@@ -500,22 +547,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addFilterEventListeners() {
-        selectors.familyFilterContainer.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                selectors.familyFilterContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                state.ui.activeFamily = btn.dataset.family;
-                selectors.familiesBtnText.textContent = btn.dataset.family;
-                setView('medications');
-                closeAllDropdowns();
-            });
+        selectors.familyFilterContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('.filter-btn');
+            if (!btn) return;
+            
+            selectors.familyFilterContainer.querySelector('.active')?.classList.remove('active');
+            btn.classList.add('active');
+            state.ui.activeFamily = btn.dataset.family;
+            selectors.familiesBtnText.textContent = btn.dataset.family;
+            setView('medications');
+            closeAllDropdowns();
         });
 
-        selectors.themesFilterContainer.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                setView('themes', btn.dataset.themeId);
-                closeAllDropdowns();
-            });
+        selectors.themesFilterContainer.addEventListener('click', (e) => {
+             const btn = e.target.closest('.theme-btn');
+            if (!btn) return;
+            setView('themes', btn.dataset.themeId);
+            closeAllDropdowns();
         });
     }
 
@@ -524,26 +572,25 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.themesDropdownPanel.classList.remove('is-open');
         selectors.familiesDropdownBtn.classList.remove('active');
         selectors.themesDropdownBtn.classList.remove('active');
+        selectors.familiesDropdownBtn.setAttribute('aria-expanded', 'false');
+        selectors.themesDropdownBtn.setAttribute('aria-expanded', 'false');
     }
 
     function setupEventListeners() {
         selectors.searchBar.addEventListener('input', (e) => {
             state.ui.searchTerm = e.target.value;
-            // Reset filters for a better search experience
-            state.ui.activeFamily = 'Todos';
-            selectors.familiesBtnText.textContent = 'Familias';
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.filter-btn[data-family="Todos"]').classList.add('active');
-            
-            state.ui.view = 'medications';
-            updateDisplay();
+            if (state.ui.view !== 'medications') {
+                setView('medications');
+            } else {
+                updateDisplay();
+            }
         });
         
         selectors.searchBar.addEventListener('change', (e) => {
-            const term = e.target.value.trim();
+            const term = e.target.value.trim().toLowerCase();
             if (term && !state.searchHistory.includes(term)) {
                 state.searchHistory.unshift(term);
-                if (state.searchHistory.length > 10) state.searchHistory.pop();
+                if (state.searchHistory.length > 15) state.searchHistory.pop();
                 saveSearchHistory();
             }
         });
@@ -553,23 +600,27 @@ document.addEventListener('DOMContentLoaded', () => {
         
         selectors.familiesDropdownBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectors.familiesDropdownPanel.classList.toggle('is-open');
-            selectors.familiesDropdownBtn.classList.toggle('active');
+            const isOpen = selectors.familiesDropdownPanel.classList.toggle('is-open');
+            selectors.familiesDropdownBtn.classList.toggle('active', isOpen);
+            selectors.familiesDropdownBtn.setAttribute('aria-expanded', isOpen);
+            // Cerrar el otro
             selectors.themesDropdownPanel.classList.remove('is-open');
             selectors.themesDropdownBtn.classList.remove('active');
+            selectors.themesDropdownBtn.setAttribute('aria-expanded', 'false');
         });
 
         selectors.themesDropdownBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectors.themesDropdownPanel.classList.toggle('is-open');
-            selectors.themesDropdownBtn.classList.toggle('active');
+            const isOpen = selectors.themesDropdownPanel.classList.toggle('is-open');
+            selectors.themesDropdownBtn.classList.toggle('active', isOpen);
+            selectors.themesDropdownBtn.setAttribute('aria-expanded', isOpen);
+            // Cerrar el otro
             selectors.familiesDropdownPanel.classList.remove('is-open');
             selectors.familiesDropdownBtn.classList.remove('active');
+            selectors.familiesDropdownBtn.setAttribute('aria-expanded', 'false');
         });
 
-        document.addEventListener('click', () => {
-            closeAllDropdowns();
-        });
+        document.addEventListener('click', () => closeAllDropdowns());
 
         document.addEventListener('keydown', (e) => {
             if (e.key === "Escape" && !selectors.modal.classList.contains('hidden')) {
@@ -589,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // --- FUNCIÓN DE INICIO ---
-    function initializeApp() {
+    async function initializeApp() {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./service-worker.js').catch(err => {
                 console.error('Service worker registration failed:', err);
@@ -599,70 +650,27 @@ document.addEventListener('DOMContentLoaded', () => {
         loadStateFromStorage();
         setupEventListeners();
 
-        fetch('./medicamentos.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Simulación de datos de embarazo/lactancia para demostración
-                const dataWithMockInfo = data.map(med => {
-                    if (med.name.includes("Ibuprofeno")) {
-                        med.pregnancy = "Riesgo. Evitar 3er trimestre.";
-                        med.lactation = "Seguro (e-lactancia.org)";
-                        med.minimumAge = "3 meses";
-                        med.notes = "No administrar con otros AINEs. Riesgo de sangrado gastrointestinal en uso prolongado.";
-                    }
-                    if (med.name.includes("Amoxicilina")) {
-                        med.pregnancy = "Seguro";
-                        med.lactation = "Seguro (e-lactancia.org)";
-                        med.minimumAge = "Recién nacido";
-                        med.notes = "Tomar el tratamiento completo aunque los síntomas mejoren antes para evitar resistencias.";
-                    }
-                    if (med.name.includes("Paracetamol")) {
-                        med.pregnancy = "Seguro";
-                        med.lactation = "Seguro (e-lactancia.org)";
-                        med.minimumAge = "Recién nacido";
-                        med.notes = "Dosis excesivas pueden causar daño hepático grave. No exceder 4g/día en adultos.";
-                    }
-                    if (med.name.includes("Loratadina")) {
-                         med.pregnancy = "Consultar Médico";
-                        med.lactation = "Seguro (e-lactancia.org)";
-                        med.minimumAge = "2 años";
-                        med.notes = "Aunque no suele causar somnolencia, puede ocurrir en algunos pacientes.";
-                    }
-                    if (med.name.includes("Ambroxol")) {
-                         med.pregnancy = "Evitar 1er Trimestre";
-                        med.lactation = "Seguro (e-lactancia.org)";
-                        med.minimumAge = "2 años";
-                        med.notes = "Asegurar una buena hidratación para ayudar a fluidificar las secreciones.";
-                    }
-                     if (med.name.includes("Ácido Fólico")) {
-                        med.pregnancy = "Esencial";
-                        med.lactation = "Seguro";
-                        med.minimumAge = "N/A";
-                        med.notes = "Dosis profiláctica para embarazo es de 400 mcg/día.";
-                    }
-                    return med;
-                });
+        try {
+            const response = await fetch('./medicamentos.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            
+            const uniqueMeds = Array.from(new Map(data.map(med => [med.name + med.presentation, med])).values());
+            state.medications.all = uniqueMeds.map((med, index) => ({
+                ...med,
+                originalIndex: index
+            })).sort((a,b) => a.name.localeCompare(b.name));
 
-                const uniqueMeds = Array.from(new Map(dataWithMockInfo.map(med => [med.name + med.presentation, med])).values());
-                state.medications.all = uniqueMeds.map((med, index) => ({
-                    ...med,
-                    originalIndex: index,
-                    normalizedName: normalizeText(med.name),
-                    isFavorite: state.medications.favorites.has(index)
-                }));
-                selectors.medCount.textContent = state.medications.all.length;
-                populateFilters();
-                updateDisplay();
-            })
-            .catch(error => {
-                console.error('Error al cargar o procesar medicamentos.json:', error);
-                selectors.loadingIndicator.innerHTML = '<p class="text-red-500">No se pudieron cargar los medicamentos. Revisa la consola para más detalles.</p>';
-            });
+            selectors.medCount.textContent = state.medications.all.length;
+            populateFilters();
+            updateDisplay();
+
+        } catch (error) {
+            console.error('Error al cargar o procesar medicamentos.json:', error);
+            selectors.skeletonLoader.innerHTML = '<p class="text-red-500 col-span-full text-center">No se pudieron cargar los medicamentos. Revisa la consola para más detalles.</p>';
+        }
     }
 
     // Iniciar la aplicación
