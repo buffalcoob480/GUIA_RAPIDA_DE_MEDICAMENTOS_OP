@@ -188,10 +188,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>Seleccione dos o más medicamentos para verificar posibles interacciones.</p>
                 </div>
                 <div class="interaction-body">
-                    <div class="med-selection-list">
-                        ${state.medications.all.map(med => `
-                            <button class="interaction-med-btn" data-med-name="${med.name}">${med.name}</button>
-                        `).join('')}
+                    <div>
+                        <div class="interaction-selection-controls">
+                            <input type="text" id="interaction-search" class="interaction-search-bar" placeholder="Filtrar medicamentos...">
+                            <div class="interaction-selection-info">
+                                <span id="selection-count">0 seleccionados</span>
+                                <button id="clear-selection" class="clear-selection-btn">Limpiar</button>
+                            </div>
+                        </div>
+                        <div class="med-selection-list">
+                            ${state.medications.all.map(med => `
+                                <button class="interaction-med-btn" data-med-name="${med.name}">${med.name}</button>
+                            `).join('')}
+                        </div>
                     </div>
                     <div class="interaction-results">
                         <h3>Resultados</h3>
@@ -202,23 +211,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>`;
     
-        const medButtons = selectors.interactionSection.querySelectorAll('.interaction-med-btn');
+        const medButtons = Array.from(selectors.interactionSection.querySelectorAll('.interaction-med-btn'));
         const resultsContent = document.getElementById('interaction-results-content');
+        const searchInput = document.getElementById('interaction-search');
+        const selectionCount = document.getElementById('selection-count');
+        const clearButton = document.getElementById('clear-selection');
         let selectedMeds = [];
     
-        medButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                btn.classList.toggle('selected');
-                const medName = btn.dataset.medName;
-                const index = selectedMeds.indexOf(medName);
+        const updateSelectionCount = () => {
+            selectionCount.textContent = `${selectedMeds.length} seleccionados`;
+        };
+        
+        const handleSelection = (btn) => {
+            btn.classList.toggle('selected');
+            const medName = btn.dataset.medName;
+            const index = selectedMeds.indexOf(medName);
 
-                if (index > -1) {
-                    selectedMeds.splice(index, 1);
-                } else {
-                    selectedMeds.push(medName);
-                }
-                checkInteractions(selectedMeds, resultsContent);
+            if (index > -1) {
+                selectedMeds.splice(index, 1);
+            } else {
+                selectedMeds.push(medName);
+            }
+            updateSelectionCount();
+            checkInteractions(selectedMeds, resultsContent);
+        };
+        
+        medButtons.forEach(btn => btn.addEventListener('click', () => handleSelection(btn)));
+        
+        searchInput.addEventListener('input', (e) => {
+            const term = normalizeText(e.target.value);
+            medButtons.forEach(btn => {
+                const medName = normalizeText(btn.dataset.medName);
+                btn.style.display = medName.includes(term) ? '' : 'none';
             });
+        });
+
+        clearButton.addEventListener('click', () => {
+            selectedMeds = [];
+            medButtons.forEach(btn => btn.classList.remove('selected'));
+            updateSelectionCount();
+            checkInteractions(selectedMeds, resultsContent);
         });
     }
 
@@ -269,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const uniqueInteractions = Array.from(interactions).map(item => JSON.parse(item));
     
         if (uniqueInteractions.length === 0) {
-            resultsContent.innerHTML = '<p class="text-green-600">No se encontraron interacciones conocidas entre los medicamentos seleccionados.</p>';
+            resultsContent.innerHTML = '<div class="info-box-success"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><p>No se encontraron interacciones conocidas entre los medicamentos seleccionados.</p></div>';
         } else {
             resultsContent.innerHTML = uniqueInteractions.map(int => `
                 <div class="interaction-item">
