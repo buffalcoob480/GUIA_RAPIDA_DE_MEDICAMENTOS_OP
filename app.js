@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function closeAllDropdowns() {
         document.querySelectorAll('.dropdown-panel.is-open').forEach(panel => panel.classList.remove('is-open'));
-        document.querySelectorAll('.dropdown-btn[aria-expanded="true"]').forEach(btn => {
+        document.querySelectorAll('.dropdown-btn.active').forEach(btn => {
             if(btn.id !== "favorites-btn" && btn.id !== "interaction-checker-btn") {
                 btn.classList.remove('active');
                 btn.setAttribute('aria-expanded', 'false');
@@ -458,8 +458,8 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.toggle('active', isOpen);
             btn.setAttribute('aria-expanded', isOpen);
         }
-        selectors.familiesDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); closeAllDropdowns(); toggleDropdown(e.currentTarget, selectors.familiesDropdownPanel); });
-        selectors.themesDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); closeAllDropdowns(); toggleDropdown(e.currentTarget, selectors.themesDropdownPanel); });
+        selectors.familiesDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(e.currentTarget, selectors.familiesDropdownPanel); });
+        selectors.themesDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(e.currentTarget, selectors.themesDropdownPanel); });
         selectors.advancedFilterBtn.addEventListener('click', () => selectors.advancedFilterPanel.classList.toggle('hidden'));
         document.addEventListener('click', () => closeAllDropdowns());
         document.addEventListener('keydown', (e) => { if (e.key === "Escape" && !selectors.modal.classList.contains('hidden')) closeModal(); });
