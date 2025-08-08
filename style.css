@@ -12,9 +12,6 @@ body::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; 
 .dark body::-webkit-scrollbar-thumb { background-color: #475569; border-color: #0f172a; }
 
 /* --- SECCIÓN DE CONTROLES Y DESPLEGABLES --- */
-.controls-container { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem; }
-@media (min-width: 768px) { .controls-container { flex-direction: row; align-items: center; } }
-.search-wrapper { flex-grow: 1; }
 .filter-controls { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
 .dropdown-wrapper { position: relative; }
 .dropdown-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background-color: white; border: 1px solid #cbd5e1; border-radius: 9999px; font-weight: 500; color: #334155; transition: all 0.2s ease-in-out; cursor: pointer; }
@@ -24,6 +21,16 @@ body::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; 
 .dropdown-btn.active[aria-expanded="true"] svg { transform: rotate(180deg); }
 .dropdown-panel { position: absolute; top: calc(100% + 0.5rem); left: 0; background-color: white; border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; width: 280px; padding: 0.5rem; z-index: 50; max-height: 400px; overflow-y: auto; opacity: 0; transform: translateY(-10px) scale(0.98); visibility: hidden; transition: all 0.2s ease-in-out; }
 .dropdown-panel.is-open { opacity: 1; transform: translateY(0) scale(1); visibility: visible; }
+
+/* --- FILTROS AVANZADOS Y PERFIL PACIENTE --- */
+.profile-btn, .adv-filter-btn { padding: 0.5rem 1rem; border: 1px solid #cbd5e1; border-radius: 9999px; font-size: 0.875rem; cursor: pointer; transition: all 0.2s ease; }
+.profile-btn.active { background-color: #2563eb; color: white; border-color: #2563eb; }
+#advanced-filter-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+.adv-filter-group h4 { font-weight: 600; margin-bottom: 0.5rem; }
+.adv-filter-group label { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+.dark .profile-btn { border-color: #475569; color: #cbd5e1; }
+.dark .profile-btn:hover { background-color: #334155; }
+.dark .profile-btn.active { background-color: #3b82f6; color: white; border-color: #3b82f6; }
 
 /* --- ESTILOS DE VISTAS Y CONTENIDO --- */
 #medication-section, #themes-section, #interaction-section { transition: opacity 0.4s ease, transform 0.4s ease; }
@@ -45,9 +52,12 @@ body::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; 
 .medication-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
 .favorite-btn-card { -webkit-text-stroke: 1.5px #a1a1aa; color: transparent; }
 .favorite-btn-card.is-favorite, #modalFavButton.is-favorite { color: #facc15; -webkit-text-stroke: 1.5px #ca8a04; }
+.card-img.lazy { background-color: #e2e8f0; } /* Placeholder color */
+.dark .card-img.lazy { background-color: #334155; }
 
 /* --- CAJAS DE INFO Y CALCULADORA --- */
-.info-box-success, .info-box-danger, .info-box-warning, .info-box-info { display: flex; gap: 0.75rem; align-items: flex-start; padding: 1rem; border-radius: 0.5rem; border: 1px solid; }
+.info-box-success, .info-box-danger, .info-box-warning, .info-box-info { display: flex; gap: 0.75rem; align-items: flex-start; padding: 1rem; border-radius: 0.5rem; border: 1px solid; transition: all 0.3s ease; }
+.info-box-highlight { transform: scale(1.03); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
 .info-box-success { background-color: #f0fdf4; border-color: #bbf7d0; color: #166534; }
 .info-box-danger { background-color: #fef2f2; border-color: #fecaca; color: #991b1b; }
 .info-box-warning { background-color: #fffbeb; border-color: #fde68a; color: #b45309; }
@@ -124,6 +134,8 @@ body.dark { background-color: #0f172a !important; color: #f1f5f9 !important; }
 .dark .info-box-danger { background-color: #450a0a; border-color: #ef4444; color: #fee2e2; }
 .dark .info-box-warning { background-color: #422006; border-color: #f59e0b; color: #fef3c7; }
 .dark .info-box-info { background-color: #172554; border-color: #3b82f6; color: #dbeafe; }
+.dark .info-box-highlight { box-shadow: 0 0 15px rgba(96, 165, 250, 0.5); }
+
 
 .dark .info-box-age { background-color: #27272a; border-color: #52525b; color: #e4e4e7; }
 .dark .info-box-pregnancy { background-color: #450a0a; border-color: #ef4444; color: #fee2e2; }
@@ -132,7 +144,7 @@ body.dark { background-color: #0f172a !important; color: #f1f5f9 !important; }
 .dark .calculator-card { background-color: #0f172a; border-color: #334155; }
 .dark .calculator-header { background-color: #1e293b; color: #dbeafe; }
 .dark .calculator-result { border-color: #334155; }
-.dark #patientWeight, .dark .interaction-search-bar { background-color: #334155; border-color: #475569; color: #f1f5f9; }
+.dark #patientWeight, .dark .interaction-search-bar, .dark .adv-filter-group input { background-color: #334155; border-color: #475569; color: #f1f5f9; }
 .dark .copy-btn { background-color: #1e40af; color: #dbeafe; }
 .dark .copy-btn:hover { background-color: #1e3a8a; }
 
