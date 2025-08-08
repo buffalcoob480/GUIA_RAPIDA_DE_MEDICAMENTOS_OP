@@ -15,7 +15,7 @@
 <body class="bg-slate-100 text-slate-800">
 
 <div class="fixed top-4 right-4 z-[60]">
-    <button id="modoAlfredoToggle" class="px-4 py-2 bg-slate-900 text-white rounded-full shadow-lg hover:bg-slate-700 transition-transform hover:scale-105">
+    <button id="modoAlfredoToggle" class="px-4 py-2 bg-slate-900 text-white rounded-full shadow-lg hover:bg-slate-700 transition-transform hover:scale-105" aria-label="Cambiar a modo oscuro">
         Modo Alfredo
     </button>
 </div>
@@ -37,14 +37,14 @@
                 <button id="favorites-btn" class="dropdown-btn"><span>★ Favoritos</span></button>
                 <button id="interaction-checker-btn" class="dropdown-btn"><span>⇆ Interacciones</span></button>
                 <div class="dropdown-wrapper">
-                    <button id="families-dropdown-btn" class="dropdown-btn">
+                    <button id="families-dropdown-btn" class="dropdown-btn" aria-haspopup="true" aria-expanded="false">
                         <span id="families-btn-text">Familias</span>
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
                     </button>
                     <div id="families-dropdown-panel" class="dropdown-panel"><nav id="familyFilterContainer" aria-label="Filtros por familia"></nav></div>
                 </div>
                 <div class="dropdown-wrapper">
-                    <button id="themes-dropdown-btn" class="dropdown-btn">
+                    <button id="themes-dropdown-btn" class="dropdown-btn" aria-haspopup="true" aria-expanded="false">
                         <span>Temas</span>
                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
                     </button>
@@ -55,17 +55,22 @@
 
         <div id="view-container" class="mt-8">
             <section id="medication-section">
-                <div id="loading-indicator" class="text-center py-16 text-slate-500">
-                    <div class="flex justify-center items-center"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
-                    <p class="mt-4">Cargando medicamentos...</p>
+                <div id="skeleton-loader" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
                 </div>
-                <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-                <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden"><p>No se encontraron medicamentos.</p></div>
+                <div id="medication-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden"></div>
+                <div id="no-results" class="text-center py-16 text-slate-500 text-xl hidden" role="status"><p>No se encontraron medicamentos.</p></div>
             </section>
             
             <section id="themes-section" class="hidden prose max-w-none"></section>
-            <section id="interaction-section" class="hidden">
-                </section>
+            <section id="interaction-section" class="hidden"></section>
         </div>
         <footer class="text-center p-4 mt-8 text-sm text-slate-500 border-t">
             <p>Información de referencia. Consulte siempre a un profesional de la salud.</p>
@@ -75,14 +80,18 @@
 
 <div id="medicationModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div id="modal-content-wrapper" tabindex="-1" class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0">
-        </div>
+    </div>
+</div>
+
+<div id="toast-notification" class="fixed bottom-5 right-5 bg-slate-900 text-white py-2 px-5 rounded-full shadow-lg opacity-0 translate-y-3 transition-all duration-300">
+    <p id="toast-message"></p>
 </div>
 
 <template id="medication-card-template">
-  <article class="bg-white rounded-xl shadow-md flex flex-col overflow-hidden relative animate-fade-in">
+  <article class="medication-card bg-white rounded-xl shadow-md flex flex-col overflow-hidden relative">
     <button class="favorite-btn-card absolute top-2 right-2 text-2xl text-slate-300 hover:text-yellow-400 transition-colors z-10" aria-label="Añadir a favoritos">★</button>
     <div class="card-content-wrapper cursor-pointer">
-        <img alt="" class="card-img w-full h-32 object-cover" onerror="console.error('Error al cargar imagen:', this.src); this.onerror=null;this.src='https://placehold.co/400x200/e0f2fe/083344?text=Imagen+no+disponible';">
+        <img alt="" class="card-img w-full h-32 object-cover">
         <div class="p-5 flex flex-col flex-grow">
             <div>
                 <h3 class="card-name font-bold text-lg text-slate-900"></h3><p class="card-presentation text-sm text-slate-600"></p>
