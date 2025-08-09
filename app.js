@@ -100,26 +100,47 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyFiltersAndSearch() {
         const searchTerm = normalizeText(state.ui.searchTerm);
         let results = [...state.medications.all];
-        if (state.ui.view === 'favorites') { results = results.filter(med => state.favorites.has(med.originalIndex)); }
+        
+        // Vista de Favoritos
+        if (state.ui.view === 'favorites') {
+             results = results.filter(med => state.favorites.has(med.originalIndex));
+        }
+
+        // Búsqueda por término
         if (searchTerm) {
             results = results.filter(med => 
                 normalizeText(med.name).includes(searchTerm) ||
                 normalizeText(med.family).includes(searchTerm) ||
                 normalizeText(med.uses).includes(searchTerm)
             );
-        } else if (Object.keys(state.ui.advancedFilters).length > 0) {
+        } 
+        // Filtros Avanzados
+        else if (Object.keys(state.ui.advancedFilters).length > 0) {
             results = results.filter(med => {
                 return Object.entries(state.ui.advancedFilters).every(([key, values]) => {
                     if (!values || values.length === 0) return true;
-                    if (key === 'families') return values.includes(med.simpleFamily);
-                    if (key === 'presentations') return values.some(p => normalizeText(med.presentation).includes(normalizeText(p).replace(/s\b/, '')));
-                    if (key === 'renalDoseAdjust') return values.includes('true') && med.renalDoseAdjust?.enabled;
-                    if (key === 'pregnancySafe') return values.includes('true') && (med.pregnancy?.toLowerCase().includes('seguro') || med.pregnancy?.toLowerCase().includes('categoría a'));
-                    if (key === 'lactationSafe') return values.includes('true') && med.lactation?.toLowerCase().includes('seguro');
+                    if (key === 'families') {
+                        return values.includes(med.simpleFamily);
+                    }
+                    if (key === 'presentations') {
+                        return values.some(p => normalizeText(med.presentation).includes(normalizeText(p).replace(/s\b/, '')));
+                    }
+                    // Comprobación de condiciones especiales
+                    if (values.includes('renalDoseAdjust')) {
+                        if (!med.renalDoseAdjust?.enabled) return false;
+                    }
+                    if (values.includes('pregnancySafe')) {
+                        if (!med.pregnancy?.toLowerCase().includes('seguro') && !med.pregnancy?.toLowerCase().includes('categoría a')) return false;
+                    }
+                    if (values.includes('lactationSafe')) {
+                         if (!med.lactation?.toLowerCase().includes('seguro')) return false;
+                    }
                     return true;
                 });
             });
-        } else if (state.ui.activeFamily !== 'Todos') {
+        } 
+        // Filtro simple por familia
+        else if (state.ui.activeFamily !== 'Todos') {
             results = results.filter(med => med.simpleFamily === state.ui.activeFamily);
         }
         return results;
@@ -240,25 +261,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const imgElement = cardClone.querySelector('.card-img');
         const warningIcon = cardClone.querySelector('#card-warning-icon');
         const imgText = `${med.name} / ${med.presentation}`;
-
         cardClone.querySelector('.card-name').textContent = med.name;
         cardClone.querySelector('.card-presentation').textContent = med.presentation;
         cardClone.querySelector('.card-family').textContent = med.family;
         cardClone.querySelector('.card-uses').textContent = med.uses;
-        
-        // Ajuste: Usar siempre el placeholder ya que no hay 'imageUrl'
         imgElement.dataset.src = `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(imgText)}`;
         imgElement.alt = `Imagen de ${med.name}`;
-        
         if (state.favorites.has(med.originalIndex)) { favButton.classList.add('is-favorite'); }
-        
         const profile = state.ui.patientProfile;
         let hasWarning = false;
         if (profile.has('renal') && med.renalDoseAdjust?.enabled) hasWarning = true;
         if (profile.has('pregnancy') && med.pregnancy && !med.pregnancy.toLowerCase().includes('seguro')) hasWarning = true;
         if (profile.has('lactation') && med.lactation && !med.lactation.toLowerCase().includes('seguro')) hasWarning = true;
         if (hasWarning) { warningIcon.classList.remove('hidden'); }
-
         favButton.addEventListener('click', (e) => { e.stopPropagation(); toggleFavorite(med.originalIndex, favButton); });
         cardElement.addEventListener('click', () => openModal(med));
         return cardClone;
@@ -290,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
-                    <div class="md:col-span-2"><img src="${placeholderUrl}" alt="Imagen de ${med.name}" class="w-full h-48 object-cover rounded-lg mb-4"></div>
+                    <div class="md:col-span-2"><img src="${placeholderUrl}" alt="Imagen de ${med.name}" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.src='${placeholderUrl}'"></div>
                     <div class="md:col-span-2 info-box-success"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><p><strong>Indicaciones:</strong> ${med.indications || 'No especificadas'}</p></div>
                     <div class="md:col-span-2 info-box-danger"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg><p><strong>Contraindicaciones:</strong> ${med.contraindications || 'No especificadas'}</p></div>
                     ${med.warnings ? `<div class="md:col-span-2 info-box-warning ${profile.has('renal') && med.renalDoseAdjust?.enabled ? 'info-box-highlight' : ''}"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg><p><strong>Advertencias:</strong> ${med.warnings}</p></div>` : ''}
@@ -410,20 +425,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleAdvancedFilterChange() {
         state.ui.advancedFilters = {};
         const activeFilters = selectors.advancedFilterPanel.querySelectorAll('input:checked');
+        
         activeFilters.forEach(input => {
             const group = input.dataset.group;
-            const key = input.dataset.key || group;
-            const value = input.value === 'on' ? 'true' : input.value;
+            // Para las 'conditions', la clave es `data-key`, para otros es el `group`.
+            const key = group === 'conditions' ? 'conditions' : group;
+            // Para 'conditions' el valor es el `data-key`, para otros es el `value` del input.
+            const value = group === 'conditions' ? input.dataset.key : input.value;
             
-            if (!state.ui.advancedFilters[key]) state.ui.advancedFilters[key] = [];
+            if (!state.ui.advancedFilters[key]) {
+                 state.ui.advancedFilters[key] = [];
+            }
             state.ui.advancedFilters[key].push(value);
         });
+
         const count = activeFilters.length;
         selectors.advancedFilterCount.textContent = count;
         selectors.advancedFilterCount.classList.toggle('hidden', count === 0);
         state.ui.searchTerm = '';
         selectors.searchBar.value = '';
         setView('medications');
+        updateDisplay();
     }
 
     function clearAdvancedFilters() {
@@ -450,8 +472,12 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.searchBar.addEventListener('input', debounce((e) => {
             state.ui.searchTerm = e.target.value;
             clearAdvancedFilters();
-            if (state.ui.view !== 'medications') setView('medications');
-            else updateDisplay();
+            if (state.ui.view !== 'medications' && state.ui.view !== 'favorites') {
+                setView('medications');
+            }
+            else {
+                updateDisplay();
+            }
         }));
         selectors.searchBar.addEventListener('change', (e) => {
             const term = e.target.value.trim().toLowerCase();
