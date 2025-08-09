@@ -240,19 +240,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const imgElement = cardClone.querySelector('.card-img');
         const warningIcon = cardClone.querySelector('#card-warning-icon');
         const imgText = `${med.name} / ${med.presentation}`;
+
         cardClone.querySelector('.card-name').textContent = med.name;
         cardClone.querySelector('.card-presentation').textContent = med.presentation;
         cardClone.querySelector('.card-family').textContent = med.family;
         cardClone.querySelector('.card-uses').textContent = med.uses;
-        imgElement.dataset.src = med.imageUrl || `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(imgText)}`;
+        
+        // Ajuste: Usar siempre el placeholder ya que no hay 'imageUrl'
+        imgElement.dataset.src = `https://placehold.co/400x200/e0f2fe/083344?text=${encodeURIComponent(imgText)}`;
         imgElement.alt = `Imagen de ${med.name}`;
+        
         if (state.favorites.has(med.originalIndex)) { favButton.classList.add('is-favorite'); }
+        
         const profile = state.ui.patientProfile;
         let hasWarning = false;
         if (profile.has('renal') && med.renalDoseAdjust?.enabled) hasWarning = true;
         if (profile.has('pregnancy') && med.pregnancy && !med.pregnancy.toLowerCase().includes('seguro')) hasWarning = true;
         if (profile.has('lactation') && med.lactation && !med.lactation.toLowerCase().includes('seguro')) hasWarning = true;
         if (hasWarning) { warningIcon.classList.remove('hidden'); }
+
         favButton.addEventListener('click', (e) => { e.stopPropagation(); toggleFavorite(med.originalIndex, favButton); });
         cardElement.addEventListener('click', () => openModal(med));
         return cardClone;
@@ -284,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-700">
-                    <div class="md:col-span-2"><img src="${med.imageUrl || placeholderUrl}" alt="Imagen de ${med.name}" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.src='${placeholderUrl}'"></div>
+                    <div class="md:col-span-2"><img src="${placeholderUrl}" alt="Imagen de ${med.name}" class="w-full h-48 object-cover rounded-lg mb-4"></div>
                     <div class="md:col-span-2 info-box-success"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><p><strong>Indicaciones:</strong> ${med.indications || 'No especificadas'}</p></div>
                     <div class="md:col-span-2 info-box-danger"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg><p><strong>Contraindicaciones:</strong> ${med.contraindications || 'No especificadas'}</p></div>
                     ${med.warnings ? `<div class="md:col-span-2 info-box-warning ${profile.has('renal') && med.renalDoseAdjust?.enabled ? 'info-box-highlight' : ''}"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg><p><strong>Advertencias:</strong> ${med.warnings}</p></div>` : ''}
@@ -407,7 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
         activeFilters.forEach(input => {
             const group = input.dataset.group;
             const key = input.dataset.key || group;
-            const value = input.value || 'true';
+            const value = input.value === 'on' ? 'true' : input.value;
             
             if (!state.ui.advancedFilters[key]) state.ui.advancedFilters[key] = [];
             state.ui.advancedFilters[key].push(value);
