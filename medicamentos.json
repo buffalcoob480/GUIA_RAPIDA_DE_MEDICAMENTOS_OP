@@ -10,8 +10,8 @@
         "dose_pediatric": "Uso no recomendado en niños pequeños sin supervisión médica.",
         "contraindications": "Hipersensibilidad, glaucoma de ángulo estrecho.",
         "minimumAge": "6 años",
-        "pregnancy": "Categoría C (FDA)",
-        "lactation": "Riesgo Bajo (e-lactancia.org)",
+        "pregnancy": "Categoría C (Según FDA)",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)",
         "warnings": "No usar por más de 72 horas sin indicación médica para evitar efecto de rebote."
     },
     {
@@ -25,8 +25,8 @@
         "dose_pediatric": "Niños 3-12 años: 10-15 mg/kg/día (inicial), titular hasta 25-35 mg/kg/día.",
         "contraindications": "Hipersensibilidad.",
         "minimumAge": "3 años",
-        "pregnancy": "Categoría C (FDA)",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)",
+        "pregnancy": "Categoría C (Según FDA)",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)",
         "renalDoseAdjust": { "enabled": true },
         "warnings": "La suspensión del tratamiento debe ser gradual."
     },
@@ -41,8 +41,8 @@
         "dose_pediatric": "No aplica.",
         "contraindications": "Hipersensibilidad a alguno de los componentes.",
         "minimumAge": "N/A",
-        "pregnancy": "Categoría A (FDA) - Recomendado",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría A (Según FDA) - Recomendado",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Mometasona / Azelastina",
@@ -55,8 +55,8 @@
         "dose_pediatric": "Niños >12 años: Misma dosis que adultos.",
         "contraindications": "Hipersensibilidad, infecciones nasales no tratadas.",
         "minimumAge": "12 años",
-        "pregnancy": "Categoría C (FDA)",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA)",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Ambroxol / Dextrometorfano",
@@ -69,8 +69,8 @@
         "dose_pediatric": "No recomendado en menores de 12 años.",
         "contraindications": "Uso con IMAO, asma, EPOC, hipersensibilidad.",
         "minimumAge": "12 años",
-        "pregnancy": "Categoría C (FDA)",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA)",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Bencidamina",
@@ -83,8 +83,8 @@
         "dose_pediatric": "Niños 6-12 años: Mitad de la dosis de adulto.",
         "contraindications": "Hipersensibilidad.",
         "minimumAge": "6 años",
-        "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA) - Evitar",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Bencidamina Clorhidrato",
@@ -97,8 +97,8 @@
         "dose_pediatric": "Niños >12 años: Misma dosis que adultos.",
         "contraindications": "Hipersensibilidad, no aplicar en piel lesionada.",
         "minimumAge": "12 años",
-        "pregnancy": "Categoría D (FDA) - 3er Trimestre",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría D (Según FDA) - 3er Trimestre",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Piroxicam",
@@ -111,8 +111,8 @@
         "dose_pediatric": "No recomendado.",
         "contraindications": "Hipersensibilidad a AINEs.",
         "minimumAge": "12 años",
-        "pregnancy": "Categoría D (FDA) - 3er Trimestre",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "pregnancy": "Categoría D (Según FDA) - 3er Trimestre",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Ribavirina",
@@ -125,8 +125,8 @@
         "dose_pediatric": "Uso por especialista.",
         "contraindications": "Embarazo (teratogénico), anemia severa, hemoglobinopatías, insuficiencia renal grave.",
         "minimumAge": "3 años",
-        "pregnancy": "Categoría X (FDA) - Contraindicado",
-        "lactation": "Riesgo Alto - Contraindicado (e-lactancia.org)",
+        "pregnancy": "Categoría X (Según FDA) - Contraindicado",
+        "lactation": "Riesgo Alto - Contraindicado (Según e-lactancia.org)",
         "renalDoseAdjust": { "enabled": true }
     },
     {
@@ -140,8 +140,8 @@
         "dose_pediatric": "No recomendado en niños pequeños.",
         "contraindications": "Hipersensibilidad a los componentes.",
         "minimumAge": "12 años",
-        "pregnancy": "Categoría A (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría A (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Proteína Whey X-Gear",
@@ -154,8 +154,8 @@
         "dose_pediatric": "No recomendado.",
         "contraindications": "Alergia a la proteína de leche (lactosa), fenilcetonuria.",
         "minimumAge": "18 años",
-        "pregnancy": "Categoría A (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría A (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Bebida Efervescente 0% Azúcar X-Gear",
@@ -168,8 +168,8 @@
         "dose_pediatric": "Uso no recomendado.",
         "contraindications": "Hipersensibilidad a los componentes.",
         "minimumAge": "12 años",
-        "pregnancy": "Categoría A (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría A (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Dutasterida / Tamsulosina",
@@ -182,8 +182,8 @@
         "dose_pediatric": "No indicado.",
         "contraindications": "Mujeres, niños, hipersensibilidad, insuficiencia hepática grave.",
         "minimumAge": "18 años",
-        "pregnancy": "Categoría X (FDA) - Contraindicado",
-        "lactation": "Riesgo Alto - Contraindicado (Fabricante)"
+        "pregnancy": "Categoría X (Según FDA) - Contraindicado",
+        "lactation": "Riesgo Alto - Contraindicado (Según Fabricante)"
     },
     {
         "name": "Betahistina",
@@ -196,8 +196,8 @@
         "dose_pediatric": "No recomendado.",
         "contraindications": "Feocromocitoma, hipersensibilidad.",
         "minimumAge": "18 años",
-        "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Alto - Evitar (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA) - Evitar",
+        "lactation": "Riesgo Alto - Evitar (Según e-lactancia.org)"
     },
     {
         "name": "Citicolina",
@@ -210,8 +210,8 @@
         "dose_pediatric": "No recomendado de rutina.",
         "contraindications": "Hipersensibilidad, hipertonía del sistema nervioso parasimpático.",
         "minimumAge": "18 años",
-        "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Alto - Evitar (Fabricante)"
+        "pregnancy": "Categoría C (Según FDA) - Evaluar",
+        "lactation": "Riesgo Alto - Evitar (Según Fabricante)"
     },
     {
         "name": "Hidroxizina",
@@ -224,8 +224,8 @@
         "dose_pediatric": ">6 años: 50-100 mg/día en dosis divididas. <6 años: 50 mg/día en dosis divididas.",
         "contraindications": "Embarazo, lactancia, hipersensibilidad, prolongación del intervalo QT.",
         "minimumAge": "1 año",
-        "pregnancy": "Categoría C (FDA) - Contraindicado en 1er trimestre",
-        "lactation": "Riesgo Alto - Contraindicado (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA) - Contraindicado en 1er trimestre",
+        "lactation": "Riesgo Alto - Contraindicado (Según e-lactancia.org)"
     },
     {
         "name": "Sumatriptán",
@@ -238,8 +238,8 @@
         "dose_pediatric": "No recomendado.",
         "contraindications": "Cardiopatía isquémica, EVC previo, hipertensión no controlada, uso con IMAO o ergotamínicos.",
         "minimumAge": "18 años",
-        "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA) - Evaluar",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Ácido Cítrico / Citrato de Potasio",
@@ -252,8 +252,8 @@
         "dose_pediatric": "Según indicación médica.",
         "contraindications": "Insuficiencia renal severa, hiperpotasemia, infección urinaria activa.",
         "minimumAge": "1 año",
-        "pregnancy": "Categoría C (FDA) - Seguro en dosis habituales",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)",
+        "pregnancy": "Categoría C (Según FDA) - Seguro en dosis habituales",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)",
         "renalDoseAdjust": { "enabled": true }
     },
     {
@@ -268,8 +268,8 @@
         "contraindications": "Hipersensibilidad, antecedentes de arritmias, hipertensión no controlada.",
         "notes": "Medicamento con potencial de abuso. Requiere supervisión médica estricta.",
         "minimumAge": "17 años",
-        "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Alto - Evitar (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA) - Evitar",
+        "lactation": "Riesgo Alto - Evitar (Según e-lactancia.org)"
     },
     {
         "name": "Saw Palmetto (Serenoa Repens)",
@@ -296,8 +296,8 @@
         "dose_pediatric": "No recomendado.",
         "contraindications": "Hipersensibilidad, uso con azatioprina o mercaptopurina.",
         "minimumAge": "18 años",
-        "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Alto - Evitar (Fabricante)"
+        "pregnancy": "Categoría C (Según FDA) - Evitar",
+        "lactation": "Riesgo Alto - Evitar (Según Fabricante)"
     },
     {
         "name": "Leflunomida",
@@ -310,8 +310,8 @@
         "dose_pediatric": "No recomendado.",
         "contraindications": "Embarazo, insuficiencia hepática severa, inmunodeficiencia severa.",
         "minimumAge": "18 años",
-        "pregnancy": "Categoría X (FDA) - Contraindicado",
-        "lactation": "Riesgo Alto - Contraindicado (e-lactancia.org)"
+        "pregnancy": "Categoría X (Según FDA) - Contraindicado",
+        "lactation": "Riesgo Alto - Contraindicado (Según e-lactancia.org)"
     },
     {
         "name": "Silybum Marianum (Cardo Mariano)",
@@ -324,8 +324,8 @@
         "dose_pediatric": "No recomendado.",
         "contraindications": "Hipersensibilidad.",
         "minimumAge": "18 años",
-        "pregnancy": "Categoría B (FDA) - Probablemente seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Probablemente seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Acarbosa",
@@ -338,8 +338,8 @@
         "dose_pediatric": "No recomendado.",
         "contraindications": "Enfermedad inflamatoria intestinal, obstrucción intestinal, hipersensibilidad.",
         "minimumAge": "18 años",
-        "pregnancy": "Categoría B (FDA) - Evitar",
-        "lactation": "Riesgo Alto - Evitar (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Evitar",
+        "lactation": "Riesgo Alto - Evitar (Según e-lactancia.org)"
     },
     {
         "name": "Acetilcisteína",
@@ -352,8 +352,8 @@
         "dose_pediatric": "Niños >2 años: 100 mg cada 8-12 horas.",
         "contraindications": "Úlcera péptica activa, hipersensibilidad.",
         "minimumAge": "2 años",
-        "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Aciclovir",
@@ -366,8 +366,8 @@
         "dose_pediatric": "Varicela: 20 mg/kg/dosis (máx. 800 mg) 4 veces/día.",
         "contraindications": "Hipersensibilidad.",
         "minimumAge": "Recién nacido",
-        "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Aciclovir",
@@ -380,8 +380,8 @@
         "dose_pediatric": "Según indicación médica.",
         "contraindications": "Hipersensibilidad.",
         "minimumAge": "Recién nacido",
-        "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Aciclovir",
@@ -399,8 +399,8 @@
         "doseMax_mg_kg_dosis": 20,
         "doseFreq": 4,
         "minimumAge": "Recién nacido",
-        "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Ácido Fólico",
@@ -413,8 +413,8 @@
         "dose_pediatric": "Según indicación médica.",
         "contraindications": "Anemia perniciosa no tratada (puede enmascarar síntomas neurológicos).",
         "minimumAge": "Recién nacido",
-        "pregnancy": "Categoría A (FDA) - Recomendado",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría A (Según FDA) - Recomendado",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Ácido Fusídico / Betametasona",
@@ -427,8 +427,8 @@
         "dose_pediatric": "Usar con precaución y por periodos cortos.",
         "contraindications": "Infecciones virales o fúngicas de la piel, acné rosácea, hipersensibilidad.",
         "minimumAge": "1 mes",
-        "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA) - Evaluar",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Ácido Ursodeoxicólico",
@@ -441,8 +441,8 @@
         "dose_pediatric": "No recomendado de forma rutinaria.",
         "contraindications": "Obstrucción biliar completa, hipersensibilidad.",
         "minimumAge": "18 años",
-        "pregnancy": "Categoría B (FDA) - Evaluar",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Evaluar",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Albendazol",
@@ -455,8 +455,8 @@
         "dose_pediatric": "Niños >2 años: 400 mg (20ml) dosis única. Niños 1-2 años: 200 mg (10ml) dosis única.",
         "contraindications": "Embarazo, hipersensibilidad.",
         "minimumAge": "1 año",
-        "pregnancy": "Categoría C (FDA) - Contraindicado",
-        "lactation": "Riesgo Bajo (e-lactancia.org) - Dosis única"
+        "pregnancy": "Categoría C (Según FDA) - Contraindicado",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org) - Dosis única"
     },
     {
         "name": "Albendazol",
@@ -469,8 +469,8 @@
         "dose_pediatric": "Niños >2 años: 400 mg dosis única.",
         "contraindications": "Embarazo, hipersensibilidad.",
         "minimumAge": "2 años",
-        "pregnancy": "Categoría C (FDA) - Contraindicado",
-        "lactation": "Riesgo Bajo (e-lactancia.org) - Dosis única"
+        "pregnancy": "Categoría C (Según FDA) - Contraindicado",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org) - Dosis única"
     },
     {
         "name": "Aluminio / Magnesio",
@@ -483,8 +483,8 @@
         "dose_pediatric": "Niños >6 años: 5-10 ml.",
         "contraindications": "Insuficiencia renal grave, hipersensibilidad.",
         "minimumAge": "6 años",
-        "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)",
+        "pregnancy": "Categoría B (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)",
         "renalDoseAdjust": { "enabled": true }
     },
     {
@@ -498,8 +498,8 @@
         "dose_pediatric": "Niños >6 años: 1 tableta.",
         "contraindications": "Insuficiencia renal grave, hipersensibilidad.",
         "minimumAge": "6 años",
-        "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)",
+        "pregnancy": "Categoría B (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)",
         "renalDoseAdjust": { "enabled": true }
     },
     {
@@ -513,8 +513,8 @@
         "dose_pediatric": "Uso en niños bajo supervisión médica.",
         "contraindications": "Hipersensibilidad a los componentes, no usar en heridas abiertas profundas o quemaduras graves.",
         "minimumAge": "3 meses",
-        "pregnancy": "Categoría A (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría A (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Alverina / Simeticona",
@@ -527,8 +527,8 @@
         "dose_pediatric": "No recomendado.",
         "contraindications": "Obstrucción intestinal, hipersensibilidad.",
         "minimumAge": "12 años",
-        "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA) - Evitar",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Ambroxol",
@@ -546,8 +546,8 @@
         "doseMax_mg_kg_dia": 1.6,
         "doseIntervals": "2-3",
         "minimumAge": "2 años",
-        "pregnancy": "Categoría B (FDA) - Evitar 1er Trimestre",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Evitar 1er Trimestre",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Ambroxol",
@@ -566,8 +566,8 @@
         "doseMax_mg_kg_dia": 1.6,
         "doseIntervals": "2-3",
         "minimumAge": "1 mes",
-        "pregnancy": "Categoría B (FDA) - Evitar 1er Trimestre",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Evitar 1er Trimestre",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Ambroxol",
@@ -580,8 +580,8 @@
         "dose_pediatric": "Niños 6-12 años: 15 mg (media tableta) 2-3 veces al día.",
         "contraindications": "Hipersensibilidad, primer trimestre del embarazo.",
         "minimumAge": "6 años",
-        "pregnancy": "Categoría B (FDA) - Evitar 1er Trimestre",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Evitar 1er Trimestre",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Ambroxol / Clenbuterol",
@@ -594,8 +594,8 @@
         "dose_pediatric": "Niños 6-12 años: 5 ml cada 12 horas. Niños 2-6 años: 2.5 ml cada 12 horas.",
         "contraindications": "Hipersensibilidad, estenosis aórtica subvalvular, taquiarritmias, primer trimestre del embarazo.",
         "minimumAge": "2 años",
-        "pregnancy": "Categoría C (FDA) - Contraindicado",
-        "lactation": "Riesgo Alto - Contraindicado (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA) - Contraindicado",
+        "lactation": "Riesgo Alto - Contraindicado (Según e-lactancia.org)"
     },
     {
         "name": "Amlodipino",
@@ -608,8 +608,8 @@
         "dose_pediatric": "2.5-5 mg/día.",
         "contraindications": "Hipotensión severa, shock cardiogénico, estenosis aórtica severa.",
         "minimumAge": "6 años",
-        "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "pregnancy": "Categoría C (Según FDA) - Evaluar",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Amoxicilina",
@@ -622,8 +622,8 @@
         "dose_pediatric": "25-50 mg/kg/día, dividido en 2-3 dosis.",
         "contraindications": "Hipersensibilidad a penicilinas.",
         "minimumAge": "Recién nacido",
-        "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "pregnancy": "Categoría B (Según FDA) - Seguro",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Amoxicilina",
@@ -642,7 +642,7 @@
         "doseIntervals": "2-3",
         "minimumAge": "Recién nacido",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Amoxicilina / Ácido Clavulánico",
@@ -656,7 +656,7 @@
         "contraindications": "Hipersensibilidad a penicilinas, antecedentes de ictericia colestásica asociada al fármaco.",
         "minimumAge": "Recién nacido",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Amoxicilina / Ácido Clavulánico",
@@ -675,7 +675,7 @@
         "doseIntervals": "2",
         "minimumAge": "Recién nacido",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Atorvastatina",
@@ -689,7 +689,7 @@
         "contraindications": "Enfermedad hepática activa, embarazo, lactancia.",
         "minimumAge": "10 años",
         "pregnancy": "Categoría X (FDA) - Contraindicado",
-        "lactation": "Riesgo Alto - Contraindicado (e-lactancia.org)"
+        "lactation": "Riesgo Alto - Contraindicado (Según e-lactancia.org)"
     },
     {
         "name": "Azitromicina",
@@ -703,7 +703,7 @@
         "contraindications": "Hipersensibilidad a macrólidos, historia de disfunción hepática con uso previo.",
         "minimumAge": "6 meses",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Baño Coloide",
@@ -717,7 +717,7 @@
         "contraindications": "Hipersensibilidad a los componentes.",
         "minimumAge": "Recién nacido",
         "pregnancy": "Categoría A (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Benzonatato",
@@ -731,7 +731,7 @@
         "contraindications": "Hipersensibilidad. No usar en niños <10 años.",
         "minimumAge": "10 años",
         "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Alto - Evitar (Fabricante)"
+        "lactation": "Riesgo Alto - Evitar (Según Fabricante)"
     },
     {
         "name": "Betametasona",
@@ -745,7 +745,7 @@
         "contraindications": "Infecciones fúngicas sistémicas, hipersensibilidad.",
         "minimumAge": "Recién nacido",
         "pregnancy": "Categoría C (FDA) - Seguro para maduración pulmonar",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Betametasona / Gentamicina / Clotrimazol",
@@ -759,7 +759,7 @@
         "contraindications": "Hipersensibilidad, infecciones virales cutáneas (herpes, varicela).",
         "minimumAge": "2 años",
         "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Bezafibrato",
@@ -773,7 +773,7 @@
         "contraindications": "Insuficiencia hepática o renal severa, enfermedad de la vesícula biliar.",
         "minimumAge": "18 años",
         "pregnancy": "Categoría C (FDA) - Contraindicado",
-        "lactation": "Riesgo Alto - Contraindicado (e-lactancia.org)"
+        "lactation": "Riesgo Alto - Contraindicado (Según e-lactancia.org)"
     },
     {
         "name": "Bimin",
@@ -787,7 +787,7 @@
         "contraindications": "Hipersensibilidad a cualquiera de los componentes de la fórmula.",
         "minimumAge": "12 años",
         "pregnancy": "Categoría A (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Bromhexina",
@@ -801,7 +801,7 @@
         "contraindications": "Hipersensibilidad, úlcera péptica activa.",
         "minimumAge": "6 años",
         "pregnancy": "Categoría C (FDA) - Evitar 1er Trimestre",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Bromhexina",
@@ -815,7 +815,7 @@
         "contraindications": "Hipersensibilidad, úlcera péptica activa.",
         "minimumAge": "2 años",
         "pregnancy": "Categoría C (FDA) - Evitar 1er Trimestre",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Bromuro de Ipratropio",
@@ -829,7 +829,7 @@
         "contraindications": "Hipersensibilidad a la atropina o sus derivados, glaucoma de ángulo estrecho, hiperplasia prostática.",
         "minimumAge": "6 años",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Bromuro de Otilonio",
@@ -843,7 +843,7 @@
         "contraindications": "Hipersensibilidad, obstrucción intestinal.",
         "minimumAge": "18 años",
         "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Alto - Evitar (Fabricante)"
+        "lactation": "Riesgo Alto - Evitar (Según Fabricante)"
     },
     {
         "name": "Bromuro de pinaverio",
@@ -857,7 +857,7 @@
         "contraindications": "Hipersensibilidad.",
         "minimumAge": "18 años",
         "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Alto - Evitar (Fabricante)"
+        "lactation": "Riesgo Alto - Evitar (Según Fabricante)"
     },
     {
         "name": "Budesonida",
@@ -871,7 +871,7 @@
         "contraindications": "Hipersensibilidad, tratamiento primario del estado asmático.",
         "minimumAge": "3 meses",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Budesonida",
@@ -885,7 +885,7 @@
         "contraindications": "Hipersensibilidad, tratamiento primario del estado asmático.",
         "minimumAge": "3 meses",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Budesonida / Formoterol",
@@ -899,7 +899,7 @@
         "contraindications": "Hipersensibilidad, tratamiento primario de crisis asmática aguda.",
         "minimumAge": "6 años",
         "pregnancy": "Categoría C (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Butilhioscina",
@@ -919,7 +919,7 @@
         "doseFreq": 3,
         "minimumAge": "1 mes",
         "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Butilhioscina / Ibuprofeno",
@@ -933,7 +933,7 @@
         "contraindications": "Hipersensibilidad a los componentes o AINEs, úlcera péptica, miastenia gravis.",
         "minimumAge": "12 años",
         "pregnancy": "Categoría D (FDA) - Contraindicado",
-        "lactation": "Riesgo Alto - Evitar (e-lactancia.org)"
+        "lactation": "Riesgo Alto - Evitar (Según e-lactancia.org)"
     },
     {
         "name": "Butilhioscina / Paracetamol",
@@ -947,7 +947,7 @@
         "contraindications": "Hipersensibilidad, miastenia gravis, megacolon, insuficiencia hepática.",
         "minimumAge": "3 meses",
         "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Butilhioscina",
@@ -961,7 +961,7 @@
         "contraindications": "Miastenia gravis, megacolon, glaucoma de ángulo estrecho.",
         "minimumAge": "1 mes",
         "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Calcio (Gluconato/Carbonato)",
@@ -975,7 +975,7 @@
         "contraindications": "Hipercalcemia, hipercalciuria, insuficiencia renal grave.",
         "minimumAge": "6 años",
         "pregnancy": "Categoría A (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Canagliflozina",
@@ -989,7 +989,7 @@
         "contraindications": "Insuficiencia renal grave (TFG < 30), hipersensibilidad.",
         "minimumAge": "18 años",
         "pregnancy": "Categoría C (FDA) - Contraindicado",
-        "lactation": "Riesgo Alto - Contraindicado (Fabricante)",
+        "lactation": "Riesgo Alto - Contraindicado (Según Fabricante)",
         "renalDoseAdjust": { "enabled": true }
     },
     {
@@ -1004,7 +1004,7 @@
         "contraindications": "Embarazo, insuficiencia hepática severa.",
         "minimumAge": "1 año",
         "pregnancy": "Categoría D (FDA) - Contraindicado",
-        "lactation": "Riesgo Alto - Contraindicado (e-lactancia.org)"
+        "lactation": "Riesgo Alto - Contraindicado (Según e-lactancia.org)"
     },
     {
         "name": "Carbamazepina",
@@ -1018,7 +1018,7 @@
         "contraindications": "Hipersensibilidad, bloqueo auriculoventricular, antecedentes de depresión de médula ósea.",
         "minimumAge": "Cualquier edad (uso por especialista)",
         "pregnancy": "Categoría D (FDA) - Evitar si es posible",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Carbocisteína",
@@ -1032,7 +1032,7 @@
         "contraindications": "Úlcera péptica activa, hipersensibilidad.",
         "minimumAge": "2 años",
         "pregnancy": "Categoría C (FDA) - Evitar 1er Trimestre",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Captopril",
@@ -1046,7 +1046,7 @@
         "contraindications": "Antecedentes de angioedema, embarazo.",
         "minimumAge": "Recién nacido (uso por especialista)",
         "pregnancy": "Categoría D (FDA) - Contraindicado",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Cefaclor",
@@ -1065,7 +1065,7 @@
         "doseIntervals": "2-3",
         "minimumAge": "1 mes",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Cefalexina",
@@ -1084,7 +1084,7 @@
         "doseIntervals": "2-4",
         "minimumAge": "1 mes",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Cefalotina",
@@ -1098,7 +1098,7 @@
         "contraindications": "Hipersensibilidad a cefalosporinas.",
         "minimumAge": "Recién nacido",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Cefixima",
@@ -1112,7 +1112,7 @@
         "contraindications": "Hipersensibilidad a cefalosporinas.",
         "minimumAge": "6 meses",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Cefixima",
@@ -1131,7 +1131,7 @@
         "doseIntervals": "1-2",
         "minimumAge": "6 meses",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Cefotaxima",
@@ -1145,7 +1145,7 @@
         "contraindications": "Hipersensibilidad a cefalosporinas.",
         "minimumAge": "Recién nacido",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Ceftazidima",
@@ -1159,7 +1159,7 @@
         "contraindications": "Hipersensibilidad a cefalosporinas.",
         "minimumAge": "Recién nacido",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Ceftriaxona",
@@ -1173,7 +1173,7 @@
         "contraindications": "Hipersensibilidad, neonatos con ictericia o que reciben calcio IV.",
         "minimumAge": "Recién nacido",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Cefuroxima",
@@ -1187,7 +1187,7 @@
         "contraindications": "Hipersensibilidad a cefalosporinas.",
         "minimumAge": "3 meses",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Cefuroxima",
@@ -1206,7 +1206,7 @@
         "doseIntervals": "2",
         "minimumAge": "3 meses",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Celecoxib",
@@ -1220,7 +1220,7 @@
         "contraindications": "Hipersensibilidad a AINEs o sulfonamidas, úlcera péptica activa, insuficiencia cardíaca grave.",
         "minimumAge": "18 años",
         "pregnancy": "Categoría D (FDA) - Contraindicado en 3er trimestre",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Cilostazol",
@@ -1234,7 +1234,7 @@
         "contraindications": "Insuficiencia cardíaca congestiva de cualquier grado, hipersensibilidad.",
         "minimumAge": "18 años",
         "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Alto - Evitar (e-lactancia.org)"
+        "lactation": "Riesgo Alto - Evitar (Según e-lactancia.org)"
     },
     {
         "name": "Cinitaprida",
@@ -1248,7 +1248,7 @@
         "contraindications": "Hipersensibilidad, hemorragia, obstrucción o perforación gastrointestinal, antecedentes de discinesia tardía por neurolépticos.",
         "minimumAge": "18 años",
         "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Alto - Evitar (e-lactancia.org)"
+        "lactation": "Riesgo Alto - Evitar (Según e-lactancia.org)"
     },
     {
         "name": "Ciprofloxacino",
@@ -1262,7 +1262,7 @@
         "contraindications": "Hipersensibilidad a quinolonas.",
         "minimumAge": "1 año",
         "pregnancy": "Categoría C (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Citalopram",
@@ -1276,7 +1276,7 @@
         "contraindications": "Uso concomitante con IMAO, hipersensibilidad, prolongación del intervalo QT.",
         "minimumAge": "18 años",
         "pregnancy": "Categoría C (FDA) - Evaluar",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Cetirizina",
@@ -1290,7 +1290,7 @@
         "contraindications": "Hipersensibilidad, insuficiencia renal grave.",
         "minimumAge": "6 meses",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Cetirizina",
@@ -1304,7 +1304,7 @@
         "contraindications": "Hipersensibilidad.",
         "minimumAge": "2 años",
         "pregnancy": "Categoría B (FDA) - Seguro",
-        "lactation": "Riesgo Muy Bajo - Seguro (e-lactancia.org)"
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     },
     {
         "name": "Cinarizina",
@@ -1318,7 +1318,7 @@
         "contraindications": "Hipersensibilidad, enfermedad de Parkinson.",
         "minimumAge": "12 años",
         "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Alto - Evitar (e-lactancia.org)"
+        "lactation": "Riesgo Alto - Evitar (Según e-lactancia.org)"
     },
     {
         "name": "Cinarizina",
@@ -1332,7 +1332,7 @@
         "contraindications": "Hipersensibilidad, enfermedad de Parkinson.",
         "minimumAge": "12 años",
         "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Alto - Evitar (e-lactancia.org)"
+        "lactation": "Riesgo Alto - Evitar (Según e-lactancia.org)"
     },
     {
         "name": "Ciprofloxacino",
@@ -1346,7 +1346,7 @@
         "contraindications": "Hipersensibilidad a quinolonas, uso concomitante con tizanidina.",
         "minimumAge": "1 año (uso restringido)",
         "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Bajo (e-lactancia.org)"
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
     },
     {
         "name": "Cisaprida",
@@ -1360,6 +1360,76 @@
         "contraindications": "Riesgo de arritmias cardíacas (prolongación QT), uso con inhibidores de CYP3A4.",
         "minimumAge": "18 años",
         "pregnancy": "Categoría C (FDA) - Evitar",
-        "lactation": "Riesgo Alto - Evitar (e-lactancia.org)"
+        "lactation": "Riesgo Alto - Evitar (Según e-lactancia.org)"
+    },
+    {
+        "name": "Claritromicina",
+        "presentation": "Tabletas 250mg / 500mg",
+        "family": "Macrólido (Antibiótico)",
+        "simpleFamily": "Antibióticos",
+        "uses": "Infecciones bacterianas respiratorias y de piel.",
+        "indications": "Faringitis, sinusitis, bronquitis, neumonía, infecciones por H. pylori.",
+        "dose_adult": "250-500 mg cada 12 horas.",
+        "dose_pediatric": "Niños >12 meses: 15 mg/kg/día, dividido en 2 dosis.",
+        "contraindications": "Hipersensibilidad a macrólidos, uso con cisaprida, pimozida, astemizol.",
+        "minimumAge": "12 meses",
+        "pregnancy": "Categoría C (Según FDA)",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
+    },
+    {
+        "name": "Clindamicina / Ketoconazol",
+        "presentation": "Óvulos 100mg/400mg",
+        "family": "Combinación (Antibiótico + Antifúngico)",
+        "simpleFamily": "Ginecológicos",
+        "uses": "Tratamiento de infecciones vaginales mixtas.",
+        "indications": "Vaginosis bacteriana, candidiasis vaginal y vaginitis mixtas.",
+        "dose_adult": "1 óvulo por vía vaginal profunda, una vez al día, por la noche, durante 7 días.",
+        "dose_pediatric": "No indicado.",
+        "contraindications": "Hipersensibilidad a los componentes, antecedentes de colitis asociada a antibióticos.",
+        "minimumAge": "Post-menarquia",
+        "pregnancy": "Categoría B (FDA) - Clindamicina / Categoría C (FDA) - Ketoconazol",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
+    },
+    {
+        "name": "Clonixinato de lisina",
+        "presentation": "Solución Inyectable 100mg/2ml",
+        "family": "Analgésico no Esteroideo (AINE)",
+        "simpleFamily": "Analgésicos",
+        "uses": "Alivio del dolor moderado a severo.",
+        "indications": "Dolor postoperatorio, cólico renal, dolor oncológico, traumatismos.",
+        "dose_adult": "100-200 mg (1-2 ampolletas) vía IM o IV lenta, cada 6-8 horas.",
+        "dose_pediatric": "No se recomienda de forma rutinaria.",
+        "contraindications": "Hipersensibilidad, úlcera péptica activa, embarazo, insuficiencia renal/hepática severa.",
+        "minimumAge": "12 años",
+        "pregnancy": "Categoría D (Según FDA) - Contraindicado",
+        "lactation": "Riesgo Bajo (Según e-lactancia.org)"
+    },
+    {
+        "name": "Clioquinol",
+        "presentation": "Crema 3g",
+        "family": "Hidroxiquinolina Tópica (Antifúngico/Antibacteriano)",
+        "simpleFamily": "Dermatológicos",
+        "uses": "Infecciones cutáneas.",
+        "indications": "Dermatitis infectadas, pie de atleta, tiña.",
+        "dose_adult": "Aplicar una capa delgada en el área afectada 2-3 veces al día.",
+        "dose_pediatric": "Niños >2 años: Misma dosis que adultos.",
+        "contraindications": "Hipersensibilidad al clioquinol o al yodo, niños menores de 2 años.",
+        "minimumAge": "2 años",
+        "pregnancy": "Categoría C (Según FDA)",
+        "lactation": "Riesgo Moderado - Usar con precaución (Según e-lactancia.org)"
+    },
+    {
+        "name": "Clopidogrel",
+        "presentation": "Tabletas 75 mg",
+        "family": "Antiagregante plaquetario",
+        "simpleFamily": "Anticoagulantes",
+        "uses": "Prevención de eventos aterotrombóticos.",
+        "indications": "Prevención de infarto de miocardio, ictus y enfermedad arterial periférica en pacientes con antecedentes.",
+        "dose_adult": "75 mg una vez al día.",
+        "dose_pediatric": "No recomendado.",
+        "contraindications": "Sangrado activo, insuficiencia hepática grave, hipersensibilidad.",
+        "minimumAge": "18 años",
+        "pregnancy": "Categoría B (Según FDA)",
+        "lactation": "Riesgo Muy Bajo - Seguro (Según e-lactancia.org)"
     }
 ]
