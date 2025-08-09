@@ -1,11 +1,12 @@
 // MEJORA: Versión del caché actualizada
-const CACHE_NAME = 'medapp-v4'; 
+const CACHE_NAME = 'medapp-v4';
 const URLS_TO_CACHE = [
     './',
     './index.html',
     './style.css',
     './app.js',
-    './manifest.webmanifest'
+    './manifest.webmanifest',
+    './medicamentos.json' // Añadido para asegurar que se cachee desde el principio
 ];
 
 self.addEventListener('install', event => {
@@ -33,28 +34,45 @@ self.addEventListener('activate', event => {
     );
 });
 
-// MEJORA: Estrategia de Fetch actualizada
+// MEJORA: Estrategia de Fetch actualizada y corregida
 self.addEventListener('fetch', event => {
     const { request } = event;
+    // Se crea un objeto URL para acceder al pathname de forma segura
+    const requestUrl = new URL(request.url);
+
+    // Ignorar peticiones que no son GET
+    if (request.method !== 'GET') {
+        return;
+    }
 
     // Estrategia Stale-While-Revalidate para medicamentos.json
-    if (request.url.includes('medicamentos.json')) {
+    if (requestUrl.pathname.endsWith('medicamentos.json')) {
         event.respondWith(
             caches.open(CACHE_NAME).then(cache => {
-                return cache.match(request).then(cachedResponse => {
-                    const fetchPromise = fetch(request).then(networkResponse => {
-                        cache.put(request, networkResponse.clone());
-                        return networkResponse;
-                    });
-                    return cachedResponse || fetchPromise;
+                return fetch(request).then(networkResponse => {
+                    cache.put(request, networkResponse.clone());
+                    return networkResponse;
+                }).catch(() => {
+                    return cache.match(request);
                 });
             })
         );
-    } else if (URLS_TO_CACHE.includes(request.pathname) || request.destination === 'image') {
-        // Para los archivos principales y las imágenes, usamos "Cache First"
+    } else {
+        // Para los demás recursos, usamos "Cache First"
         event.respondWith(
             caches.match(request).then(response => {
-                return response || fetch(request);
+                // Si encontramos una respuesta en el caché, la devolvemos.
+                // Si no, hacemos la petición a la red.
+                return response || fetch(request).then(networkResponse => {
+                    // Opcional: Cachear nuevos recursos dinámicamente
+                    // if (request.destination === 'image') {
+                    //     const cacheCopy = networkResponse.clone();
+                    //     caches.open(CACHE_NAME).then(cache => {
+                    //         cache.put(request, cacheCopy);
+                    //     });
+                    // }
+                    return networkResponse;
+                });
             })
         );
     }
