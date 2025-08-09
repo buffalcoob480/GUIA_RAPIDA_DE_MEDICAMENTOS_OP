@@ -1,22 +1,22 @@
-// MEJORA: Versión del caché actualizada
-const CACHE_NAME = 'medapp-v4';
+const CACHE_NAME = 'medapp-v5'; // Versión del caché actualizada
 const URLS_TO_CACHE = [
     './',
     './index.html',
     './style.css',
     './app.js',
     './manifest.webmanifest',
-    './medicamentos.json' // Añadido para asegurar que se cachee desde el principio
+    './medicamentos.json'
 ];
 
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
         .then(cache => {
-            console.log('Cache abierto');
+            console.log('Cache abierto y archivos añadidos');
             return cache.addAll(URLS_TO_CACHE);
         })
     );
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
@@ -30,50 +30,48 @@ self.addEventListener('activate', event => {
                     }
                 })
             );
-        })
+        }).then(() => self.clients.claim())
     );
 });
 
-// MEJORA: Estrategia de Fetch actualizada y corregida
 self.addEventListener('fetch', event => {
     const { request } = event;
-    // Se crea un objeto URL para acceder al pathname de forma segura
-    const requestUrl = new URL(request.url);
+    const url = new URL(request.url);
 
-    // Ignorar peticiones que no son GET
+    // Solo manejar peticiones GET
     if (request.method !== 'GET') {
         return;
     }
 
-    // Estrategia Stale-While-Revalidate para medicamentos.json
-    if (requestUrl.pathname.endsWith('medicamentos.json')) {
+    // Estrategia: Stale-While-Revalidate para medicamentos.json
+    // Intenta obtener de la red primero para tener los datos más frescos,
+    // pero si falla, usa el caché.
+    if (url.pathname.endsWith('/medicamentos.json')) {
         event.respondWith(
             caches.open(CACHE_NAME).then(cache => {
                 return fetch(request).then(networkResponse => {
+                    console.log('medicamentos.json obtenido de la red');
                     cache.put(request, networkResponse.clone());
                     return networkResponse;
                 }).catch(() => {
+                    console.log('medicamentos.json no disponible en la red, usando caché');
                     return cache.match(request);
                 });
             })
         );
-    } else {
-        // Para los demás recursos, usamos "Cache First"
-        event.respondWith(
-            caches.match(request).then(response => {
-                // Si encontramos una respuesta en el caché, la devolvemos.
-                // Si no, hacemos la petición a la red.
-                return response || fetch(request).then(networkResponse => {
-                    // Opcional: Cachear nuevos recursos dinámicamente
-                    // if (request.destination === 'image') {
-                    //     const cacheCopy = networkResponse.clone();
-                    //     caches.open(CACHE_NAME).then(cache => {
-                    //         cache.put(request, cacheCopy);
-                    //     });
-                    // }
-                    return networkResponse;
-                });
-            })
-        );
+        return;
     }
+
+    // Estrategia: Cache First para los demás recursos estáticos
+    // Busca en el caché primero. Si no está, va a la red.
+    event.respondWith(
+        caches.match(request).then(cachedResponse => {
+            if (cachedResponse) {
+                // console.log('Sirviendo desde caché:', request.url);
+                return cachedResponse;
+            }
+            // console.log('No está en caché, pidiendo a la red:', request.url);
+            return fetch(request);
+        })
+    );
 });
