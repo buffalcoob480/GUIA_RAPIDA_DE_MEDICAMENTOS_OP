@@ -97,74 +97,106 @@ document.addEventListener('DOMContentLoaded', () => {
         saveFavorites();
         if (state.ui.view === 'favorites') updateDisplay();
     }
+
+    /**
+     * ✅ FUNCIÓN CORREGIDA Y REESTRUCTURADA
+     * Aplica los filtros de forma secuencial y lógica.
+     */
     function applyFiltersAndSearch() {
         const searchTerm = normalizeText(state.ui.searchTerm);
-        let results = [...state.medications.all];
-        
-        // Vista de Favoritos
+        let filteredMeds = [...state.medications.all];
+
+        // 1. Filtrar por vista (Favoritos)
         if (state.ui.view === 'favorites') {
-             results = results.filter(med => state.favorites.has(med.originalIndex));
+            filteredMeds = filteredMeds.filter(med => state.favorites.has(med.originalIndex));
         }
 
-        // Búsqueda por término
+        // 2. Filtrar por Búsqueda (si existe un término)
         if (searchTerm) {
-            results = results.filter(med => 
+            filteredMeds = filteredMeds.filter(med => 
                 normalizeText(med.name).includes(searchTerm) ||
                 normalizeText(med.family).includes(searchTerm) ||
                 normalizeText(med.uses).includes(searchTerm)
             );
-        } 
-        // Filtros Avanzados
-        else if (Object.keys(state.ui.advancedFilters).length > 0) {
-            results = results.filter(med => {
-                return Object.entries(state.ui.advancedFilters).every(([key, values]) => {
-                    if (!values || values.length === 0) return true;
-                    if (key === 'families') {
-                        return values.includes(med.simpleFamily);
-                    }
-                    if (key === 'presentations') {
-                        return values.some(p => normalizeText(med.presentation).includes(normalizeText(p).replace(/s\b/, '')));
-                    }
-                    // Comprobación de condiciones especiales
-                    if (values.includes('renalDoseAdjust')) {
-                        if (!med.renalDoseAdjust?.enabled) return false;
-                    }
-                    if (values.includes('pregnancySafe')) {
-                        if (!med.pregnancy?.toLowerCase().includes('seguro') && !med.pregnancy?.toLowerCase().includes('categoría a')) return false;
-                    }
-                    if (values.includes('lactationSafe')) {
-                         if (!med.lactation?.toLowerCase().includes('seguro')) return false;
-                    }
-                    return true;
-                });
-            });
-        } 
-        // Filtro simple por familia
-        else if (state.ui.activeFamily !== 'Todos') {
-            results = results.filter(med => med.simpleFamily === state.ui.activeFamily);
+        } else {
+            // 3. Si no hay búsqueda, aplicar filtros de Familia y Avanzados
+            
+            // Filtro por Familia (del menú desplegable)
+            if (state.ui.view === 'medications' && state.ui.activeFamily !== 'Todos') {
+                filteredMeds = filteredMeds.filter(med => med.simpleFamily === state.ui.activeFamily);
+            }
+
+            // Filtros Avanzados
+            const advanced = state.ui.advancedFilters;
+            if (Object.keys(advanced).length > 0) {
+                // Filtrar por familias seleccionadas en avanzados
+                if (advanced.families?.length) {
+                    filteredMeds = filteredMeds.filter(med => advanced.families.includes(med.simpleFamily));
+                }
+                // Filtrar por presentaciones seleccionadas en avanzados
+                if (advanced.presentations?.length) {
+                    filteredMeds = filteredMeds.filter(med => 
+                        advanced.presentations.some(p => normalizeText(med.presentation).includes(normalizeText(p).replace(/s\b/, '')))
+                    );
+                }
+                // Filtrar por condiciones especiales seleccionadas en avanzados
+                if (advanced.conditions?.length) {
+                    filteredMeds = filteredMeds.filter(med => {
+                        return advanced.conditions.every(condition => {
+                            if (condition === 'renalDoseAdjust') return med.renalDoseAdjust?.enabled;
+                            if (condition === 'pregnancySafe') return med.pregnancy?.toLowerCase().includes('seguro') || med.pregnancy?.toLowerCase().includes('categoría a');
+                            if (condition === 'lactationSafe') return med.lactation?.toLowerCase().includes('seguro');
+                            return true;
+                        });
+                    });
+                }
+            }
         }
-        return results;
+        
+        return filteredMeds;
     }
+
     function setView(view, id = null) {
         state.ui.view = view;
-        state.ui.searchTerm = '';
-        selectors.searchBar.value = '';
+
+        // Limpiar filtros específicos cuando se cambia de vista principal
+        if (view !== 'medications') {
+            state.ui.activeFamily = 'Todos';
+            selectors.familiesBtnText.textContent = 'Familias';
+        }
+        if (view !== 'themes') {
+            state.ui.activeThemeId = null;
+        }
+
         document.querySelectorAll('.filter-btn.active, .theme-btn.active').forEach(b => b.classList.remove('active'));
         selectors.favoritesBtn.classList.toggle('active', view === 'favorites');
         selectors.interactionCheckerBtn.classList.toggle('active', view === 'interaction-checker');
-        if (view === 'themes') { state.ui.activeThemeId = id; document.querySelector(`.theme-btn[data-theme-id="${id}"]`)?.classList.add('active'); }
-        else if (view === 'medications') { document.querySelector('.filter-btn[data-family="Todos"]')?.classList.add('active'); state.ui.activeFamily = 'Todos'; selectors.familiesBtnText.textContent = 'Familias'; }
+        
+        if (view === 'themes') { 
+            state.ui.activeThemeId = id;
+            document.querySelector(`.theme-btn[data-theme-id="${id}"]`)?.classList.add('active');
+        } else if (view === 'medications') {
+            document.querySelector('.filter-btn[data-family="Todos"]')?.classList.add('active');
+        }
+        
         updateDisplay();
     }
+
     const updateDisplay = debounce(() => {
         const isMedView = ['medications', 'favorites'].includes(state.ui.view);
         selectors.medicationSection.classList.toggle('hidden', !isMedView);
         selectors.themesSection.classList.toggle('hidden', state.ui.view !== 'themes');
         selectors.interactionSection.classList.toggle('hidden', state.ui.view !== 'interaction-checker');
-        if (state.ui.view === 'interaction-checker') renderInteractionChecker();
-        else if (isMedView) renderMedications(applyFiltersAndSearch());
-        else if (state.ui.view === 'themes') renderTheme(state.ui.activeThemeId);
-    });
+
+        if (state.ui.view === 'interaction-checker') {
+            renderInteractionChecker();
+        } else if (isMedView) {
+            renderMedications(applyFiltersAndSearch());
+        } else if (state.ui.view === 'themes') {
+            renderTheme(state.ui.activeThemeId);
+        }
+    }, 250); // Un pequeño debounce para mejorar la fluidez
+
     function renderInteractionChecker() {
         selectors.interactionSection.innerHTML = `
             <div class="interaction-checker-container">
@@ -375,11 +407,16 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.familyFilterContainer.addEventListener('click', (e) => {
             const btn = e.target.closest('.filter-btn');
             if (!btn) return;
-            selectors.familyFilterContainer.querySelector('.active')?.classList.remove('active');
-            btn.classList.add('active');
             state.ui.activeFamily = btn.dataset.family;
-            selectors.familiesBtnText.textContent = btn.dataset.family;
+            selectors.familiesBtnText.textContent = btn.dataset.family === 'Todos' ? 'Familias' : btn.dataset.family;
+            
+            // Cambiar a la vista de medicamentos y limpiar otros filtros
             setView('medications');
+            clearAdvancedFilters(false); // No redisparar el update
+            state.ui.searchTerm = '';
+            selectors.searchBar.value = '';
+
+            updateDisplay();
             closeAllDropdowns();
         });
         selectors.themesFilterContainer.addEventListener('click', (e) => {
@@ -419,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         panel.innerHTML = html;
         panel.addEventListener('change', handleAdvancedFilterChange);
-        document.getElementById('clear-adv-filters').addEventListener('click', clearAdvancedFilters);
+        document.getElementById('clear-adv-filters').addEventListener('click', () => clearAdvancedFilters(true));
     }
 
     function handleAdvancedFilterChange() {
@@ -428,9 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         activeFilters.forEach(input => {
             const group = input.dataset.group;
-            // Para las 'conditions', la clave es `data-key`, para otros es el `group`.
             const key = group === 'conditions' ? 'conditions' : group;
-            // Para 'conditions' el valor es el `data-key`, para otros es el `value` del input.
             const value = group === 'conditions' ? input.dataset.key : input.value;
             
             if (!state.ui.advancedFilters[key]) {
@@ -442,15 +477,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const count = activeFilters.length;
         selectors.advancedFilterCount.textContent = count;
         selectors.advancedFilterCount.classList.toggle('hidden', count === 0);
+        
+        // Limpiar filtros simples para no crear conflictos
         state.ui.searchTerm = '';
         selectors.searchBar.value = '';
-        setView('medications');
-        updateDisplay();
+        state.ui.activeFamily = 'Todos';
+        selectors.familiesBtnText.textContent = 'Familias';
+
+        // Si el usuario está en una vista que no es de medicamentos, lo pasamos a la de medicamentos
+        if (state.ui.view !== 'medications' && state.ui.view !== 'favorites') {
+            setView('medications');
+        } else {
+            updateDisplay();
+        }
     }
 
-    function clearAdvancedFilters() {
+    function clearAdvancedFilters(shouldUpdateDisplay = true) {
         selectors.advancedFilterPanel.querySelectorAll('input:checked').forEach(input => input.checked = false);
-        handleAdvancedFilterChange();
+        state.ui.advancedFilters = {};
+        selectors.advancedFilterCount.textContent = 0;
+        selectors.advancedFilterCount.classList.add('hidden');
+        if (shouldUpdateDisplay) {
+            updateDisplay();
+        }
     }
 
     function setupPatientProfile() {
@@ -471,29 +520,53 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupEventListeners() {
         selectors.searchBar.addEventListener('input', debounce((e) => {
             state.ui.searchTerm = e.target.value;
-            clearAdvancedFilters();
+            // Al buscar, limpiamos los otros tipos de filtros
+            clearAdvancedFilters(false);
+            state.ui.activeFamily = 'Todos';
+            selectors.familiesBtnText.textContent = 'Familias';
+
             if (state.ui.view !== 'medications' && state.ui.view !== 'favorites') {
                 setView('medications');
-            }
-            else {
+            } else {
                 updateDisplay();
             }
         }));
+
         selectors.searchBar.addEventListener('change', (e) => {
             const term = e.target.value.trim().toLowerCase();
-            if (term && !state.searchHistory.includes(term)) { state.searchHistory.unshift(term); if (state.searchHistory.length > 15) state.searchHistory.pop(); saveSearchHistory(); }
+            if (term && !state.searchHistory.includes(term)) {
+                state.searchHistory.unshift(term);
+                if (state.searchHistory.length > 15) state.searchHistory.pop();
+                saveSearchHistory();
+            }
         });
-        selectors.favoritesBtn.addEventListener('click', () => setView('favorites'));
+
+        selectors.favoritesBtn.addEventListener('click', () => {
+            setView('favorites');
+            // Limpiar otros filtros para solo ver favoritos
+            clearAdvancedFilters(false);
+            state.ui.searchTerm = '';
+            selectors.searchBar.value = '';
+        });
+
         selectors.interactionCheckerBtn.addEventListener('click', () => setView('interaction-checker'));
+        
         const toggleDropdown = (btn, panel) => {
             const isOpen = panel.classList.toggle('is-open');
             btn.classList.toggle('active', isOpen);
             btn.setAttribute('aria-expanded', isOpen);
-        }
+        };
+
         selectors.familiesDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(e.currentTarget, selectors.familiesDropdownPanel); });
         selectors.themesDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(e.currentTarget, selectors.themesDropdownPanel); });
         selectors.advancedFilterBtn.addEventListener('click', () => selectors.advancedFilterPanel.classList.toggle('hidden'));
-        document.addEventListener('click', () => closeAllDropdowns());
+        
+        document.addEventListener('click', (e) => {
+            // Cerrar desplegables si se hace clic fuera
+            if (!e.target.closest('.dropdown-wrapper') && !e.target.closest('.dropdown-btn')) {
+                closeAllDropdowns();
+            }
+        });
         document.addEventListener('keydown', (e) => { if (e.key === "Escape" && !selectors.modal.classList.contains('hidden')) closeModal(); });
         selectors.modal.addEventListener('click', (e) => { if (e.target.id === 'medicationModal') closeModal(); });
         document.getElementById('modoAlfredoToggle').addEventListener('click', () => document.body.classList.toggle('dark'));
