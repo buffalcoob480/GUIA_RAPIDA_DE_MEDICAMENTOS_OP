@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (key === 'families') return values.includes(med.simpleFamily);
                     if (key === 'presentations') return values.some(p => normalizeText(med.presentation).includes(normalizeText(p).replace(/s\b/, '')));
                     if (key === 'renalDoseAdjust') return values.includes('true') && med.renalDoseAdjust?.enabled;
-                    if (key === 'pregnancySafe') return values.includes('true') && med.pregnancy?.toLowerCase().includes('seguro');
+                    if (key === 'pregnancySafe') return values.includes('true') && (med.pregnancy?.toLowerCase().includes('seguro') || med.pregnancy?.toLowerCase().includes('categoría a'));
                     if (key === 'lactationSafe') return values.includes('true') && med.lactation?.toLowerCase().includes('seguro');
                     return true;
                 });
