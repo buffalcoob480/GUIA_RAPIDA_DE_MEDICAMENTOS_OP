@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- DECLARACIÓN DE FUNCIONES ---
 
-    const normalizeText = (str = '') => str ? str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
+    const normalizeText = (str = '') => (str || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     
     const debounce = (func, delay = 300) => {
         let timeout;
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const familyConfig = {
         'Antihipertensivos': { color: 'card-color-antihipertensivos', lottie_url: 'https://assets10.lottiefiles.com/packages/lf20_t9v3s2ro.json' },
-        'Antibióticos': { color: 'card-color-antibioticos', lottie_url: 'https://assets8.lottiefiles.com/packages/lf20_vjyb0p2f.json' },
+        'Antibióticos': { color: 'card-color-antibioticos', lottie_url: 'https://lottie.host/80b548b3-3aa4-47f1-801a-82402927244c/vL3Y0T43DE.json' },
         'Antivirales': { color: 'card-color-antibioticos', lottie_url: 'https://assets5.lottiefiles.com/packages/lf20_pGwnp5.json'},
         'Respiratorios': { color: 'card-color-respiratorios', lottie_url: 'https://assets4.lottiefiles.com/packages/lf20_S19G6s.json' },
         'Gastrointestinales': { color: 'card-color-gastrointestinales', box_icon: 'bxs-stomach' },
@@ -629,15 +629,25 @@ document.addEventListener('DOMContentLoaded', () => {
                                              .sort((a,b) => a.name.localeCompare(b.name));
             
             state.medications.uniqueFamilies = [...new Set(state.medications.all.map(m => m.simpleFamily).filter(Boolean))].sort();
+            
+            // Lógica mejorada para clasificar presentaciones
+            const presentationMap = {
+                'Tabletas/Cápsulas': ['tableta', 'cápsula', 'perlas', 'grageas', 'comprimido'],
+                'Líquidos Orales': ['jarabe', 'suspensi', 'gotas', 'soluci'],
+                'Inyectables': ['inyectable'],
+                'Tópicos': ['crema', 'gel', 'ungüento'],
+                'Supositorios/Óvulos': ['óvulo', 'supositorio'],
+                'Inhalados/Nasales': ['inhalador', 'nebulizar', 'nasal']
+            };
             const presentations = new Set();
-            state.medications.all.forEach(m => {
-                const p = normalizeText(m.presentation);
-                if (p.includes('tableta') || p.includes('cápsula') || p.includes('perlas') || p.includes('grageas') || p.includes('comprimido')) presentations.add('Tabletas/Cápsulas');
-                else if (p.includes('jarabe') || p.includes('suspensi') || p.includes('gotas') || p.includes('soluci')) presentations.add('Líquidos Orales');
-                else if (p.includes('inyectable')) presentations.add('Inyectables');
-                else if (p.includes('crema') || p.includes('gel') || p.includes('ungüento')) presentations.add('Tópicos');
-                else if (p.includes('óvulo') || p.includes('supositorio')) presentations.add('Supositorios/Óvulos');
-                else if (p.includes('inhalador') || p.includes('nebulizar') || p.includes('nasal')) presentations.add('Inhalados/Nasales');
+            state.medications.all.forEach(med => {
+                const p = normalizeText(med.presentation);
+                for (const [category, keywords] of Object.entries(presentationMap)) {
+                    if (keywords.some(keyword => p.includes(keyword))) {
+                        presentations.add(category);
+                        break; 
+                    }
+                }
             });
             state.medications.uniquePresentations = [...presentations].sort();
 
