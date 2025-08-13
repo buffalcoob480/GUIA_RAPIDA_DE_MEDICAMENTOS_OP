@@ -283,13 +283,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const familyConfig = {
         'Antihipertensivos': { color: 'card-color-antihipertensivos', lottie_url: 'https://assets10.lottiefiles.com/packages/lf20_t9v3s2ro.json' },
+        'Cardiovasculares': { color: 'card-color-antihipertensivos', lottie_url: 'https://assets10.lottiefiles.com/packages/lf20_t9v3s2ro.json' },
         'Antibióticos': { color: 'card-color-antibioticos', lottie_url: 'https://lottie.host/80b548b3-3aa4-47f1-801a-82402927244c/vL3Y0T43DE.json' },
         'Antivirales': { color: 'card-color-antibioticos', lottie_url: 'https://assets5.lottiefiles.com/packages/lf20_pGwnp5.json'},
         'Respiratorios': { color: 'card-color-respiratorios', lottie_url: 'https://assets4.lottiefiles.com/packages/lf20_S19G6s.json' },
-        'Gastrointestinales': { color: 'card-color-gastrointestinales', box_icon: 'bxs-stomach' },
-        'Antidiabéticos': { color: 'card-color-antidiabeticos', box_icon: 'bxs-droplet' },
-        'Analgésicos': { color: 'card-color-analgesicos', box_icon: 'bxs-capsule' },
-        'default': { color: 'card-color-default', box_icon: 'bxs-first-aid' }
+        'Gastrointestinales': { color: 'card-color-gastrointestinales', lottie_url: 'https://lottie.host/933c042c-a28a-48d0-8f91-cf62164e2169/2rpz12i1uF.json' },
+        'Antidiabéticos': { color: 'card-color-antidiabeticos', lottie_url: 'https://lottie.host/25c898a3-c598-4c9c-b246-81498b67d58f/kP3Untg2jL.json' },
+        'Analgésicos': { color: 'card-color-analgesicos', lottie_url: 'https://lottie.host/e00f9180-2a42-427c-9428-f68a867303d8/I6j5dZ1yD2.json' },
+        'Antialérgicos': { color: 'card-color-respiratorios', lottie_url: 'https://lottie.host/807065a7-19a9-4b67-8b2b-038e1b4395e5/VWP0AbDkpA.json' },
+        'Antiinflamatorios': { color: 'card-color-analgesicos', lottie_url: 'https://lottie.host/28f6250b-4613-406a-a0f5-19e0999547d6/4v9S1a9Y1h.json' },
+        'Dermatológicos': { color: 'card-color-default', lottie_url: 'https://lottie.host/02a3a146-12c1-4099-b1d5-b69512683015/hT2S2N8K1B.json' },
+        'Neurológicos': { color: 'card-color-gastrointestinales', lottie_url: 'https://lottie.host/c5c87a5a-22e7-4f27-8e65-a8c6a08ca948/k5b3Vd5ZAR.json' },
+        'Oftalmológicos': { color: 'card-color-antibioticos', lottie_url: 'https://lottie.host/38600d3d-519b-449d-b892-c0e666f7fcf0/u4pX1a3eY2.json' },
+        'default': { color: 'card-color-default', lottie_url: 'https://lottie.host/5a072381-8b01-4602-a4f6-a815a51e60f2/ok2m12aPgg.json' }
     };
 
     function createMedicationCard(med) {
