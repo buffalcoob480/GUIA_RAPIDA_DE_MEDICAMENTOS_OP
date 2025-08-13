@@ -282,12 +282,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     const familyConfig = {
-        'Antihipertensivos': { color: 'card-color-antihipertensivos', box_icon: 'bxs-heart-pulse' },
-        'Cardiovasculares': { color: 'card-color-antihipertensivos', box_icon: 'bxs-heart-pulse' },
-        'Antibióticos': { color: 'card-color-antibioticos', box_icon: 'bxs-capsule' },
-        'Antivirales': { color: 'card-color-antibioticos', box_icon: 'bxs-virus-block'},
-        'Respiratorios': { color: 'card-color-respiratorios', box_icon: 'bxs-lungs' },
-        'Gastrointestinales': { color: 'card-color-gastrointestinales', box_icon: 'bxs-stomach' },
+        'Antihipertensivos': { color: 'card-color-antihipertensivos', lottie_url: 'https://lottie.host/99245387-a226-4279-8ab1-b4f7637829a2/Y8D9MC23fE.json' },
+        'Cardiovasculares': { color: 'card-color-antihipertensivos', lottie_url: 'https://lottie.host/99245387-a226-4279-8ab1-b4f7637829a2/Y8D9MC23fE.json' },
+        'Antibióticos': { color: 'card-color-antibioticos', lottie_url: 'https://lottie.host/682998a3-2594-4770-970f-b44c8c199589/w9sXm2oKzV.json' },
+        'Antivirales': { color: 'card-color-antibioticos', lottie_url: 'https://lottie.host/a89b0394-1188-4660-8422-5203ac34083d/XkC4wzTjjd.json'},
+        'Respiratorios': { color: 'card-color-respiratorios', lottie_url: 'https://lottie.host/549c7161-5768-450f-8086-4448552601b3/0xT3KYZUZ1.json' },
+        'Gastrointestinales': { color: 'card-color-gastrointestinales', lottie_url: 'https://lottie.host/7905d233-e380-4a8e-8a19-a9a83421f180/7e3b97b1-5e5d-4d2d-9b3b-8d7d3d7d3d7d.json' },
         'Antidiabéticos': { color: 'card-color-antidiabeticos', box_icon: 'bxs-droplet' },
         'Analgésicos': { color: 'card-color-analgesicos', box_icon: 'bxs-band-aid' },
         'Antialérgicos': { color: 'card-color-respiratorios', box_icon: 'bxs-shield-alt-2' },
@@ -307,17 +307,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const config = familyConfig[med.simpleFamily] || familyConfig.default;
         cardElement.classList.add(config.color, 'animate__animated', 'animate__fadeInUp');
 
-        iconContainer.innerHTML = `<i class='bx ${config.box_icon}'></i>`;
+        if (config.lottie_url) {
+            const player = document.createElement('lottie-player');
+            player.setAttribute('src', config.lottie_url);
+            player.setAttribute('background', 'transparent');
+            player.setAttribute('speed', '1');
+            player.setAttribute('loop', '');
+            player.setAttribute('autoplay', '');
+            iconContainer.appendChild(player);
+        } else {
+            iconContainer.innerHTML = `<i class='bx ${config.box_icon}'></i>`;
+        }
         
         cardClone.querySelector('.card-family-tag').textContent = med.simpleFamily;
         cardClone.querySelector('.card-name').textContent = med.name;
         cardClone.querySelector('.card-presentation').textContent = med.presentation;
         
-        const usesParagraph = document.createElement('p');
-        usesParagraph.className = 'card-uses text-sm opacity-90';
-        usesParagraph.textContent = med.uses || 'Indicaciones generales.';
-        detailsContainer.innerHTML = ''; 
-        detailsContainer.appendChild(usesParagraph);
+        detailsContainer.querySelector('.card-family').textContent = med.family;
+        detailsContainer.querySelector('.card-uses').textContent = med.uses || 'Indicaciones generales.';
         
         cardElement.addEventListener('click', () => openModal(med));
         return cardClone;
