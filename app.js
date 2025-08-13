@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center animate__animated animate__fadeInUp" style="animation-delay: 350ms;">
                         <div class="info-box-age"><i class='bx bx-time-five text-3xl'></i><span>Edad Mínima</span><span>${med.minimumAge || '?'}</span></div>
                         <div class="info-box-pregnancy ${profile.has('pregnancy') ? 'info-box-highlight' : ''}"><i class='bx bx-female text-3xl'></i><span>Embarazo</span><span>${med.pregnancy || 'N/A'}</span></div>
-                        <div class="info-box-lactation ${profile.has('lactation') ? 'info-box-highlight' : ''}"><i class='bx bx-baby-carriage text-3xl'></i><span>Lactancia</span><span>${med.lactation || 'N/A'}</span></div>
+                        <div class="info-box-lactation ${profile.has('lactation') ? 'info-box-highlight' : ''}"><i class='bx bxs-bottle text-3xl'></i><span>Lactancia</span><span>${med.lactation || 'N/A'}</span></div>
                     </div>
                     
                     <div class="bg-white p-4 rounded-lg space-y-2 animate__animated animate__fadeInUp" style="animation-delay: 450ms;">
@@ -433,7 +433,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- CONFIGURACIÓN INICIAL DE FILTROS Y EVENTOS ---
     function populateFilters() {
         const families = ['Todos', ...state.medications.uniqueFamilies];
-        selectors.familyFilterContainer.innerHTML = families.map(f => `<button class="filter-btn ${f === 'Todos' ? 'active' : ''}" data-family="${f}">${f}</button>`).join('');
+        selectors.familyFilterContainer.innerHTML = families.map(f => {
+            if (f === 'Todos') {
+                return `<button class="filter-btn active" data-family="Todos"><i class='bx bxs-grid-alt'></i><span>Todos</span></button>`;
+            }
+            const config = familyConfig[f] || familyConfig.default;
+            const iconHtml = `<i class='bx ${config.box_icon}'></i>`;
+            return `<button class="filter-btn" data-family="${f}">${iconHtml}<span>${f}</span></button>`;
+        }).join('');
+        
         selectors.themesFilterContainer.innerHTML = Object.entries(clinicalThemes).map(([id, t]) => `<button class="theme-btn" data-theme-id="${id}">${t.name}</button>`).join('');
     }
 
