@@ -282,20 +282,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     const familyConfig = {
-        'Antihipertensivos': { color: 'card-color-antihipertensivos', lottie_url: 'https://lottie.host/99245387-a226-4279-8ab1-b4f7637829a2/Y8D9MC23fE.json' },
-        'Cardiovasculares': { color: 'card-color-antihipertensivos', lottie_url: 'https://lottie.host/99245387-a226-4279-8ab1-b4f7637829a2/Y8D9MC23fE.json' },
-        'Antibióticos': { color: 'card-color-antibioticos', lottie_url: 'https://lottie.host/682998a3-2594-4770-970f-b44c8c199589/w9sXm2oKzV.json' },
-        'Antivirales': { color: 'card-color-antibioticos', lottie_url: 'https://lottie.host/a89b0394-1188-4660-8422-5203ac34083d/XkC4wzTjjd.json'},
-        'Respiratorios': { color: 'card-color-respiratorios', lottie_url: 'https://lottie.host/549c7161-5768-450f-8086-4448552601b3/0xT3KYZUZ1.json' },
-        'Gastrointestinales': { color: 'card-color-gastrointestinales', lottie_url: 'https://lottie.host/b042b36c-0849-4363-8973-44e21b5b08e5/nIU93s24X4.json' },
-        'Antidiabéticos': { color: 'card-color-antidiabeticos', lottie_url: 'https://lottie.host/25c898a3-c598-4c9c-b246-81498b67d58f/kP3Untg2jL.json' },
-        'Analgésicos': { color: 'card-color-analgesicos', lottie_url: 'https://lottie.host/e00f9180-2a42-427c-9428-f68a867303d8/I6j5dZ1yD2.json' },
-        'Antialérgicos': { color: 'card-color-respiratorios', lottie_url: 'https://lottie.host/807065a7-19a9-4b67-8b2b-038e1b4395e5/VWP0AbDkpA.json' },
-        'Antiinflamatorios': { color: 'card-color-analgesicos', lottie_url: 'https://lottie.host/28f6250b-4613-406a-a0f5-19e0999547d6/4v9S1a9Y1h.json' },
-        'Dermatológicos': { color: 'card-color-default', lottie_url: 'https://lottie.host/02a3a146-12c1-4099-b1d5-b69512683015/hT2S2N8K1B.json' },
-        'Neurológicos': { color: 'card-color-gastrointestinales', lottie_url: 'https://lottie.host/c5c87a5a-22e7-4f27-8e65-a8c6a08ca948/k5b3Vd5ZAR.json' },
-        'Oftalmológicos': { color: 'card-color-antibioticos', lottie_url: 'https://lottie.host/38600d3d-519b-449d-b892-c0e666f7fcf0/u4pX1a3eY2.json' },
-        'default': { color: 'card-color-default', lottie_url: 'https://lottie.host/5a072381-8b01-4602-a4f6-a815a51e60f2/ok2m12aPgg.json' }
+        'Antihipertensivos': { color: 'card-color-antihipertensivos', box_icon: 'bxs-heart-pulse' },
+        'Cardiovasculares': { color: 'card-color-antihipertensivos', box_icon: 'bxs-heart-pulse' },
+        'Antibióticos': { color: 'card-color-antibioticos', box_icon: 'bxs-capsule' },
+        'Antivirales': { color: 'card-color-antibioticos', box_icon: 'bxs-virus-block'},
+        'Respiratorios': { color: 'card-color-respiratorios', box_icon: 'bxs-lungs' },
+        'Gastrointestinales': { color: 'card-color-gastrointestinales', box_icon: 'bxs-stomach' },
+        'Antidiabéticos': { color: 'card-color-antidiabeticos', box_icon: 'bxs-droplet' },
+        'Analgésicos': { color: 'card-color-analgesicos', box_icon: 'bxs-band-aid' },
+        'Antialérgicos': { color: 'card-color-respiratorios', box_icon: 'bxs-shield-alt-2' },
+        'Antiinflamatorios': { color: 'card-color-analgesicos', box_icon: 'bxs-hot' },
+        'Dermatológicos': { color: 'card-color-default', box_icon: 'bxs-hand' },
+        'Neurológicos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-brain' },
+        'Oftalmológicos': { color: 'card-color-antibioticos', box_icon: 'bxs-show' },
+        'default': { color: 'card-color-default', box_icon: 'bxs-first-aid' }
     };
 
     function createMedicationCard(med) {
@@ -307,17 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const config = familyConfig[med.simpleFamily] || familyConfig.default;
         cardElement.classList.add(config.color, 'animate__animated', 'animate__fadeInUp');
 
-        if (config.lottie_url) {
-            const player = document.createElement('lottie-player');
-            player.setAttribute('src', config.lottie_url);
-            player.setAttribute('background', 'transparent');
-            player.setAttribute('speed', '1');
-            player.setAttribute('loop', '');
-            player.setAttribute('autoplay', '');
-            iconContainer.appendChild(player);
-        } else {
-            iconContainer.innerHTML = `<i class='bx ${config.box_icon}'></i>`;
-        }
+        iconContainer.innerHTML = `<i class='bx ${config.box_icon}'></i>`;
         
         cardClone.querySelector('.card-family-tag').textContent = med.simpleFamily;
         cardClone.querySelector('.card-name').textContent = med.name;
