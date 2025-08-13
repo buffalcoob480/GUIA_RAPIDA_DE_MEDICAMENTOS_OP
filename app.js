@@ -302,12 +302,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardClone = selectors.cardTemplate.content.cloneNode(true);
         const cardElement = cardClone.querySelector('.medication-card');
         const iconContainer = cardClone.querySelector('.card-icon');
-        const detailsContainer = cardClone.querySelector('.card-body .mt-4');
+        const detailsContainer = cardClone.querySelector('.card-details');
 
         const config = familyConfig[med.simpleFamily] || familyConfig.default;
         cardElement.classList.add(config.color, 'animate__animated', 'animate__fadeInUp');
 
-        iconContainer.innerHTML = `<i class='bx ${config.box_icon}' style="font-size: 3rem; text-align: center; width: 100%;"></i>`;
+        iconContainer.innerHTML = `<i class='bx ${config.box_icon}'></i>`;
         
         cardClone.querySelector('.card-family-tag').textContent = med.simpleFamily;
         cardClone.querySelector('.card-name').textContent = med.name;
