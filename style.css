@@ -103,6 +103,7 @@ body.dark::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 1
     transform: translateY(-8px) scale(1.03); 
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.6), 0 8px 10px -6px rgba(0,0,0,0.6); 
 }
+
 .card-icon {
     width: 50px;
     height: 50px;
@@ -110,6 +111,16 @@ body.dark::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 1
     align-items: center;
     justify-content: center;
 }
+
+.card-icon .bx {
+    font-size: 3rem;
+    transition: transform 0.3s ease;
+}
+
+.medication-card:hover .card-icon .bx {
+    transform: scale(1.2);
+}
+
 .card-uses {
     line-height: 1.5;
     height: 60px; /* Ajusta esta altura para controlar el espacio */
@@ -125,6 +136,7 @@ body.dark::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 1
     color: #4ade80;
     transform: scale(1.25);
 }
+
 
 /* Colores por Familia */
 .card-color-antihipertensivos { background: linear-gradient(135deg, #be185d, #831843); }
