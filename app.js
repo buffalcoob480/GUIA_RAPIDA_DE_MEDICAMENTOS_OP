@@ -282,24 +282,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     const familyConfig = {
-        'Antihipertensivos': { color: 'card-color-antihipertensivos', icon: 'bxs-heart icon-heart-beat' },
-        'Antibióticos': { color: 'card-color-antibioticos', icon: 'bxs-bug icon-bacteria-shake' },
-        'Antivirales': { color: 'card-color-antibioticos', icon: 'bxs-virus icon-virus-rotate'},
-        'Gastrointestinales': { color: 'card-color-gastrointestinales', icon: 'bxs-stomach' },
-        'Respiratorios': { color: 'card-color-respiratorios', icon: 'bxs-lungs icon-lungs-breathe' },
-        'Antidiabéticos': { color: 'card-color-antidiabeticos', icon: 'bxs-droplet' },
-        'Analgésicos': { color: 'card-color-analgesicos', icon: 'bxs-capsule' },
-        'default': { color: 'card-color-default', icon: 'bxs-first-aid' }
+        'Antihipertensivos': { color: 'card-color-antihipertensivos', lottie_url: 'https://assets10.lottiefiles.com/packages/lf20_t9v3s2ro.json' },
+        'Antibióticos': { color: 'card-color-antibioticos', lottie_url: 'https://assets8.lottiefiles.com/packages/lf20_vjyb0p2f.json' },
+        'Antivirales': { color: 'card-color-antibioticos', lottie_url: 'https://assets5.lottiefiles.com/packages/lf20_pGwnp5.json'},
+        'Respiratorios': { color: 'card-color-respiratorios', lottie_url: 'https://assets4.lottiefiles.com/packages/lf20_S19G6s.json' },
+        'Gastrointestinales': { color: 'card-color-gastrointestinales', box_icon: 'bxs-stomach' },
+        'Antidiabéticos': { color: 'card-color-antidiabeticos', box_icon: 'bxs-droplet' },
+        'Analgésicos': { color: 'card-color-analgesicos', box_icon: 'bxs-capsule' },
+        'default': { color: 'card-color-default', box_icon: 'bxs-first-aid' }
     };
 
     function createMedicationCard(med) {
         const cardClone = selectors.cardTemplate.content.cloneNode(true);
         const cardElement = cardClone.querySelector('.medication-card');
+        const iconContainer = cardClone.querySelector('.card-icon');
         const detailsList = cardClone.querySelector('.card-details-list');
 
         const config = familyConfig[med.simpleFamily] || familyConfig.default;
         cardElement.classList.add(config.color, 'animate__animated', 'animate__fadeInUp');
-        cardClone.querySelector('.card-icon').innerHTML = `<i class='bx ${config.icon}'></i>`;
+
+        if (config.lottie_url) {
+            const player = document.createElement('lottie-player');
+            player.setAttribute('src', config.lottie_url);
+            player.setAttribute('background', 'transparent');
+            player.setAttribute('speed', '1');
+            player.setAttribute('loop', '');
+            player.setAttribute('autoplay', '');
+            iconContainer.appendChild(player);
+        } else if (config.box_icon) {
+            iconContainer.innerHTML = `<i class='bx ${config.box_icon}' style="font-size: 3rem; text-align: center; width: 100%;"></i>`;
+        }
         
         cardClone.querySelector('.card-family-tag').textContent = med.simpleFamily;
         cardClone.querySelector('.card-name').textContent = med.name;
@@ -309,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const details = med.indications || med.uses;
         if (details) {
             const detailItems = details.split(/,|\./).filter(item => item.trim() !== '');
-            detailItems.slice(0, 3).forEach(item => { // Show max 3 items
+            detailItems.slice(0, 3).forEach(item => {
                 const li = document.createElement('li');
                 li.textContent = item.trim();
                 detailsList.appendChild(li);
