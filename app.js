@@ -302,37 +302,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardClone = selectors.cardTemplate.content.cloneNode(true);
         const cardElement = cardClone.querySelector('.medication-card');
         const iconContainer = cardClone.querySelector('.card-icon');
-        const detailsList = cardClone.querySelector('.card-details-list');
+        const detailsContainer = cardClone.querySelector('.card-body .mt-4');
 
         const config = familyConfig[med.simpleFamily] || familyConfig.default;
         cardElement.classList.add(config.color, 'animate__animated', 'animate__fadeInUp');
 
-        if (config.lottie_url) {
-            const player = document.createElement('lottie-player');
-            player.setAttribute('src', config.lottie_url);
-            player.setAttribute('background', 'transparent');
-            player.setAttribute('speed', '1');
-            player.setAttribute('loop', '');
-            player.setAttribute('autoplay', '');
-            iconContainer.appendChild(player);
-        } else if (config.box_icon) {
-            iconContainer.innerHTML = `<i class='bx ${config.box_icon}' style="font-size: 3rem; text-align: center; width: 100%;"></i>`;
-        }
+        iconContainer.innerHTML = `<i class='bx ${config.box_icon}' style="font-size: 3rem; text-align: center; width: 100%;"></i>`;
         
         cardClone.querySelector('.card-family-tag').textContent = med.simpleFamily;
         cardClone.querySelector('.card-name').textContent = med.name;
         cardClone.querySelector('.card-presentation').textContent = med.presentation;
-        cardClone.querySelector('.card-family').textContent = med.family;
         
-        const details = med.indications || med.uses;
-        if (details) {
-            const detailItems = details.split(/,|\./).filter(item => item.trim() !== '');
-            detailItems.slice(0, 3).forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = item.trim();
-                detailsList.appendChild(li);
-            });
-        }
+        const usesParagraph = document.createElement('p');
+        usesParagraph.className = 'card-uses text-sm opacity-90';
+        usesParagraph.textContent = med.uses || 'Indicaciones generales.';
+        detailsContainer.innerHTML = ''; 
+        detailsContainer.appendChild(usesParagraph);
         
         cardElement.addEventListener('click', () => openModal(med));
         return cardClone;
@@ -357,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const profile = state.ui.patientProfile;
 
         selectors.modalContent.innerHTML = `
-            <div class="modal-header p-4 flex justify-between items-start">
+            <div class="modal-header p-4 flex justify-between items-start animate__animated animate__fadeInDown" style="animation-delay: 50ms;">
                 <div>
                     <h2 id="modalTitle" class="text-2xl font-bold">${med.name}</h2>
                     <p class="text-slate-600">${med.presentation}</p>
@@ -366,29 +351,29 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="p-6 overflow-y-auto">
                 <div class="space-y-4">
-                    <div class="info-box-success">
+                    <div class="info-box-success animate__animated animate__fadeInUp" style="animation-delay: 150ms;">
                         <i class='bx bxs-check-circle text-2xl'></i>
                         <div><strong>Indicaciones:</strong> ${med.indications || 'No especificadas'}</div>
                     </div>
-                    <div class="info-box-danger">
+                    <div class="info-box-danger animate__animated animate__fadeInUp" style="animation-delay: 250ms;">
                         <i class='bx bxs-x-circle text-2xl'></i>
                         <div><strong>Contraindicaciones:</strong> ${med.contraindications || 'No especificadas'}</div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center animate__animated animate__fadeInUp" style="animation-delay: 350ms;">
                         <div class="info-box-age"><i class='bx bx-time-five text-3xl'></i><span>Edad Mínima</span><span>${med.minimumAge || '?'}</span></div>
                         <div class="info-box-pregnancy ${profile.has('pregnancy') ? 'info-box-highlight' : ''}"><i class='bx bx-female text-3xl'></i><span>Embarazo</span><span>${med.pregnancy || 'N/A'}</span></div>
                         <div class="info-box-lactation ${profile.has('lactation') ? 'info-box-highlight' : ''}"><i class='bx bx-baby-carriage text-3xl'></i><span>Lactancia</span><span>${med.lactation || 'N/A'}</span></div>
                     </div>
                     
-                    <div class="bg-white p-4 rounded-lg space-y-2">
+                    <div class="bg-white p-4 rounded-lg space-y-2 animate__animated animate__fadeInUp" style="animation-delay: 450ms;">
                         <div><strong>Familia:</strong><p>${med.family || 'N/A'}</p></div>
                         <div><strong>Usos:</strong><p>${med.uses || 'N/A'}</p></div>
                         <div><strong>Dosis Adulto:</strong><p>${med.dose_adult || 'N/A'}</p></div>
                         <div><strong>Dosis Pediátrica:</strong><p>${med.dose_pediatric || 'No especificada'}</p></div>
                     </div>
 
-                    ${med.isCalculable ? `<div class="calculator-card !bg-white"><div class="calculator-header !bg-slate-200 !text-slate-800"><i class='bx bxs-calculator text-2xl'></i><h4 class="font-bold">Calculadora de Dosis Pediátrica</h4></div><div class="calculator-body"><input type="number" id="patientWeight" placeholder="Peso del paciente en kg" class="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><button id="calculateDoseBtn" class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">Calcular Dosis</button></div><div id="doseResult" class="calculator-result"></div></div>` : ''}
+                    ${med.isCalculable ? `<div class="calculator-card !bg-white animate__animated animate__fadeInUp" style="animation-delay: 550ms;"><div class="calculator-header !bg-slate-200 !text-slate-800"><i class='bx bxs-calculator text-2xl'></i><h4 class="font-bold">Calculadora de Dosis Pediátrica</h4></div><div class="calculator-body"><input type="number" id="patientWeight" placeholder="Peso del paciente en kg" class="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><button id="calculateDoseBtn" class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">Calcular Dosis</button></div><div id="doseResult" class="calculator-result"></div></div>` : ''}
                 </div>
             </div>
             <div class="modal-footer p-4 flex justify-end">
