@@ -273,18 +273,23 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.medicationList.innerHTML = '';
         selectors.noResults.classList.toggle('hidden', meds.length > 0);
         const fragment = document.createDocumentFragment();
-        meds.forEach(med => { fragment.appendChild(createMedicationCard(med)); });
+        meds.forEach((med, index) => { 
+            const card = createMedicationCard(med);
+            card.firstElementChild.style.animationDelay = `${index * 50}ms`;
+            fragment.appendChild(card);
+        });
         selectors.medicationList.appendChild(fragment);
     }
-
+    
     const familyConfig = {
-        'Antihipertensivos': { color: 'card-color-antihipertensivos', icon: '💓' },
-        'Antibióticos': { color: 'card-color-antibioticos', icon: '🔬' },
-        'Gastrointestinales': { color: 'card-color-gastrointestinales', icon: '💨' },
-        'Respiratorios': { color: 'card-color-respiratorios', icon: '🫁' },
-        'Antidiabéticos': { color: 'card-color-antidiabeticos', icon: '🩸' },
-        'Analgésicos': { color: 'card-color-analgesicos', icon: '💊' },
-        'default': { color: 'card-color-default', icon: '⚕️' }
+        'Antihipertensivos': { color: 'card-color-antihipertensivos', icon: 'bxs-heart icon-heart-beat' },
+        'Antibióticos': { color: 'card-color-antibioticos', icon: 'bxs-bug icon-bacteria-shake' },
+        'Antivirales': { color: 'card-color-antibioticos', icon: 'bxs-virus icon-virus-rotate'},
+        'Gastrointestinales': { color: 'card-color-gastrointestinales', icon: 'bxs-stomach' },
+        'Respiratorios': { color: 'card-color-respiratorios', icon: 'bxs-lungs icon-lungs-breathe' },
+        'Antidiabéticos': { color: 'card-color-antidiabeticos', icon: 'bxs-droplet' },
+        'Analgésicos': { color: 'card-color-analgesicos', icon: 'bxs-capsule' },
+        'default': { color: 'card-color-default', icon: 'bxs-first-aid' }
     };
 
     function createMedicationCard(med) {
@@ -293,8 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const detailsList = cardClone.querySelector('.card-details-list');
 
         const config = familyConfig[med.simpleFamily] || familyConfig.default;
-        cardElement.classList.add(config.color);
-        cardClone.querySelector('.card-icon').textContent = config.icon;
+        cardElement.classList.add(config.color, 'animate__animated', 'animate__fadeInUp');
+        cardClone.querySelector('.card-icon').innerHTML = `<i class='bx ${config.icon}'></i>`;
         
         cardClone.querySelector('.card-family-tag').textContent = med.simpleFamily;
         cardClone.querySelector('.card-name').textContent = med.name;
@@ -339,23 +344,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h2 id="modalTitle" class="text-2xl font-bold">${med.name}</h2>
                     <p class="text-slate-600">${med.presentation}</p>
                 </div>
-                <button id="modalFavButton" class="text-3xl favorite-btn-modal ${isFavorite ? 'is-favorite' : ''}" aria-label="Añadir a favoritos">★</button>
+                <button id="modalFavButton" class="text-3xl favorite-btn-modal ${isFavorite ? 'is-favorite' : ''}" aria-label="Añadir a favoritos"><i class='bx bxs-star'></i></button>
             </div>
             <div class="p-6 overflow-y-auto">
                 <div class="space-y-4">
                     <div class="info-box-success">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <i class='bx bxs-check-circle text-2xl'></i>
                         <div><strong>Indicaciones:</strong> ${med.indications || 'No especificadas'}</div>
                     </div>
                     <div class="info-box-danger">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <i class='bx bxs-x-circle text-2xl'></i>
                         <div><strong>Contraindicaciones:</strong> ${med.contraindications || 'No especificadas'}</div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                        <div class="info-box-age"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><span>Edad Mínima</span><span>${med.minimumAge || '?'}</span></div>
-                        <div class="info-box-pregnancy ${profile.has('pregnancy') ? 'info-box-highlight' : ''}"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg><span>Embarazo</span><span>${med.pregnancy || 'N/A'}</span></div>
-                        <div class="info-box-lactation ${profile.has('lactation') ? 'info-box-highlight' : ''}"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path><path d="M12 20a8 8 0 01-8-8H0c0 6.627 5.373 12 12 12v-4zm5.938-3A7.962 7.962 0 0112 20v4c3.042 0 5.824-1.135 7.938-3l-2.647-3z"></path></svg><span>Lactancia</span><span>${med.lactation || 'N/A'}</span></div>
+                        <div class="info-box-age"><i class='bx bx-time-five text-3xl'></i><span>Edad Mínima</span><span>${med.minimumAge || '?'}</span></div>
+                        <div class="info-box-pregnancy ${profile.has('pregnancy') ? 'info-box-highlight' : ''}"><i class='bx bx-female text-3xl'></i><span>Embarazo</span><span>${med.pregnancy || 'N/A'}</span></div>
+                        <div class="info-box-lactation ${profile.has('lactation') ? 'info-box-highlight' : ''}"><i class='bx bx-baby-carriage text-3xl'></i><span>Lactancia</span><span>${med.lactation || 'N/A'}</span></div>
                     </div>
                     
                     <div class="bg-white p-4 rounded-lg space-y-2">
@@ -365,17 +370,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div><strong>Dosis Pediátrica:</strong><p>${med.dose_pediatric || 'No especificada'}</p></div>
                     </div>
 
-                    ${med.isCalculable ? `<div class="calculator-card !bg-white"><div class="calculator-header !bg-slate-200 !text-slate-800"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M12 21a9 9 0 110-18 9 9 0 010 18z" /></svg><h4 class="font-bold">Calculadora de Dosis Pediátrica</h4></div><div class="calculator-body"><input type="number" id="patientWeight" placeholder="Peso del paciente en kg" class="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><button id="calculateDoseBtn" class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">Calcular Dosis</button></div><div id="doseResult" class="calculator-result"></div></div>` : ''}
+                    ${med.isCalculable ? `<div class="calculator-card !bg-white"><div class="calculator-header !bg-slate-200 !text-slate-800"><i class='bx bxs-calculator text-2xl'></i><h4 class="font-bold">Calculadora de Dosis Pediátrica</h4></div><div class="calculator-body"><input type="number" id="patientWeight" placeholder="Peso del paciente en kg" class="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><button id="calculateDoseBtn" class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">Calcular Dosis</button></div><div id="doseResult" class="calculator-result"></div></div>` : ''}
                 </div>
             </div>
             <div class="modal-footer p-4 flex justify-end">
                 <button id="closeModalBtn" class="px-5 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300 transition-colors">Cerrar</button>
             </div>
         `;
-        selectors.modal.classList.remove('hidden'); 
-        setTimeout(() => {
-            selectors.modalContent.classList.remove('opacity-0', 'scale-95');
-        }, 10);
+        selectors.modal.classList.remove('hidden', 'animate__fadeOut');
+        selectors.modal.classList.add('animate__fadeIn');
         
         document.body.style.overflow = 'hidden';
         
@@ -410,20 +413,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const durationText = med.duration || '';
             const copyText = `Dar ${doseRange.replace(' - ', ' a ')} vía oral ${frequency} ${durationText}.`;
             resultDiv.innerHTML = `
-                <div class="result-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V4z" /><path d="M5 12a2 2 0 012-2h6a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2v-2z" /></svg><span><strong>Dosis:</strong> ${doseRange}</span></div>
-                <div class="result-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg><span><strong>Frecuencia:</strong> ${frequency}</span></div>
-                ${durationText ? `<div class="result-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg><span><strong>Duración:</strong> ${durationText}</span></div>` : ''}
-                <button id="copyDoseBtn" class="copy-btn"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" /><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" /></svg>Copiar Indicación</button>`;
+                <div class="result-item"><i class='bx bxs-injection'></i><span><strong>Dosis:</strong> ${doseRange}</span></div>
+                <div class="result-item"><i class='bx bx-timer'></i><span><strong>Frecuencia:</strong> ${frequency}</span></div>
+                ${durationText ? `<div class="result-item"><i class='bx bxs-calendar-event'></i><span><strong>Duración:</strong> ${durationText}</span></div>` : ''}
+                <button id="copyDoseBtn" class="copy-btn"><i class='bx bxs-copy'></i>Copiar Indicación</button>`;
             document.getElementById('copyDoseBtn').addEventListener('click', () => { navigator.clipboard.writeText(copyText).then(() => showToast('¡Indicación copiada!')); });
         });
     }
 
     function closeModal() { 
-        selectors.modalContent.classList.add('opacity-0', 'scale-95');
+        selectors.modal.classList.remove('animate__fadeIn');
+        selectors.modal.classList.add('animate__fadeOut');
         setTimeout(() => {
             selectors.modal.classList.add('hidden'); 
             document.body.style.overflow = 'auto'; 
-        }, 300);
+        }, 400); // Duración de la animación
     }
 
     // --- CONFIGURACIÓN INICIAL DE FILTROS Y EVENTOS ---
@@ -586,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!e.target.closest('.dropdown-wrapper')) {
                 closeAllDropdowns();
             }
-             if (e.target.id === 'medicationModal') {
+             if (e.target === selectors.modal) {
                 closeModal();
             }
         });
