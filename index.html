@@ -31,10 +31,10 @@
             </div>
         </header>
 
-        <section class="mb-8 animate__animated animate__fadeInUp">
-            <div class="search-wrapper mb-4">
+        <section id="controls-section" class="space-y-4 mb-8 animate__animated animate__fadeInUp">
+            <div class="search-wrapper">
                 <i class='bx bx-search search-icon'></i>
-                <input id="searchBar" type="text" placeholder="Buscar medicamento..." aria-label="Buscar medicamento" class="w-full p-4 rounded-full transition" list="search-history">
+                <input id="searchBar" type="text" placeholder="Buscar medicamento por nombre, familia o uso..." aria-label="Buscar medicamento" class="w-full p-4 rounded-full transition" list="search-history">
                 <datalist id="search-history"></datalist>
             </div>
             <nav class="filter-controls" aria-label="Filtros principales">
@@ -62,8 +62,9 @@
             </nav>
         </section>
         
-        <section id="patient-profile-section" class="mb-6 p-3 bg-slate-800/50 border border-slate-700 rounded-lg animate__animated animate__fadeInUp">
-            <h3 class="font-bold text-center text-slate-300 mb-2">Perfil de Paciente (Filtro Rápido)</h3>
+        <section id="patient-profile-section" class="patient-profile-bar animate__animated animate__fadeInUp">
+            <div class="profile-icon"><i class='bx bxs-user-detail'></i></div>
+            <span class="profile-title">Perfil de Paciente (Filtro Rápido):</span>
             <div id="patient-profile-controls" class="flex flex-wrap justify-center gap-2"></div>
         </section>
 
