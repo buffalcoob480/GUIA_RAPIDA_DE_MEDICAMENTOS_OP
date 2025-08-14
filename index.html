@@ -7,8 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guía Farmacológica y Clínica - Centro de Salud Colonia Azteca</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script> 
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -31,12 +30,13 @@
             </div>
         </header>
 
-        <section id="controls-section" class="space-y-4 mb-8 animate__animated animate__fadeInUp">
+        <section id="controls-container" class="mb-8 space-y-4 animate__animated animate__fadeInUp">
             <div class="search-wrapper">
                 <i class='bx bx-search search-icon'></i>
                 <input id="searchBar" type="text" placeholder="Buscar medicamento por nombre, familia o uso..." aria-label="Buscar medicamento" class="w-full p-4 rounded-full transition" list="search-history">
                 <datalist id="search-history"></datalist>
             </div>
+            
             <nav class="filter-controls" aria-label="Filtros principales">
                 <button id="favorites-btn" class="dropdown-btn"><i class='bx bxs-star'></i><span>Favoritos</span></button>
                 <button id="interaction-checker-btn" class="dropdown-btn"><i class='bx bx-git-compare'></i><span>Interacciones</span></button>
@@ -60,12 +60,12 @@
                     <span id="advanced-filter-count" class="hidden absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold"></span>
                 </button>
             </nav>
-        </section>
-        
-        <section id="patient-profile-section" class="patient-profile-bar animate__animated animate__fadeInUp">
-            <div class="profile-icon"><i class='bx bxs-user-detail'></i></div>
-            <span class="profile-title">Perfil de Paciente (Filtro Rápido):</span>
-            <div id="patient-profile-controls" class="flex flex-wrap justify-center gap-2"></div>
+
+            <section id="patient-profile-section" class="patient-profile-bar">
+                <div class="profile-icon"><i class='bx bxs-user-detail'></i></div>
+                <span class="profile-title">Perfil de Paciente (Filtro Rápido):</span>
+                <div id="patient-profile-controls" class="flex flex-wrap justify-center gap-2"></div>
+            </section>
         </section>
 
         <section id="advanced-filter-panel" class="hidden mb-6 p-4 bg-slate-800 rounded-lg shadow-md border border-slate-700"></section>
@@ -123,6 +123,7 @@
   </article>
 </template>
 
-<script src="app.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
+<script src="app.js" defer></script>
 </body>
 </html>
