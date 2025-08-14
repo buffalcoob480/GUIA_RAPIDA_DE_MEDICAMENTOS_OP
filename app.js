@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         advancedFilterCount: document.getElementById('advanced-filter-count'),
         patientProfileControls: document.getElementById('patient-profile-controls'),
         themeToggleBtn: document.getElementById('theme-toggle'),
+        backToTopBtn: document.getElementById('back-to-top-btn'),
     };
     
     // --- DECLARACIÓN DE FUNCIONES ---
@@ -89,12 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (favs) state.favorites = new Set(JSON.parse(favs));
             const history = localStorage.getItem('medSearchHistory');
             if (history) state.searchHistory = JSON.parse(history);
-            const theme = localStorage.getItem('medTheme');
-            if (theme) {
-                state.ui.theme = theme;
-                document.body.classList.toggle('dark', theme === 'dark');
-                document.body.classList.toggle('light', theme === 'light');
-            }
+            const theme = localStorage.getItem('medTheme') || 'dark';
+            state.ui.theme = theme;
+            document.body.className = theme;
+            
             updateSearchHistoryDatalist();
         } catch (error) { console.error("Error cargando estado:", error); localStorage.clear(); }
     }
@@ -124,45 +123,64 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyFiltersAndSearch() {
         const searchTerm = normalizeText(state.ui.searchTerm);
         let filteredMeds = [...state.medications.all];
-
+    
+        // 1. Filtro de Vista (Favoritos)
         if (state.ui.view === 'favorites') {
             filteredMeds = filteredMeds.filter(med => state.favorites.has(med.originalIndex));
         }
-
+    
+        // 2. Filtro de Búsqueda
         if (searchTerm) {
-            filteredMeds = filteredMeds.filter(med => 
+            filteredMeds = filteredMeds.filter(med =>
                 normalizeText(med.name).includes(searchTerm) ||
                 normalizeText(med.family).includes(searchTerm) ||
                 normalizeText(med.uses).includes(searchTerm)
             );
         } else {
-            if (state.ui.view === 'medications' && state.ui.activeFamily !== 'Todos') {
+            // 3. Filtros de Familia y Avanzados (solo si no hay término de búsqueda)
+            if (state.ui.activeFamily !== 'Todos') {
                 filteredMeds = filteredMeds.filter(med => med.simpleFamily === state.ui.activeFamily);
             }
-
+    
             const advanced = state.ui.advancedFilters;
-            if (Object.keys(advanced).length > 0) {
-                if (advanced.families?.length) {
-                    filteredMeds = filteredMeds.filter(med => advanced.families.includes(med.simpleFamily));
-                }
-                if (advanced.presentations?.length) {
-                    filteredMeds = filteredMeds.filter(med => 
-                        advanced.presentations.some(p => normalizeText(med.presentation).includes(normalizeText(p).replace(/s\b/, '')))
-                    );
-                }
-                if (advanced.conditions?.length) {
-                    filteredMeds = filteredMeds.filter(med => {
-                        return advanced.conditions.every(condition => {
-                            if (condition === 'renalDoseAdjust') return med.renalDoseAdjust?.enabled;
-                            if (condition === 'pregnancySafe') return med.pregnancy?.toLowerCase().includes('seguro') || med.pregnancy?.toLowerCase().includes('categoría a');
-                            if (condition === 'lactationSafe') return med.lactation?.toLowerCase().includes('seguro');
-                            return true;
-                        });
+            if (advanced.families?.length) {
+                filteredMeds = filteredMeds.filter(med => advanced.families.includes(med.simpleFamily));
+            }
+            if (advanced.presentations?.length) {
+                filteredMeds = filteredMeds.filter(med =>
+                    advanced.presentations.some(p => normalizeText(med.presentation).includes(normalizeText(p).replace(/s\b/, '')))
+                );
+            }
+            if (advanced.conditions?.length) {
+                filteredMeds = filteredMeds.filter(med => {
+                    return advanced.conditions.every(condition => {
+                        if (condition === 'renalDoseAdjust') return med.renalDoseAdjust?.enabled;
+                        if (condition === 'pregnancySafe') return med.pregnancy?.toLowerCase().includes('seguro') || med.pregnancy?.toLowerCase().includes('categoría a');
+                        if (condition === 'lactationSafe') return med.lactation?.toLowerCase().includes('seguro');
+                        return true;
                     });
-                }
+                });
             }
         }
-        
+    
+        // 4. Filtro de Perfil de Paciente (se aplica a los resultados de los filtros anteriores)
+        const profileFilters = state.ui.patientProfile;
+        if (profileFilters.size > 0) {
+            filteredMeds = filteredMeds.filter(med => {
+                let passes = true;
+                if (profileFilters.has('pregnancy') && !(med.pregnancy?.toLowerCase().includes('seguro') || med.pregnancy?.toLowerCase().includes('categoría a'))) {
+                    passes = false;
+                }
+                if (profileFilters.has('lactation') && !med.lactation?.toLowerCase().includes('seguro')) {
+                    passes = false;
+                }
+                if (profileFilters.has('renal') && !med.renalDoseAdjust?.enabled) {
+                    passes = false;
+                }
+                return passes;
+            });
+        }
+    
         return filteredMeds;
     }
 
@@ -254,27 +272,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkInteractions(selectedMedNames, resultsContent) {
-        if (selectedMedNames.length < 2) { resultsContent.innerHTML = '<p class="text-slate-500">Seleccione al menos dos medicamentos.</p>'; return; }
+        if (selectedMedNames.length < 2) {
+            resultsContent.innerHTML = '<p class="text-slate-500">Seleccione al menos dos medicamentos.</p>';
+            return;
+        }
+    
         const interactions = new Set();
-        const selectedMeds = state.medications.all.filter(med => selectedMedNames.includes(med.name));
-        for (let i = 0; i < selectedMeds.length; i++) {
-            for (let j = i + 1; j < selectedMeds.length; j++) {
-                const med1 = selectedMeds[i], med2 = selectedMeds[j];
-                if (med1.interactions) {
-                    for (const level in med1.interactions) {
-                        med1.interactions[level].forEach(desc => { if (normalizeText(desc).includes(normalizeText(med2.name))) interactions.add(JSON.stringify({ meds: [med1.name, med2.name].sort(), level, description: desc })); });
+        const selectedMedsData = state.medications.all.filter(med => selectedMedNames.includes(med.name));
+        let hasIncompleteData = false;
+    
+        for (let i = 0; i < selectedMedsData.length; i++) {
+            for (let j = i + 1; j < selectedMedsData.length; j++) {
+                const med1 = selectedMedsData[i];
+                const med2 = selectedMedsData[j];
+    
+                if (!med1.interactions || med1.interactions.startsWith('Completar con')) hasIncompleteData = true;
+                if (!med2.interactions || med2.interactions.startsWith('Completar con')) hasIncompleteData = true;
+
+                if (med1.interactions && typeof med1.interactions === 'string' && !med1.interactions.startsWith('Completar con')) {
+                    if (normalizeText(med1.interactions).includes(normalizeText(med2.name))) {
+                         interactions.add(JSON.stringify({ meds: [med1.name, med2.name].sort(), level: 'moderate', description: med1.interactions }));
                     }
                 }
-                if (med2.interactions) {
-                    for (const level in med2.interactions) {
-                        med2.interactions[level].forEach(desc => { if (normalizeText(desc).includes(normalizeText(med1.name))) interactions.add(JSON.stringify({ meds: [med2.name, med1.name].sort(), level, description: desc })); });
+                 if (med2.interactions && typeof med2.interactions === 'string' && !med2.interactions.startsWith('Completar con')) {
+                    if (normalizeText(med2.interactions).includes(normalizeText(med1.name))) {
+                         interactions.add(JSON.stringify({ meds: [med1.name, med2.name].sort(), level: 'moderate', description: med2.interactions }));
                     }
                 }
             }
         }
+    
         const uniqueInteractions = Array.from(interactions).map(item => JSON.parse(item));
-        if (uniqueInteractions.length === 0) { resultsContent.innerHTML = '<div class="info-box-success"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg><p>No se encontraron interacciones conocidas.</p></div>'; }
-        else { resultsContent.innerHTML = uniqueInteractions.map(int => `<div class="interaction-item"><p><strong>${int.meds[0]} + ${int.meds[1]}</strong></p><p class="level-${int.level}">${int.level.charAt(0).toUpperCase() + int.level.slice(1)}: ${int.description}</p></div>`).join(''); }
+        let resultsHTML = '';
+    
+        if (uniqueInteractions.length === 0) {
+            resultsHTML += `<div class="info-box-success"><i class='bx bxs-check-circle text-2xl'></i><p>No se encontraron interacciones conocidas entre los medicamentos seleccionados.</p></div>`;
+        } else {
+            resultsHTML += uniqueInteractions.map(int => `
+                <div class="interaction-item">
+                    <p><strong>${int.meds[0]} + ${int.meds[1]}</strong></p>
+                    <p class="level-${int.level}">${int.level.charAt(0).toUpperCase() + int.level.slice(1)}: ${int.description}</p>
+                </div>`).join('');
+        }
+    
+        if (hasIncompleteData) {
+            resultsHTML += `<div class="info-box-warning mt-4"><i class='bx bxs-error-alt text-2xl'></i><p>Nota: La información sobre interacciones para uno o más de los medicamentos seleccionados está incompleta. Consulte referencias adicionales.</p></div>`;
+        }
+    
+        resultsContent.innerHTML = resultsHTML;
     }
 
     function renderMedications(meds) {
@@ -305,6 +350,18 @@ document.addEventListener('DOMContentLoaded', () => {
         'Dermatológicos': { color: 'card-color-default', box_icon: 'bxs-hand' },
         'Neurológicos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-brain' },
         'Oftalmológicos': { color: 'card-color-antibioticos', box_icon: 'bxs-show' },
+        'Anticonvulsivos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-brain' },
+        'Urológicos y Salud Masculina': { color: 'card-color-antibioticos', box_icon: 'bxs-user' },
+        'Antivertiginosos': { color: 'card-color-default', box_icon: 'bxs-dizzy' },
+        'Psiquiátricos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-user-voice' },
+        'Antimicóticos': { color: 'card-color-antibioticos', box_icon: 'bxs-bug-alt' },
+        'Ginecológicos': { color: 'card-color-antihipertensivos', box_icon: 'bxs-female' },
+        'Endocrinológicos': { color: 'card-color-antidiabeticos', box_icon: 'bxs-injection' },
+        'Inmunomoduladores': { color: 'card-color-respiratorios', box_icon: 'bxs-shield-check' },
+        'Antianémicos': { color: 'card-color-antihipertensivos', box_icon: 'bxs-droplet-half' },
+        'Antídotos': { color: 'card-color-default', box_icon: 'bxs-skull' },
+        'Anestésicos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-sleepy' },
+        'Diuréticos': { color: 'card-color-antibioticos', box_icon: 'bxs-washer' },
         'default': { color: 'card-color-default', box_icon: 'bxs-first-aid' }
     };
 
@@ -343,9 +400,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-
+    
     function createAccordionItem(title, content) {
-        if (!content || content.startsWith('Completar con')) return '';
+        if (!content || (typeof content === 'string' && content.startsWith('Completar con'))) return '';
+        const contentHtml = typeof content === 'string' ? `<p>${content.replace(/\n/g, '<br>')}</p>` : `<p>${JSON.stringify(content, null, 2)}</p>`;
         return `
             <div class="accordion-item">
                 <div class="accordion-header">
@@ -353,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class='bx bx-chevron-down'></i>
                 </div>
                 <div class="accordion-content">
-                    <p>${content.replace(/\n/g, '<br>')}</p>
+                    ${contentHtml}
                 </div>
             </div>`;
     }
@@ -368,7 +426,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h2 id="modalTitle" class="text-2xl font-bold">${med.name}</h2>
                     <p class="text-slate-600">${med.presentation}</p>
                 </div>
-                <button id="modalFavButton" class="text-3xl favorite-btn-modal ${isFavorite ? 'is-favorite' : ''}" aria-label="Añadir a favoritos"><i class='bx bxs-star'></i></button>
+                <div class="flex items-center gap-2">
+                    <button id="printModalBtn" class="text-2xl text-slate-500 hover:text-blue-600" aria-label="Imprimir"><i class='bx bxs-printer'></i></button>
+                    <button id="modalFavButton" class="text-3xl favorite-btn-modal ${isFavorite ? 'is-favorite' : ''}" aria-label="Añadir a favoritos"><i class='bx bxs-star'></i></button>
+                </div>
             </div>
             <div class="p-6 overflow-y-auto">
                 <div class="space-y-4">
@@ -376,15 +437,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         <i class='bx bxs-check-circle text-2xl'></i>
                         <div><strong>Indicaciones:</strong> ${med.indications || 'No especificadas'}</div>
                     </div>
-                    <div class="info-box-danger animate__animated animate__fadeInUp" style="animation-delay: 250ms;">
-                        <i class='bx bxs-x-circle text-2xl'></i>
-                        <div><strong>Contraindicaciones:</strong> ${med.contraindications || 'No especificadas'}</div>
-                    </div>
+                    ${med.contraindications ? `<div class="info-box-danger animate__animated animate__fadeInUp" style="animation-delay: 250ms;"><i class='bx bxs-x-circle text-2xl'></i><div><strong>Contraindicaciones:</strong> ${med.contraindications}</div></div>` : ''}
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center animate__animated animate__fadeInUp" style="animation-delay: 350ms;">
                         <div class="info-box-age"><i class='bx bx-time-five text-3xl'></i><span>Edad Mínima</span><span>${med.minimumAge || '?'}</span></div>
                         <div class="info-box-pregnancy ${profile.has('pregnancy') ? 'info-box-highlight' : ''}"><i class='bx bx-female text-3xl'></i><span>Embarazo</span><span>${med.pregnancy || 'N/A'}</span></div>
-                        <div class="info-box-lactation ${profile.has('lactation') ? 'info-box-highlight' : ''}"><i class='bx bxs-bottle text-3xl'></i><span>Lactancia</span><span>${med.lactation || 'N/A'}</span></div>
+                        <div class="info-box-lactation ${profile.has('lactation') ? 'info-box-highlight' : ''}"><i class='bx bxs-baby-carriage text-3xl'></i><span>Lactancia</span><span>${med.lactation || 'N/A'}</span></div>
                     </div>
                     
                     <div class="bg-white p-4 rounded-lg space-y-2 animate__animated animate__fadeInUp" style="animation-delay: 450ms;">
@@ -398,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <div class="animate__animated animate__fadeInUp" style="animation-delay: 650ms;">
                         ${createAccordionItem('Mecanismo de Acción', med.mechanism)}
-                        ${createAccordionItem('Advertencias Importantes', med.important_warnings)}
+                        ${createAccordionItem('Advertencias Importantes', med.important_warnings || med.warnings)}
                         ${createAccordionItem('Interacciones', med.interactions)}
                         ${createAccordionItem('Ajuste Renal', med.renal_adjustment)}
                         ${createAccordionItem('Ajuste Hepático', med.hepatic_adjustment)}
@@ -406,7 +464,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <div class="modal-footer p-4 flex justify-end">
-                <button id="printModalBtn" class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors mr-2">Imprimir</button>
                 <button id="closeModalBtn" class="px-5 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300 transition-colors">Cerrar</button>
             </div>
         `;
@@ -573,7 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function clearAdvancedFilters(shouldUpdateDisplay = true) {
         selectors.advancedFilterPanel.querySelectorAll('input:checked').forEach(input => input.checked = false);
         state.ui.advancedFilters = {};
-        selectors.advancedFilterCount.textContent = 0;
+        selectors.advancedFilterCount.textContent = '';
         selectors.advancedFilterCount.classList.add('hidden');
         if (shouldUpdateDisplay) {
             updateDisplay();
@@ -591,7 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.toggle('active');
             if (state.ui.patientProfile.has(profile)) state.ui.patientProfile.delete(profile);
             else state.ui.patientProfile.add(profile);
-            updateDisplay();
+            updateDisplay(); // Re-renderiza la lista de medicamentos con el filtro de perfil
         });
     }
 
@@ -638,8 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         selectors.themeToggleBtn.addEventListener('click', () => {
             state.ui.theme = state.ui.theme === 'dark' ? 'light' : 'dark';
-            document.body.classList.toggle('dark', state.ui.theme === 'dark');
-            document.body.classList.toggle('light', state.ui.theme === 'light');
+            document.body.className = state.ui.theme;
             saveThemePreference();
         });
 
@@ -653,6 +709,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('keydown', (e) => { if (e.key === "Escape" && !selectors.modal.classList.contains('hidden')) closeModal(); });
+   
+        // Botón "Volver Arriba"
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                selectors.backToTopBtn.classList.add('show');
+            } else {
+                selectors.backToTopBtn.classList.remove('show');
+            }
+        });
+        selectors.backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     }
 
     // --- FUNCIÓN DE INICIO ---
@@ -675,6 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             state.medications.uniqueFamilies = [...new Set(state.medications.all.map(m => m.simpleFamily).filter(Boolean))].sort();
             
+            // Lógica mejorada para clasificar presentaciones
             const presentationMap = {
                 'Tabletas/Cápsulas': ['tableta', 'cápsula', 'perlas', 'grageas', 'comprimido'],
                 'Líquidos Orales': ['jarabe', 'suspensi', 'gotas', 'soluci'],
