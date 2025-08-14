@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
             searchTerm: '',
             advancedFilters: {},
             patientProfile: new Set(),
+            theme: 'dark', // 'dark' o 'light'
         },
         searchHistory: [],
     };
@@ -57,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         advancedFilterPanel: document.getElementById('advanced-filter-panel'),
         advancedFilterCount: document.getElementById('advanced-filter-count'),
         patientProfileControls: document.getElementById('patient-profile-controls'),
+        themeToggleBtn: document.getElementById('theme-toggle'),
     };
     
     // --- DECLARACIÓN DE FUNCIONES ---
@@ -87,6 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (favs) state.favorites = new Set(JSON.parse(favs));
             const history = localStorage.getItem('medSearchHistory');
             if (history) state.searchHistory = JSON.parse(history);
+            const theme = localStorage.getItem('medTheme');
+            if (theme) {
+                state.ui.theme = theme;
+                document.body.classList.toggle('dark', theme === 'dark');
+                document.body.classList.toggle('light', theme === 'light');
+            }
             updateSearchHistoryDatalist();
         } catch (error) { console.error("Error cargando estado:", error); localStorage.clear(); }
     }
@@ -95,6 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function saveSearchHistory() { localStorage.setItem('medSearchHistory', JSON.stringify(state.searchHistory)); updateSearchHistoryDatalist(); }
     
+    function saveThemePreference() { localStorage.setItem('medTheme', state.ui.theme); }
+
     function updateSearchHistoryDatalist() { selectors.searchHistoryDatalist.innerHTML = state.searchHistory.map(term => `<option value="${term}"></option>`).join(''); }
     
     function toggleFavorite(medId, button) {
@@ -322,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function renderTheme(themeId) {
         const theme = clinicalThemes[themeId];
-        selectors.themesSection.innerHTML = (theme && theme.content) ? `<div class="prose">${theme.content}</div>` : `<p class="text-center p-8">Contenido no encontrado.</p>`;
+        selectors.themesSection.innerHTML = (theme && theme.content) ? `<div class="prose max-w-none">${theme.content}</div>` : `<p class="text-center p-8">Contenido no encontrado.</p>`;
         if (theme) {
             selectors.themesSection.querySelectorAll('.med-link').forEach(link => {
                 link.addEventListener('click', e => {
@@ -332,6 +342,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         }
+    }
+
+    function createAccordionItem(title, content) {
+        if (!content || content.startsWith('Completar con')) return '';
+        return `
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <span>${title}</span>
+                    <i class='bx bx-chevron-down'></i>
+                </div>
+                <div class="accordion-content">
+                    <p>${content.replace(/\n/g, '<br>')}</p>
+                </div>
+            </div>`;
     }
 
     function openModal(med) {
@@ -371,9 +395,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                     ${med.isCalculable ? `<div class="calculator-card !bg-white animate__animated animate__fadeInUp" style="animation-delay: 550ms;"><div class="calculator-header !bg-slate-200 !text-slate-800"><i class='bx bxs-calculator text-2xl'></i><h4 class="font-bold">Calculadora de Dosis Pediátrica</h4></div><div class="calculator-body"><input type="number" id="patientWeight" placeholder="Peso del paciente en kg" class="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><button id="calculateDoseBtn" class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">Calcular Dosis</button></div><div id="doseResult" class="calculator-result"></div></div>` : ''}
+                    
+                    <div class="animate__animated animate__fadeInUp" style="animation-delay: 650ms;">
+                        ${createAccordionItem('Mecanismo de Acción', med.mechanism)}
+                        ${createAccordionItem('Advertencias Importantes', med.important_warnings)}
+                        ${createAccordionItem('Interacciones', med.interactions)}
+                        ${createAccordionItem('Ajuste Renal', med.renal_adjustment)}
+                        ${createAccordionItem('Ajuste Hepático', med.hepatic_adjustment)}
+                    </div>
                 </div>
             </div>
             <div class="modal-footer p-4 flex justify-end">
+                <button id="printModalBtn" class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors mr-2">Imprimir</button>
                 <button id="closeModalBtn" class="px-5 py-2 bg-slate-200 text-slate-800 rounded-md hover:bg-slate-300 transition-colors">Cerrar</button>
             </div>
         `;
@@ -383,8 +416,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'hidden';
         
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+        document.getElementById('printModalBtn').addEventListener('click', () => window.print());
         document.getElementById('modalFavButton').addEventListener('click', (e) => toggleFavorite(med.originalIndex, e.currentTarget));
         if (med.isCalculable) setupDoseCalculator(med);
+
+        // Activar acordeones
+        selectors.modalContent.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                item.classList.toggle('active');
+            });
+        });
     }
     
     function setupDoseCalculator(med) {
@@ -594,6 +636,13 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.themesDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(e.currentTarget, selectors.themesDropdownPanel); });
         selectors.advancedFilterBtn.addEventListener('click', () => selectors.advancedFilterPanel.classList.toggle('hidden'));
         
+        selectors.themeToggleBtn.addEventListener('click', () => {
+            state.ui.theme = state.ui.theme === 'dark' ? 'light' : 'dark';
+            document.body.classList.toggle('dark', state.ui.theme === 'dark');
+            document.body.classList.toggle('light', state.ui.theme === 'light');
+            saveThemePreference();
+        });
+
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.dropdown-wrapper')) {
                 closeAllDropdowns();
@@ -626,7 +675,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             state.medications.uniqueFamilies = [...new Set(state.medications.all.map(m => m.simpleFamily).filter(Boolean))].sort();
             
-            // Lógica mejorada para clasificar presentaciones
             const presentationMap = {
                 'Tabletas/Cápsulas': ['tableta', 'cápsula', 'perlas', 'grageas', 'comprimido'],
                 'Líquidos Orales': ['jarabe', 'suspensi', 'gotas', 'soluci'],
