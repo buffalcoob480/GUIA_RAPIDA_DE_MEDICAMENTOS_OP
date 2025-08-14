@@ -1,49 +1,241 @@
-/* ---- INICIO DE CORRECCIONES ---- */
+/* --- GUÍA FARMACOLÓGICA Y CLÍNICA - STYLE.CSS --- */
 
-/* CORRECCIÓN: Barra de filtros pegajosa para evitar superposición */
-#controls-container {
-    position: sticky;
-    top: 0;
-    z-index: 40; /* Prioridad de capa para que esté por encima de las tarjetas */
-    background-color: #0f172a; /* Fondo para el tema oscuro, ajusta si es necesario */
-    padding-top: 1.5rem;
-    padding-bottom: 1rem;
-    margin-bottom: 0 !important; /* Asegura que no haya margen extra abajo */
+/* 1. CONFIGURACIÓN GENERAL Y VARIABLES
+-------------------------------------------------- */
+:root {
+    --primary-bg-dark: #0f172a; /* Azul pizarra oscuro */
+    --secondary-bg-dark: #1e293b; /* Azul pizarra más claro */
+    --primary-text-dark: #e2e8f0; /* Texto claro */
+    --secondary-text-dark: #94a3b8; /* Texto grisáceo */
+    --accent-color: #3b82f6; /* Azul brillante */
+
+    --primary-bg-light: #ffffff;
+    --secondary-bg-light: #f1f5f9; /* Gris muy claro */
+    --primary-text-light: #0f172a;
+    --secondary-text-light: #475569;
 }
-
-/* Modo claro para la barra de filtros */
-html:not(.dark) #controls-container {
-    background-color: #ffffff; /* Fondo para el tema claro */
-}
-
-
-/* CORRECCIÓN ACCESIBILIDAD: Aumentar el tamaño de los botones para ser más fáciles de presionar */
-.filter-controls .dropdown-btn {
-    padding: 12px; /* Aumenta el área clicable */
-    min-height: 48px;
-    min-width: 48px;
-    box-sizing: border-box; /* Asegura que el padding no afecte el tamaño final de forma inesperada */
-}
-
-/* ---- FIN DE CORRECCIONES ---- */
-
-/* Aquí puedes añadir el resto de tus estilos personalizados si los tienes */
 
 body {
-    background-color: #0f172a; /* Color de fondo oscuro por defecto */
-    color: #e2e8f0;
     font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Estilos para el tema claro */
-html:not(.dark) body {
-    background-color: #ffffff;
-    color: #1e293b;
+/* 2. TEMAS OSCURO Y CLARO
+-------------------------------------------------- */
+body.dark {
+    background-color: var(--primary-bg-dark);
+    color: var(--primary-text-dark);
 }
 
-/* Otros estilos de tu aplicación... */
+body:not(.dark) {
+    background-color: var(--primary-bg-light);
+    color: var(--primary-text-light);
+}
+
+/* 3. ENCABEZADO Y CONTROLES PRINCIPALES
+-------------------------------------------------- */
 .theme-switcher-wrapper {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+.theme-toggle-btn {
+    background: var(--secondary-bg-dark);
+    border: 1px solid #334155;
+    border-radius: 9999px;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+}
+
+body:not(.dark) .theme-toggle-btn {
+    background: var(--secondary-bg-light);
+    border-color: #e2e8f0;
+}
+
+.theme-toggle-btn .bxs-sun { display: none; }
+.theme-toggle-btn .bxs-moon { display: block; color: var(--primary-text-dark); }
+body:not(.dark) .theme-toggle-btn .bxs-sun { display: block; color: var(--primary-text-light); }
+body:not(.dark) .theme-toggle-btn .bxs-moon { display: none; }
+
+
+/* --- CORRECCIÓN DE ERRORES --- */
+#controls-container {
+    position: sticky;
+    top: 0;
+    z-index: 40; /* Mantiene los controles por encima del contenido */
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    transition: background-color 0.3s;
+}
+body.dark #controls-container { background-color: var(--primary-bg-dark); }
+body:not(.dark) #controls-container { background-color: var(--primary-bg-light); }
+
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 1.25rem;
+    transform: translateY(-50%);
+    color: var(--secondary-text-dark);
+    font-size: 1.25rem;
+}
+body:not(.dark) .search-icon { color: var(--secondary-text-light); }
+
+#searchBar {
+    padding-left: 3.5rem; /* Espacio para el icono */
+    background-color: var(--secondary-bg-dark);
+    border: 1px solid #334155;
+}
+body:not(.dark) #searchBar {
+    background-color: var(--secondary-bg-light);
+    border-color: #cbd5e1;
+}
+#searchBar:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+    outline: none;
+}
+
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.dropdown-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem; /* Aumenta el área clicable */
+    min-height: 48px; /* Tamaño mínimo para accesibilidad */
+    min-width: 48px;
+    box-sizing: border-box;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+}
+body.dark .dropdown-btn {
+    background-color: var(--secondary-bg-dark);
+    color: var(--primary-text-dark);
+}
+body:not(.dark) .dropdown-btn {
+    background-color: var(--secondary-bg-light);
+    color: var(--primary-text-light);
+}
+.dropdown-btn:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+.dropdown-btn.active {
+    background-color: var(--accent-color);
+    color: white;
+}
+.dropdown-wrapper { position: relative; }
+.dropdown-panel {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: var(--secondary-bg-dark);
+    border: 1px solid #334155;
+    border-radius: 0.75rem;
+    padding: 0.5rem;
+    min-width: 200px;
+    z-index: 50;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+body:not(.dark) .dropdown-panel {
+    background-color: var(--primary-bg-light);
+    border-color: #cbd5e1;
+}
+
+/* 4. TARJETAS DE MEDICAMENTOS Y LOADER
+-------------------------------------------------- */
+.medication-card {
+    background: linear-gradient(145deg, #2a3a50, #1e293b);
+    border: 1px solid #334155;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+body:not(.dark) .medication-card {
+    background: var(--primary-bg-light);
+    border-color: #e2e8f0;
+    color: var(--primary-text-light);
+}
+
+.medication-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.card-family-tag { background-color: var(--accent-color); color: white; }
+
+.card-footer { border-color: rgba(255,255,255,0.2); }
+body:not(.dark) .card-footer { border-color: #e2e8f0; }
+
+.skeleton-card {
+    background-color: var(--secondary-bg-dark);
+    border-radius: 0.5rem;
+    height: 220px;
+    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+body:not(.dark) .skeleton-card {
+    background-color: #e2e8f0;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+
+/* 5. VENTANA MODAL Y OTROS COMPONENTES
+-------------------------------------------------- */
+#medicationModal {
+    z-index: 100; /* Debe estar por encima de todo */
+}
+
+#modal-content-wrapper {
+    background-color: var(--secondary-bg-dark);
+}
+body:not(.dark) #modal-content-wrapper {
+    background-color: var(--primary-bg-light);
+}
+
+.back-to-top-btn {
+    position: fixed;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    background-color: var(--accent-color);
+    color: white;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    display: none; /* Se muestra con JS */
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    z-index: 50;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#toast-notification {
+    z-index: 110;
+}
+body.dark #toast-notification {
+    background-color: #2a3a50;
+    color: white;
+}
+body:not(.dark) #toast-notification {
+    background-color: #334155;
+    color: white;
 }
