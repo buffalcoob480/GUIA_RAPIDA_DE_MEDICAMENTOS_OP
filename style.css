@@ -16,10 +16,11 @@ body.dark .dropdown-panel { background-color: #1e293b; border: 1px solid #334155
 body.dark .filter-btn, body.dark .theme-btn { color: #cbd5e1; }
 body.dark .filter-btn:hover, body.dark .theme-btn:hover { background-color: #334155; }
 body.dark .filter-btn.active, body.dark .theme-btn.active { background-color: #4f46e5; color: white; }
-body.dark #patient-profile-section, body.dark #advanced-filter-panel { background-color: #1e293b; border-color: #334155; }
+body.dark #advanced-filter-panel { background-color: #1e293b; border-color: #334155; }
+body.dark .patient-profile-bar { background-color: #1e293b; border-color: #334155; color: #cbd5e1;}
 body.dark .profile-btn { color: #cbd5e1; border-color: #475569; }
 body.dark .profile-btn:hover { background-color: #334155; }
-body.dark .profile-btn.active { background-color: #4f46e5; border-color: #4f46e5; }
+body.dark .profile-btn.active { background-color: #4f46e5; border-color: #4f46e5; color:white; }
 body.dark .skeleton-card { background-color: #334155; }
 body.dark footer { border-color: #334155; color: #64748b;}
 body.dark .prose { color: #d1d5db; }
@@ -38,8 +39,9 @@ body.light .dropdown-panel { background-color: #ffffff; border: 1px solid #e2e8f
 body.light .filter-btn, body.light .theme-btn { color: #475569; }
 body.light .filter-btn:hover, body.light .theme-btn:hover { background-color: #f1f5f9; }
 body.light .filter-btn.active, body.light .theme-btn.active { background-color: #4f46e5; color: white; }
-body.light #patient-profile-section, body.light #advanced-filter-panel { background-color: #ffffff; border-color: #e2e8f0; }
+body.light #advanced-filter-panel { background-color: #ffffff; border-color: #e2e8f0; }
 body.light h3 { color: #334155; }
+body.light .patient-profile-bar { background-color: #ffffff; border-color: #e2e8f0; color: #475569;}
 body.light .profile-btn { color: #475569; border-color: #cbd5e1; }
 body.light .profile-btn:hover { background-color: #f1f5f9; }
 body.light .profile-btn.active { background-color: #4f46e5; border-color: #4f46e5; color: white; }
@@ -127,6 +129,23 @@ body.dark .theme-toggle-btn .bxs-sun { display: none; }
 
 
 /* --- PERFIL PACIENTE Y FILTROS AVANZADOS --- */
+.patient-profile-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    border: 1px solid;
+    margin-top: 1rem; /* Asegura espacio con los controles de arriba */
+}
+.profile-icon { font-size: 1.5rem; }
+.profile-title { font-weight: 600; }
+#patient-profile-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
 #advanced-filter-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
 .adv-filter-group h4 { font-weight: 600; margin-bottom: 0.5rem; }
 .adv-filter-group label { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
@@ -194,12 +213,13 @@ body.light .medication-card:hover {
 .accordion-header .bx-chevron-down { transition: transform 0.3s ease; }
 .accordion-item.active .accordion-header .bx-chevron-down { transform: rotate(180deg); }
 
-
 /* --- INTERACTION CHECKER --- */
 .interaction-item { border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem; margin-bottom: 0.75rem; }
 body.dark .interaction-item { border-color: #334155; }
 .level-severe { color: #b91c1c; }
 .level-moderate { color: #d97706; }
+.selected-med-pill { display: inline-flex; align-items: center; background-color: #4f46e5; color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; margin: 0.25rem; font-size: 0.875rem;}
+.remove-med-btn { margin-left: 0.5rem; background: none; border: none; color: white; cursor: pointer; font-size: 1rem; }
 
 /* --- BOTÓN VOLVER ARRIBA --- */
 .back-to-top-btn {
@@ -230,10 +250,12 @@ body.dark .interaction-item { border-color: #334155; }
 /* --- ESTILOS DE IMPRESIÓN --- */
 @media print {
     body { background-color: #ffffff !important; color: #000000 !important; }
-    .main-content, .search-wrapper, .filter-controls, #patient-profile-section, #advanced-filter-panel, footer, #toast-notification, .modal-footer, .favorite-btn-modal, .theme-switcher-wrapper, .back-to-top-btn { display: none !important; }
+    #controls-section, #patient-profile-section, #advanced-filter-panel, footer, #toast-notification, .modal-footer, .favorite-btn-modal, .theme-switcher-wrapper, .back-to-top-btn { display: none !important; }
     #medicationModal { position: static; display: block !important; background-color: transparent; padding: 0; }
     #modal-content-wrapper { box-shadow: none; border: none; max-height: none; height: auto; }
-    .modal-header { background-color: transparent; }
+    .modal-header, .modal-header div { display: block; text-align: left; }
+    .modal-header button { display: none; }
     .info-box-success, .info-box-danger { border: 1px solid #ccc; }
+    .accordion-item { page-break-inside: avoid; }
     .accordion-item.active .accordion-content { max-height: none; }
 }
