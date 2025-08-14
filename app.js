@@ -167,17 +167,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const profileFilters = state.ui.patientProfile;
         if (profileFilters.size > 0) {
             filteredMeds = filteredMeds.filter(med => {
-                let passes = true;
-                if (profileFilters.has('pregnancy') && !(med.pregnancy?.toLowerCase().includes('seguro') || med.pregnancy?.toLowerCase().includes('categoría a'))) {
-                    passes = false;
-                }
-                if (profileFilters.has('lactation') && !med.lactation?.toLowerCase().includes('seguro')) {
-                    passes = false;
-                }
-                if (profileFilters.has('renal') && !med.renalDoseAdjust?.enabled) {
-                    passes = false;
-                }
-                return passes;
+                return Array.from(profileFilters).every(profile => {
+                    if (profile === 'pregnancy') return med.pregnancy?.toLowerCase().includes('seguro') || med.pregnancy?.toLowerCase().includes('categoría a');
+                    if (profile === 'lactation') return med.lactation?.toLowerCase().includes('seguro');
+                    if (profile === 'renal') return med.renalDoseAdjust?.enabled;
+                    return true;
+                });
             });
         }
     
@@ -231,49 +226,81 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderInteractionChecker() {
         selectors.interactionSection.innerHTML = `
             <div class="interaction-checker-container">
-                <div class="interaction-header"><h2>Verificador de Interacciones</h2><p>Seleccione dos o más medicamentos para verificar.</p></div>
-                <div class="interaction-body">
-                    <div>
-                        <div class="interaction-selection-controls">
-                            <input type="text" id="interaction-search" class="interaction-search-bar" placeholder="Filtrar medicamentos...">
-                            <div class="interaction-selection-info"><span id="selection-count">0 seleccionados</span><button id="clear-selection" class="clear-selection-btn">Limpiar</button></div>
-                        </div>
-                        <div class="med-selection-list">${state.medications.all.map(med => `<button class="interaction-med-btn" data-med-name="${med.name}">${med.name}</button>`).join('')}</div>
-                    </div>
-                    <div class="interaction-results"><h3>Resultados</h3><div id="interaction-results-content"><p class="text-slate-500">Seleccione medicamentos.</p></div></div>
+                <h2>Verificador de Interacciones</h2>
+                <p class="mb-4">Seleccione dos o más medicamentos para verificar posibles interacciones.</p>
+                
+                <div class="mb-4">
+                    <input type="text" id="interaction-search" class="w-full p-2 border rounded" placeholder="Buscar medicamento para añadir...">
+                    <div id="search-suggestions" class="search-suggestions"></div>
                 </div>
+
+                <div id="selected-meds-container" class="selected-meds-container mb-4">
+                    <span class="text-slate-500">No hay medicamentos seleccionados.</span>
+                </div>
+                
+                <div id="interaction-results-content"></div>
             </div>`;
-        const medButtons = Array.from(selectors.interactionSection.querySelectorAll('.interaction-med-btn'));
-        const resultsContent = document.getElementById('interaction-results-content');
+    
         const searchInput = document.getElementById('interaction-search');
-        const selectionCount = document.getElementById('selection-count');
-        const clearButton = document.getElementById('clear-selection');
+        const suggestionsContainer = document.getElementById('search-suggestions');
+        const selectedContainer = document.getElementById('selected-meds-container');
+        const resultsContent = document.getElementById('interaction-results-content');
         let selectedMeds = [];
-        const updateSelectionCount = () => { selectionCount.textContent = `${selectedMeds.length} seleccionados`; };
-        const handleSelection = (btn) => {
-            btn.classList.toggle('selected');
-            const medName = btn.dataset.medName;
-            const index = selectedMeds.indexOf(medName);
-            (index > -1) ? selectedMeds.splice(index, 1) : selectedMeds.push(medName);
-            updateSelectionCount();
+    
+        const renderSelected = () => {
+            if (selectedMeds.length === 0) {
+                selectedContainer.innerHTML = '<span class="text-slate-500">No hay medicamentos seleccionados.</span>';
+            } else {
+                selectedContainer.innerHTML = selectedMeds.map(name => `
+                    <div class="selected-med-pill">
+                        <span>${name}</span>
+                        <button class="remove-med-btn" data-med-name="${name}">&times;</button>
+                    </div>
+                `).join('');
+            }
             checkInteractions(selectedMeds, resultsContent);
         };
-        medButtons.forEach(btn => btn.addEventListener('click', () => handleSelection(btn)));
+    
         searchInput.addEventListener('input', debounce((e) => {
             const term = normalizeText(e.target.value);
-            medButtons.forEach(btn => { btn.style.display = normalizeText(btn.dataset.medName).includes(term) ? '' : 'none'; });
+            suggestionsContainer.innerHTML = '';
+            if (term.length > 1) {
+                const suggestions = state.medications.all
+                    .filter(med => normalizeText(med.name).includes(term) && !selectedMeds.includes(med.name))
+                    .slice(0, 5);
+                if (suggestions.length > 0) {
+                    suggestionsContainer.style.display = 'block';
+                    suggestions.forEach(med => {
+                        const li = document.createElement('li');
+                        li.textContent = med.name;
+                        li.addEventListener('click', () => {
+                            selectedMeds.push(med.name);
+                            searchInput.value = '';
+                            suggestionsContainer.style.display = 'none';
+                            renderSelected();
+                        });
+                        suggestionsContainer.appendChild(li);
+                    });
+                } else {
+                    suggestionsContainer.style.display = 'none';
+                }
+            } else {
+                suggestionsContainer.style.display = 'none';
+            }
         }));
-        clearButton.addEventListener('click', () => {
-            selectedMeds = [];
-            medButtons.forEach(btn => btn.classList.remove('selected'));
-            updateSelectionCount();
-            checkInteractions(selectedMeds, resultsContent);
+    
+        selectedContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-med-btn')) {
+                const medName = e.target.dataset.medName;
+                selectedMeds = selectedMeds.filter(name => name !== medName);
+                renderSelected();
+            }
         });
     }
 
     function checkInteractions(selectedMedNames, resultsContent) {
         if (selectedMedNames.length < 2) {
-            resultsContent.innerHTML = '<p class="text-slate-500">Seleccione al menos dos medicamentos.</p>';
+            resultsContent.innerHTML = '';
             return;
         }
     
@@ -286,15 +313,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const med1 = selectedMedsData[i];
                 const med2 = selectedMedsData[j];
     
-                if (!med1.interactions || med1.interactions.startsWith('Completar con')) hasIncompleteData = true;
-                if (!med2.interactions || med2.interactions.startsWith('Completar con')) hasIncompleteData = true;
+                if (!med1.interactions || (typeof med1.interactions === 'string' && med1.interactions.startsWith('Completar'))) hasIncompleteData = true;
+                if (!med2.interactions || (typeof med2.interactions === 'string' && med2.interactions.startsWith('Completar'))) hasIncompleteData = true;
 
-                if (med1.interactions && typeof med1.interactions === 'string' && !med1.interactions.startsWith('Completar con')) {
+                if (med1.interactions && typeof med1.interactions === 'string' && !med1.interactions.startsWith('Completar')) {
                     if (normalizeText(med1.interactions).includes(normalizeText(med2.name))) {
                          interactions.add(JSON.stringify({ meds: [med1.name, med2.name].sort(), level: 'moderate', description: med1.interactions }));
                     }
                 }
-                 if (med2.interactions && typeof med2.interactions === 'string' && !med2.interactions.startsWith('Completar con')) {
+                 if (med2.interactions && typeof med2.interactions === 'string' && !med2.interactions.startsWith('Completar')) {
                     if (normalizeText(med2.interactions).includes(normalizeText(med1.name))) {
                          interactions.add(JSON.stringify({ meds: [med1.name, med2.name].sort(), level: 'moderate', description: med2.interactions }));
                     }
@@ -308,11 +335,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (uniqueInteractions.length === 0) {
             resultsHTML += `<div class="info-box-success"><i class='bx bxs-check-circle text-2xl'></i><p>No se encontraron interacciones conocidas entre los medicamentos seleccionados.</p></div>`;
         } else {
-            resultsHTML += uniqueInteractions.map(int => `
-                <div class="interaction-item">
-                    <p><strong>${int.meds[0]} + ${int.meds[1]}</strong></p>
-                    <p class="level-${int.level}">${int.level.charAt(0).toUpperCase() + int.level.slice(1)}: ${int.description}</p>
-                </div>`).join('');
+            resultsHTML += uniqueInteractions.map(int => {
+                let icon = 'bxs-error-alt';
+                let colorClass = 'info-box-warning'; // moderate
+                return `
+                <div class="interaction-item ${colorClass} mb-4">
+                    <i class='bx ${icon} text-2xl'></i>
+                    <div>
+                        <p><strong>${int.meds[0]} + ${int.meds[1]}</strong></p>
+                        <p>${int.description}</p>
+                    </div>
+                </div>`;
+            }).join('');
         }
     
         if (hasIncompleteData) {
@@ -338,30 +372,38 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const familyConfig = {
         'Antihipertensivos': { color: 'card-color-antihipertensivos', box_icon: 'bxs-heart-pulse' },
-        'Cardiovasculares': { color: 'card-color-antihipertensivos', box_icon: 'bxs-heart-pulse' },
+        'Cardiovasculares': { color: 'card-color-antihipertensivos', box_icon: 'bxs-heart-circle' },
         'Antibióticos': { color: 'card-color-antibioticos', box_icon: 'bxs-capsule' },
-        'Antivirales': { color: 'card-color-antibioticos', box_icon: 'bxs-virus-block'},
+        'Antivirales': { color: 'card-color-antibioticos', box_icon: 'bxs-virus-block' },
+        'Antiparasitarios': { color: 'card-color-antibioticos', box_icon: 'bxs-bug-alt' },
         'Respiratorios': { color: 'card-color-respiratorios', box_icon: 'bxs-lungs' },
         'Gastrointestinales': { color: 'card-color-gastrointestinales', box_icon: 'bxs-stomach' },
-        'Antidiabéticos': { color: 'card-color-antidiabeticos', box_icon: 'bxs-droplet' },
+        'Antidiabéticos': { color: 'card-color-antidiabeticos', box_icon: 'bxs-droplet-half' },
         'Analgésicos': { color: 'card-color-analgesicos', box_icon: 'bxs-band-aid' },
         'Antialérgicos': { color: 'card-color-respiratorios', box_icon: 'bxs-shield-alt-2' },
         'Antiinflamatorios': { color: 'card-color-analgesicos', box_icon: 'bxs-hot' },
         'Dermatológicos': { color: 'card-color-default', box_icon: 'bxs-hand' },
         'Neurológicos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-brain' },
         'Oftalmológicos': { color: 'card-color-antibioticos', box_icon: 'bxs-show' },
-        'Anticonvulsivos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-brain' },
+        'Anticonvulsivos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-bolt-circle' },
         'Urológicos y Salud Masculina': { color: 'card-color-antibioticos', box_icon: 'bxs-user' },
         'Antivertiginosos': { color: 'card-color-default', box_icon: 'bxs-dizzy' },
+        'Antidepresivos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-user-voice' },
+        'Ansiolíticos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-user-voice' },
         'Psiquiátricos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-user-voice' },
-        'Antimicóticos': { color: 'card-color-antibioticos', box_icon: 'bxs-bug-alt' },
+        'Antimicóticos': { color: 'card-color-antibioticos', box_icon: 'bxs-bug' },
         'Ginecológicos': { color: 'card-color-antihipertensivos', box_icon: 'bxs-female' },
         'Endocrinológicos': { color: 'card-color-antidiabeticos', box_icon: 'bxs-injection' },
         'Inmunomoduladores': { color: 'card-color-respiratorios', box_icon: 'bxs-shield-check' },
-        'Antianémicos': { color: 'card-color-antihipertensivos', box_icon: 'bxs-droplet-half' },
+        'Antianémicos': { color: 'card-color-antihipertensivos', box_icon: 'bxs-droplet' },
         'Antídotos': { color: 'card-color-default', box_icon: 'bxs-skull' },
         'Anestésicos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-sleepy' },
         'Diuréticos': { color: 'card-color-antibioticos', box_icon: 'bxs-washer' },
+        'Hipolipemiantes': { color: 'card-color-antihipertensivos', box_icon: 'bxs-bar-chart-alt-2' },
+        'Anticoagulantes': { color: 'card-color-antihipertensivos', box_icon: 'bxs-band-aid' },
+        'Vitaminas y Suplementos': { color: 'card-color-antidiabeticos', box_icon: 'bxs-leaf' },
+        'Corticosteroides': { color: 'card-color-analgesicos', box_icon: 'bxs-briefcase-alt-2' },
+        'Antidiarreicos': { color: 'card-color-gastrointestinales', box_icon: 'bxs-minus-circle' },
         'default': { color: 'card-color-default', box_icon: 'bxs-first-aid' }
     };
 
@@ -648,7 +690,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.toggle('active');
             if (state.ui.patientProfile.has(profile)) state.ui.patientProfile.delete(profile);
             else state.ui.patientProfile.add(profile);
-            updateDisplay(); // Re-renderiza la lista de medicamentos con el filtro de perfil
+            updateDisplay();
         });
     }
 
