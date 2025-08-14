@@ -1,4 +1,4 @@
-const CACHE_NAME = 'medapp-v5'; // Versión del caché actualizada
+const CACHE_NAME = 'medapp-v6'; // Versión del caché actualizada
 const URLS_TO_CACHE = [
     './',
     './index.html',
@@ -43,14 +43,14 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // Estrategia: Stale-While-Revalidate para medicamentos.json
+    // Estrategia: Network First, falling back to Cache para medicamentos.json
     // Intenta obtener de la red primero para tener los datos más frescos,
-    // pero si falla, usa el caché.
+    // pero si falla, usa el caché. Actualiza el caché si la red funciona.
     if (url.pathname.endsWith('/medicamentos.json')) {
         event.respondWith(
             caches.open(CACHE_NAME).then(cache => {
                 return fetch(request).then(networkResponse => {
-                    console.log('medicamentos.json obtenido de la red');
+                    console.log('medicamentos.json obtenido de la red y cache actualizado');
                     cache.put(request, networkResponse.clone());
                     return networkResponse;
                 }).catch(() => {
@@ -66,12 +66,10 @@ self.addEventListener('fetch', event => {
     // Busca en el caché primero. Si no está, va a la red.
     event.respondWith(
         caches.match(request).then(cachedResponse => {
-            if (cachedResponse) {
-                // console.log('Sirviendo desde caché:', request.url);
-                return cachedResponse;
-            }
-            // console.log('No está en caché, pidiendo a la red:', request.url);
-            return fetch(request);
+            return cachedResponse || fetch(request).then(networkResponse => {
+                // Opcional: cachear nuevos recursos estáticos si es necesario
+                return networkResponse;
+            });
         })
     );
 });
